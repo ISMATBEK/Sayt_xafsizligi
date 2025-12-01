@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veb-sayt Skanneri - Professional Xavfsizlik Asbobi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="main-header">
+            <div class="header-content">
+                <h1><i class="fas fa-shield-alt"></i> Veb-sayt Skanneri</h1>
+                <p class="tagline">Professional veb-xavfsizlik va audit asbobi</p>
+                <p class="subtitle">Saytlarning xavfsizlik zaifliklarini, ochiq portlarini va SEO parametrlarini tekshiring</p>
+            </div>
+        </header>
+
+        {% if error %}
+        <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <i class="fas fa-bug"></i>
+                <h3>Xavfsizlik Tekshiruvi</h3>
+                <p>SQL Injection, XSS va boshqa zaifliklarni toping</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-network-wired"></i>
+                <h3>Port Skanerlash</h3>
+                <p>30+ portni tezkor skanerlash</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-search"></i>
+                <h3>SEO Tahlili</h3>
+                <p>Sayt optimallashtirish bo'yicha tavsiyalar</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-mobile-alt"></i>
+                <h3>APK Tahlili</h3>
+                <p>Android ilovalarini xavfsizlik tekshiruvi</p>
+            </div>
+        </div>
+
+        <!-- Main Scan Section -->
+        <div class="main-scan-section">
+            <h2><i class="fas fa-rocket"></i> Tezkor Skanerlash</h2>
+            <form action="/scan" method="POST" class="scan-form">
+                <div class="input-group">
+                    <input type="text" name="website" placeholder="https://example.com yoki example.com" required>
+                    <button type="submit" class="scan-btn">
+                        <i class="fas fa-search"></i> Skanerlashni Boshlash
+                    </button>
+                </div>
+                <p class="form-note">Enter tugmasini bosing yoki skanerlash tugmasini bosing</p>
+            </form>
+        </div>
+
+        <!-- Advanced Features Section -->
+        <div class="features-section">
+            <h2><i class="fas fa-tools"></i> Qo'shimcha Imkoniyatlar</h2>
+
+            <!-- Link Checker -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-link"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>🔗 Linklar Tekshiruvi</h3>
+                    <p>Saytdagi buzilgan, redirect va xavfli linklarni toping</p>
+                    <form action="/check-links" method="POST" class="feature-form">
+                        <input type="text" name="website" placeholder="Sayt manzilini kiriting" class="feature-input" required>
+                        <button type="submit" class="feature-btn">
+                            <i class="fas fa-check-circle"></i> Linklarni Tekshirish
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- APK Analyzer -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>📱 APK Tahlili</h3>
+                    <p>Android ilovalarining xavfsizlik parametrlarini tekshiring</p>
+                    <form action="/analyze-apk" method="POST" enctype="multipart/form-data" class="feature-form">
+                        <input type="file" name="file" accept=".apk" class="file-input" required>
+                        <button type="submit" class="feature-btn">
+                            <i class="fas fa-upload"></i> APK ni Yuklash va Tahlil Qilish
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- How to Use Section -->
+        <div class="tutorial-section">
+            <h2><i class="fas fa-graduation-cap"></i> Qanday Foydalanish Kerak?</h2>
+            <div class="tutorial-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Sayt Manzilini Kiriting</h3>
+                        <p>Tekshirmoqchi bo'lgan saytingizning manzilini kiriting</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Skanerlashni Boshlang</h3>
+                        <p>"Skanerlashni Boshlash" tugmasini bosing</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Natijalarni Ko'ring</h3>
+                        <p>Barcha tahlil natijalari avtomatik ko'rsatiladi</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Tool Information Section -->
+<div class="info-panel tool-info">
+    <h3><i class="fas fa-info-circle"></i> Veb-sayt Skanneri Haqida</h3>
+    <p>
+        <strong>Veb-sayt Skanneri</strong> - bu professional veb-xavfsizlik audit asbobi bo'lib,
+        quyidagi imkoniyatlarga ega:
+    </p>
+    <div class="capabilities-grid">
+        <div class="capability-item">
+            <i class="fas fa-shield-check"></i>
+            <h4>Xavfsizlik Tekshiruvi</h4>
+            <ul>
+                <li>SQL Injection zaifliklari</li>
+                <li>XSS (Cross-site Scripting)</li>
+                <li>Security Headers tekshiruvi</li>
+                <li>Admin panel topish</li>
+            </ul>
+        </div>
+        <div class="capability-item">
+            <i class="fas fa-link"></i>
+            <h4>Link Tekshiruvi</h4>
+            <ul>
+                <li>Zararli linklarni aniqlash</li>
+                <li>Fishing saytlarini topish</li>
+                <li>Shubhali linklarni ko'rsatish</li>
+                <li>Buzilgan linklarni aniqlash</li>
+            </ul>
+        </div>
+        <div class="capability-item">
+            <i class="fas fa-mobile-alt"></i>
+            <h4>APK Tahlili</h4>
+            <ul>
+                <li>Zararli dasturlarni aniqlash</li>
+                <li>Ruxsatlarni tahlil qilish</li>
+                <li>Sertifikat tekshiruvi</li>
+                <li>Xavfsizlik bahosi</li>
+            </ul>
+        </div>
+        <div class="capability-item">
+            <i class="fas fa-chart-line"></i>
+            <h4>SEO va Performance</h4>
+            <ul>
+                <li>Yuklanish tezligi</li>
+                <li>SEO optimallashtirish</li>
+                <li>Meta taglar tahlili</li>
+                <li>WHOIS ma'lumotlari</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Warning Panel -->
+<div class="info-panel warning-panel">
+    <h3><i class="fas fa-exclamation-triangle"></i> Muhim Ogohlantirish</h3>
+    <p>
+        <strong>Diqqat!</strong> Ushbu asbob faqat xavfsizlikni tekshirish va ogohlantirish
+        maqsadida ishlatiladi. Barcha tahlil natijalari taxminiy bo'lib, to'liq xavfsizlik
+        kafolatini bermaydi. Muhim saytlar va ilovalarni professional xavfsizlik
+        mutaxassislari tomonidan tekshirishni tavsiya etamiz.
+    </p>
+</div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Veb-sayt Skanneri. Barcha huquqlar himoyalangan.</p>
+        </div>
+    </footer>
+</body>
+</html>
