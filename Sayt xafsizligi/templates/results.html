@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% if results.scan_type == 'website' %}
+            Sayt Skanerlash Natijalari
+        {% elif results.scan_type == 'links' %}
+            Link Tekshiruvi Natijalari
+        {% elif results.scan_type == 'apk' %}
+            APK Tahlili Natijalari
+        {% else %}
+            Skanerlash Natijalari
+        {% endif %}
+        - Veb-sayt Skanneri
+    </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="results-header">
+            <div class="header-content">
+                <h1>
+                    <i class="fas fa-
+                        {% if results.scan_type == 'website' %}
+                            file-alt
+                        {% elif results.scan_type == 'links' %}
+                            link
+                        {% elif results.scan_type == 'apk' %}
+                            mobile-alt
+                        {% else %}
+                            file-alt
+                        {% endif %}"></i>
+                    {% if results.scan_type == 'website' %}
+                        Sayt Skanerlash Natijalari
+                    {% elif results.scan_type == 'links' %}
+                        Link Tekshiruvi Natijalari
+                    {% elif results.scan_type == 'apk' %}
+                        APK Tahlili Natijalari
+                    {% else %}
+                        Skanerlash Natijalari
+                    {% endif %}
+                </h1>
+                <p>
+                    {% if results.scan_type == 'website' %}
+                        To'liq tahlil va xavfsizlik audit hisoboti
+                    {% elif results.scan_type == 'links' %}
+                        Linklar tekshiruvi hisoboti
+                    {% elif results.scan_type == 'apk' %}
+                        Android ilova tahlili hisoboti
+                    {% else %}
+                        Tahlil hisoboti
+                    {% endif %}
+                </p>
+                <a href="{{ url_for('index') }}" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Bosh sahifaga qaytish
+                </a>
+            </div>
+        </header>
+
+        <div class="results-container">
+            <!-- Umumiy ma'lumotlar -->
+            <div class="result-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-bar"></i> Umumiy Ma'lumot</h2>
+                    <span class="status-badge info">{{ results.scan_time }}</span>
+                </div>
+
+                <div class="summary-grid">
+                    {% if results.scan_type == 'website' %}
+                    <!-- Website Scan Summary -->
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Domen</h3>
+                            <p class="summary-value">{{ results.domain }}</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>IP Manzil</h3>
+                            <p class="summary-value">
+                                {% if results.port_scan and results.port_scan.ip %}
+                                    {{ results.port_scan.ip }}
+                                {% else %}
+                                    Noma'lum
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Xavfsizlik</h3>
+                            <p class="summary-value
+                                {% if results.security_scan and results.security_scan|length > 0 %}
+                                    danger
+                                {% else %}
+                                    safe
+                                {% endif %}">
+                                {% if results.security_scan %}
+                                    {{ results.security_scan|length }} muammo
+                                {% else %}
+                                    0 muammo
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Tezlik</h3>
+                            <p class="summary-value">
+                                {% if results.performance and results.performance.load_time %}
+                                    {{ results.performance.load_time }} ms
+                                {% else %}
+                                    Noma'lum
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    {% elif results.scan_type == 'links' %}
+                    <!-- Links Scan Summary -->
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Sayt</h3>
+                            <p class="summary-value">{{ results.website }}</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-list"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Jami Linklar</h3>
+                            <p class="summary-value">
+                                {{ results.link_check.total_links if results.link_check and results.link_check.total_links else 0 }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Buzilgan</h3>
+                            <p class="summary-value
+                                {% if results.link_check and results.link_check.broken_links and results.link_check.broken_links|length > 0 %}
+                                    danger
+                                {% else %}
+                                    safe
+                                {% endif %}">
+                                {% if results.link_check and results.link_check.broken_links %}
+                                    {{ results.link_check.broken_links|length }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Tashqi Linklar</h3>
+                            <p class="summary-value">
+                                {% if results.link_check and results.link_check.external_links %}
+                                    {{ results.link_check.external_links|length }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    {% elif results.scan_type == 'apk' %}
+                    <!-- APK Scan Summary -->
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-file"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Fayl Nomi</h3>
+                            <p class="summary-value">
+                                {{ results.apk_analysis.file_info.file_name if results.apk_analysis and results.apk_analysis.file_info else 'Noma\'lum' }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-weight"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Hajmi</h3>
+                            <p class="summary-value">
+                                {{ results.apk_analysis.file_info.file_size_mb if results.apk_analysis and results.apk_analysis.file_info else 0 }} MB
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Xavfsizlik</h3>
+                            <p class="summary-value
+                                {% if results.apk_analysis and results.apk_analysis.security_issues and results.apk_analysis.security_issues|length > 0 %}
+                                    warning
+                                {% else %}
+                                    safe
+                                {% endif %}">
+                                {% if results.apk_analysis and results.apk_analysis.security_issues %}
+                                    {{ results.apk_analysis.security_issues|length }} muammo
+                                {% else %}
+                                    0 muammo
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Ruxsatlar</h3>
+                            <p class="summary-value">
+                                {% if results.apk_analysis and results.apk_analysis.permissions %}
+                                    {{ results.apk_analysis.permissions|length }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- WEBSITE SCAN SECTIONS -->
+            {% if results.scan_type == 'website' %}
+            <!-- Port Skanerlash Natijalari -->
+            <div class="result-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-network-wired"></i> Port Skanerlash</h2>
+                    <span class="status-badge
+                        {% if results.port_scan and results.port_scan.open_ports and results.port_scan.open_ports|length > 0 %}
+                            warning
+                        {% else %}
+                            safe
+                        {% endif %}">
+                        {% if results.port_scan and results.port_scan.open_ports %}
+                            {{ results.port_scan.open_ports|length }} ochiq
+                        {% else %}
+                            0 ochiq
+                        {% endif %}
+                    </span>
+                </div>
+
+                {% if results.port_scan and results.port_scan.error %}
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>{{ results.port_scan.error }}</p>
+                    </div>
+                {% else %}
+                    <div class="port-analysis">
+                        <div class="port-stats">
+                            <div class="stat">
+                                <span class="stat-value">
+                                    {% if results.port_scan and results.port_scan.open_ports %}
+                                        {{ results.port_scan.open_ports|length }}
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                </span>
+                                <span class="stat-label">Ochiq Portlar</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">
+                                    {% if results.port_scan and results.port_scan.total_scanned %}
+                                        {{ results.port_scan.total_scanned }}
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                </span>
+                                <span class="stat-label">Skanerlangan</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">
+                                    {% if results.port_scan and results.port_scan.ip %}
+                                        {{ results.port_scan.ip }}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </span>
+                                <span class="stat-label">IP Manzil</span>
+                            </div>
+                        </div>
+
+                        {% if results.port_scan and results.port_scan.open_ports and results.port_scan.open_ports|length > 0 %}
+                        <div class="ports-display">
+                            <h4><i class="fas fa-list"></i> Ochiq Portlar Ro'yxati:</h4>
+                            <div class="ports-grid">
+                                {% for port_info in results.port_scan.open_ports %}
+                                <div class="port-card
+                                    {% if port_info.port in [21, 22, 23, 25, 53, 1433, 3306, 5432] %}
+                                        critical
+                                    {% elif port_info.port in [80, 443, 8080, 8443] %}
+                                        warning
+                                    {% else %}
+                                        info
+                                    {% endif %}">
+                                    <div class="port-header">
+                                        <span class="port-number">{{ port_info.port }}</span>
+                                        <span class="port-status">Ochiq</span>
+                                    </div>
+                                    <div class="port-service">{{ port_info.service }}</div>
+                                    <div class="port-risk">
+                                        {% if port_info.port in [21, 22, 23, 25, 53, 1433, 3306, 5432] %}
+                                            <i class="fas fa-exclamation-triangle"></i> Yuqori risk
+                                        {% elif port_info.port in [80, 443, 8080, 8443] %}
+                                            <i class="fas fa-info-circle"></i> O'rta risk
+                                        {% else %}
+                                            <i class="fas fa-check-circle"></i> Past risk
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="success-message">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Ochiq portlar topilmadi!</h4>
+                                <p>Bu saytning port xavfsizligi yaxshi holatda ekanligini ko'rsatadi.</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Xavfsizlik Tahlili -->
+            <div class="result-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-shield-alt"></i> Xavfsizlik Tahlili</h2>
+                    <span class="status-badge
+                        {% if results.security_scan and results.security_scan|length > 0 %}
+                            danger
+                        {% else %}
+                            safe
+                        {% endif %}">
+                        {% if results.security_scan %}
+                            {{ results.security_scan|length }} ta muammo
+                        {% else %}
+                            0 ta muammo
+                        {% endif %}
+                    </span>
+                </div>
+
+                {% if results.security_scan and results.security_scan|length > 0 %}
+                    <div class="security-overview">
+                        <div class="security-stats">
+                            {% set high_count = [] %}
+                            {% set medium_count = [] %}
+                            {% set low_count = [] %}
+
+                            {% for vuln in results.security_scan %}
+                                {% if vuln.level == 'Yuqori' %}
+                                    {% if high_count.append(1) %}{% endif %}
+                                {% elif vuln.level == "O'rta" %}
+                                    {% if medium_count.append(1) %}{% endif %}
+                                {% elif vuln.level == 'Past' %}
+                                    {% if low_count.append(1) %}{% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            <div class="security-stat critical">
+                                <span class="stat-count">{{ high_count|length }}</span>
+                                <span class="stat-label">Yuqori Xavf</span>
+                            </div>
+                            <div class="security-stat warning">
+                                <span class="stat-count">{{ medium_count|length }}</span>
+                                <span class="stat-label">O'rta Xavf</span>
+                            </div>
+                            <div class="security-stat info">
+                                <span class="stat-count">{{ low_count|length }}</span>
+                                <span class="stat-label">Past Xavf</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="vulnerabilities-list">
+                        {% for vuln in results.security_scan %}
+                        <div class="vulnerability-card
+                            {% if vuln.level == 'Yuqori' %}
+                                yuqori
+                            {% elif vuln.level == "O'rta" %}
+                                orta
+                            {% else %}
+                                past
+                            {% endif %}">
+                            <div class="vuln-header">
+                                <div class="vuln-title">
+                                    <i class="fas fa-
+                                        {% if vuln.level == 'Yuqori' %}
+                                            exclamation-triangle
+                                        {% elif vuln.level == "O'rta" %}
+                                            exclamation-circle
+                                        {% else %}
+                                            info-circle
+                                        {% endif %}"></i>
+                                    <h4>{{ vuln.type }}</h4>
+                                </div>
+                                <span class="severity-badge
+                                    {% if vuln.level == 'Yuqori' %}
+                                        yuqori
+                                    {% elif vuln.level == "O'rta" %}
+                                        orta
+                                    {% else %}
+                                        past
+                                    {% endif %}">
+                                    {{ vuln.level }}
+                                </span>
+                            </div>
+                            <div class="vuln-body">
+                                <div class="vuln-description">
+                                    <strong><i class="fas fa-info-circle"></i> Tavsif:</strong>
+                                    <p>{{ vuln.description }}</p>
+                                </div>
+                                <div class="vuln-recommendation">
+                                    <strong><i class="fas fa-lightbulb"></i> Tavsiya:</strong>
+                                    <p>{{ vuln.recommendation }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="success-message">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h4>Ajoyib! Xavfsizlik muammolari topilmadi</h4>
+                            <p>Sayt asosiy xavfsizlik standartlariga rioya qilmoqda.</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- SEO va Performance Tahlili -->
+            {% if results.seo_analysis and not results.seo_analysis.error %}
+            <div class="result-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-line"></i> SEO va Performance</h2>
+                    <span class="status-badge info">Tahlil</span>
+                </div>
+
+                <div class="seo-performance-grid">
+                    <div class="seo-card">
+                        <h4><i class="fas fa-heading"></i> Kontent Tahlili</h4>
+                        <div class="seo-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Sarlavha</span>
+                                <span class="metric-value">
+                                    {{ results.seo_analysis.title_info.text if results.seo_analysis.title_info and results.seo_analysis.title_info.text else 'Mavjud emas' }}
+                                </span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Sarlavha uzunligi</span>
+                                <span class="metric-value
+                                    {% if results.seo_analysis.title_info and results.seo_analysis.title_info.length and results.seo_analysis.title_info.length <= 60 %}
+                                        good
+                                    {% else %}
+                                        bad
+                                    {% endif %}">
+                                    {{ results.seo_analysis.title_info.length if results.seo_analysis.title_info and results.seo_analysis.title_info.length else 0 }} belgi
+                                </span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">H1 sarlavhalar</span>
+                                <span class="metric-value">
+                                    {{ results.seo_analysis.headings.h1 if results.seo_analysis.headings and results.seo_analysis.headings.h1 else 0 }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="performance-card">
+                        <h4><i class="fas fa-tachometer-alt"></i> Performance</h4>
+                        <div class="performance-metrics">
+                            {% if results.performance and not results.performance.error %}
+                            <div class="metric">
+                                <span class="metric-label">Yuklanish vaqti</span>
+                                <span class="metric-value
+                                    {% if results.performance.load_time and results.performance.load_time < 1000 %}
+                                        good
+                                    {% else %}
+                                        bad
+                                    {% endif %}">
+                                    {{ results.performance.load_time if results.performance.load_time else 0 }} ms
+                                </span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Kontent hajmi</span>
+                                <span class="metric-value">
+                                    {{ results.performance.content_size_kb if results.performance.content_size_kb else 0 }} KB
+                                </span>
+                            </div>
+                            {% else %}
+                            <div class="no-data">
+                                <i class="fas fa-info-circle"></i>
+                                <p>Performance ma'lumotlari mavjud emas</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- WHOIS Ma'lumotlari -->
+            {% if results.whois_info and not results.whois_info.error %}
+            <div class="result-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-info-circle"></i> WHOIS Ma'lumotlari</h2>
+                    <span class="status-badge info">Domen ma'lumoti</span>
+                </div>
+
+                <div class="whois-grid">
+                    {% if results.whois_info.registrar %}
+                    <div class="whois-item">
+                        <strong>Registrar:</strong>
+                        <span>{{ results.whois_info.registrar }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if results.whois_info.creation_date %}
+                    <div class="whois-item">
+                        <strong>Yaratilgan sana:</strong>
+                        <span>{{ results.whois_info.creation_date }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if results.whois_info.expiration_date %}
+                    <div class="whois-item">
+                        <strong>Muddati:</strong>
+                        <span>{{ results.whois_info.expiration_date }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- LINKS SCAN SECTIONS -->
+            {% elif results.scan_type == 'links' %}
+            <!-- Link Tekshiruvi Natijalari -->
+            <div class="result-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-link"></i> Link Tekshiruvi</h2>
+                    <span class="status-badge
+                        {% if results.link_check and results.link_check.broken_links and results.link_check.broken_links|length > 0 %}
+                            danger
+                        {% else %}
+                            safe
+                        {% endif %}">
+                        {% if results.link_check and results.link_check.broken_links %}
+                            {{ results.link_check.broken_links|length }} ta buzilgan
+                        {% else %}
+                            0 ta buzilgan
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="link-analysis">
+                    <div class="link-stats">
+                        <div class="link-stat safe">
+                            <span class="stat-count">
+                                {{ results.link_check.total_links if results.link_check and results.link_check.total_links else 0 }}
+                            </span>
+                            <span class="stat-label">Jami Linklar</span>
+                        </div>
+                        <div class="link-stat
+                            {% if results.link_check and results.link_check.broken_links and results.link_check.broken_links|length > 0 %}
+                                danger
+                            {% else %}
+                                safe
+                            {% endif %}">
+                            <span class="stat-count">
+                                {% if results.link_check and results.link_check.broken_links %}
+                                    {{ results.link_check.broken_links|length }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </span>
+                            <span class="stat-label">Buzilgan</span>
+                        </div>
+                        <div class="link-stat info">
+                            <span class="stat-count">
+                                {% if results.link_check and results.link_check.external_links %}
+                                    {{ results.link_check.external_links|length }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </span>
+                            <span class="stat-label">Tashqi</span>
+                        </div>
+                    </div>
+
+                    {% if results.link_check and results.link_check.broken_links and results.link_check.broken_links|length > 0 %}
+                    <div class="broken-links-section">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Buzilgan Linklar:</h4>
+                        <div class="broken-links-list">
+                            {% for link in results.link_check.broken_links %}
+                            <div class="broken-link-card">
+                                <div class="link-url">{{ link.url }}</div>
+                                <div class="link-details">
+                                    <span class="link-text">{{ link.text if link.text else 'Matnsiz' }}</span>
+                                    <span class="link-error">{{ link.error if link.error else 'Noma\'lum xato' }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="success-message">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h4>Buzilgan linklar topilmadi!</h4>
+                            <p>Saytning barcha linklari to'g'ri ishlayapti.</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if results.link_check and results.link_check.internal_links and results.link_check.internal_links|length > 0 %}
+                    <div class="internal-links-section">
+                        <h4><i class="fas fa-home"></i> Ichki Linklar ({{ results.link_check.internal_links|length }}):</h4>
+                        <div class="links-grid">
+                            {% for link in results.link_check.internal_links %}
+                            <div class="link-card">
+                                <div class="link-status success">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="link-content">
+                                    <div class="link-url">{{ link.url }}</div>
+                                    <div class="link-text">{{ link.text if link.text else 'Matnsiz' }}</div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- APK SCAN SECTIONS -->
+            {% elif results.scan_type == 'apk' %}
+            <!-- APK Tahlili Natijalari -->
+            <div class="result-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-mobile-alt"></i> APK Tahlili</h2>
+                    <span class="status-badge
+                        {% if results.apk_analysis and results.apk_analysis.security_issues and results.apk_analysis.security_issues|length > 0 %}
+                            warning
+                        {% else %}
+                            safe
+                        {% endif %}">
+                        {% if results.apk_analysis and results.apk_analysis.security_issues %}
+                            {{ results.apk_analysis.security_issues|length }} ta muammo
+                        {% else %}
+                            0 ta muammo
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="apk-analysis">
+                    <!-- File Information -->
+                    <div class="apk-file-info">
+                        <h4><i class="fas fa-info-circle"></i> Fayl Ma'lumotlari</h4>
+                        <div class="file-info-grid">
+                            <div class="file-info-item">
+                                <strong>Fayl nomi:</strong>
+                                <span>{{ results.apk_analysis.file_info.file_name if results.apk_analysis and results.apk_analysis.file_info else 'Noma\'lum' }}</span>
+                            </div>
+                            <div class="file-info-item">
+                                <strong>Hajmi:</strong>
+                                <span>{{ results.apk_analysis.file_info.file_size_mb if results.apk_analysis and results.apk_analysis.file_info else 0 }} MB</span>
+                            </div>
+                            <div class="file-info-item">
+                                <strong>MD5:</strong>
+                                <span class="hash-value">{{ results.apk_analysis.file_info.md5_hash if results.apk_analysis and results.apk_analysis.file_info else 'Noma\'lum' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- App Information -->
+                    {% if results.apk_analysis and results.apk_analysis.app_info %}
+                    <div class="app-info-section">
+                        <h4><i class="fas fa-info-circle"></i> Ilova Ma'lumotlari</h4>
+                        <div class="app-info-grid">
+                            <div class="app-info-item">
+                                <strong>Paket nomi:</strong>
+                                <span>{{ results.apk_analysis.app_info.package_name }}</span>
+                            </div>
+                            <div class="app-info-item">
+                                <strong>Versiya:</strong>
+                                <span>{{ results.apk_analysis.app_info.version }}</span>
+                            </div>
+                            <div class="app-info-item">
+                                <strong>Min SDK:</strong>
+                                <span>{{ results.apk_analysis.app_info.min_sdk }}</span>
+                            </div>
+                            <div class="app-info-item">
+                                <strong>Target SDK:</strong>
+                                <span>{{ results.apk_analysis.app_info.target_sdk }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Malware Analysis Section -->
+                    {% if results.apk_analysis and results.apk_analysis.malware_analysis %}
+                    <div class="result-section">
+                        <div class="section-header">
+                            <h2><i class="fas fa-virus"></i> Zararli Dastur Tahlili</h2>
+                            <span class="status-badge {{ 'danger' if results.apk_analysis.malware_analysis.detected > 0 else 'safe' }}">
+                                {{ results.apk_analysis.malware_analysis.detected }} ta zararli belgi
+                            </span>
+                        </div>
+
+                        <div class="malware-analysis">
+                            <div class="malware-stats">
+                                <div class="malware-stat {{ 'high-risk' if results.apk_analysis.malware_analysis.risk_score > 70 else 'medium-risk' if results.apk_analysis.malware_analysis.risk_score > 30 else 'low-risk' }}">
+                                    <span class="stat-count">{{ results.apk_analysis.malware_analysis.risk_score }}%</span>
+                                    <span class="stat-label">Xavf Darajasi</span>
+                                </div>
+                                <div class="malware-stat {{ 'high-risk' if results.apk_analysis.malware_analysis.detected > 2 else 'medium-risk' if results.apk_analysis.malware_analysis.detected > 0 else 'low-risk' }}">
+                                    <span class="stat-count">{{ results.apk_analysis.malware_analysis.detected }}/{{ results.apk_analysis.malware_analysis.total_scanned }}</span>
+                                    <span class="stat-label">Zararli Belgilar</span>
+                                </div>
+                                <div class="malware-stat info">
+                                    <span class="stat-count">{{ results.apk_analysis.malware_analysis.verdict }}</span>
+                                    <span class="stat-label">Yakuniy Baho</span>
+                                </div>
+                            </div>
+
+                            {% if results.apk_analysis.malware_analysis.signatures %}
+                            <div class="malware-signatures">
+                                <h4><i class="fas fa-search"></i> Aniqlangan Zararli Belgilar:</h4>
+                                {% for signature in results.apk_analysis.malware_analysis.signatures %}
+                                <div class="malware-signature-card {{ 'high-risk' if signature.severity == 'YUQORI' else 'medium-risk' if signature.severity == 'O\'RTA' else 'low-risk' }}">
+                                    <div class="signature-header">
+                                        <div class="signature-name">
+                                            <i class="fas fa-{{ 'exclamation-triangle' if signature.severity == 'YUQORI' else 'exclamation-circle' if signature.severity == 'O\'RTA' else 'info-circle' }}"></i>
+                                            <h4>{{ signature.name }}</h4>
+                                        </div>
+                                        <span class="detection-badge {{ 'detected' if signature.detected else 'clean' }}">
+                                            {{ 'Aniqlangan' if signature.detected else 'Aniqlanmagan' }}
+                                        </span>
+                                    </div>
+                                    <div class="signature-details">
+                                        <div class="signature-detail">
+                                            <strong>Xavf Darajasi:</strong>
+                                            <p>{{ signature.severity }}</p>
+                                        </div>
+                                        <div class="signature-detail">
+                                            <strong>Tavsif:</strong>
+                                            <p>{{ signature.description }}</p>
+                                        </div>
+                                        <div class="signature-detail">
+                                            <strong>Harakat:</strong>
+                                            <p>{{ signature.action }}</p>
+                                        </div>
+                                        <div class="signature-detail">
+                                            <strong>Himoya:</strong>
+                                            <p>{{ signature.protection }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Certificate Information -->
+                    {% if results.apk_analysis and results.apk_analysis.certificate_info %}
+                    <div class="certificate-info">
+                        <h4><i class="fas fa-certificate"></i> Sertifikat Ma'lumotlari</h4>
+                        <div class="cert-status
+                            {% if results.apk_analysis.certificate_info.has_signature %}
+                                safe
+                            {% else %}
+                                warning
+                            {% endif %}">
+                            <i class="fas fa-{% if results.apk_analysis.certificate_info.has_signature %}check{% else %}exclamation{% endif %}-circle"></i>
+                            <span>Imzolangan: {{ 'Ha' if results.apk_analysis.certificate_info.has_signature else 'Yo\'q' }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Permissions -->
+                    {% if results.apk_analysis and results.apk_analysis.permissions and results.apk_analysis.permissions|length > 0 %}
+                    <div class="permissions-section">
+                        <h4><i class="fas fa-shield-alt"></i> Ruxsatlar ({{ results.apk_analysis.permissions|length }})</h4>
+                        <div class="permissions-grid">
+                            {% for permission in results.apk_analysis.permissions %}
+                            <div class="permission-card-detailed {{ 'high-risk' if permission.risk == 'YUQORI' else 'medium-risk' if permission.risk == 'O\'RTA' else 'low-risk' }}">
+                                <div class="permission-header">
+                                    <div class="permission-name">
+                                        <i class="fas fa-{{ 'exclamation-triangle' if permission.risk == 'YUQORI' else 'exclamation-circle' if permission.risk == 'O\'RTA' else 'info-circle' }}"></i>
+                                        <h5>{{ permission.display_name }}</h5>
+                                    </div>
+                                    <span class="permission-risk-badge {{ 'high-risk' if permission.risk == 'YUQORI' else 'medium-risk' if permission.risk == 'O\'RTA' else 'low-risk' }}">
+                                        {{ permission.risk }}
+                                    </span>
+                                </div>
+                                <p class="permission-description">{{ permission.description }}</p>
+                                <div class="permission-damage">
+                                    <strong>Zarar:</strong> {{ permission.damage }}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Security Issues -->
+                    {% if results.apk_analysis and results.apk_analysis.security_issues and results.apk_analysis.security_issues|length > 0 %}
+                    <div class="apk-security-issues">
+                        <h4><i class="fas fa-bug"></i> Xavfsizlik Muammolari</h4>
+                        <div class="security-issues-list">
+                            {% for issue in results.apk_analysis.security_issues %}
+                            <div class="security-issue-card {{ issue.severity.lower() }}">
+                                <div class="issue-header">
+                                    <h5>{{ issue.issue }}</h5>
+                                    <span class="severity-badge {{ issue.severity.lower() }}">{{ issue.severity }}</span>
+                                </div>
+                                <p class="issue-description">{{ issue.description }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Xulosa -->
+            <div class="result-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-clipboard-check"></i> Xulosa</h2>
+                </div>
+
+                <div class="conclusion-content">
+                    <!-- Website Conclusion -->
+                    {% if results.scan_type == 'website' %}
+                    <div class="conclusion-card
+                        {% if results.security_scan and results.security_scan|length > 0 %}
+                            {% set has_high_risk = false %}
+                            {% for vuln in results.security_scan %}
+                                {% if vuln.level == 'Yuqori' %}
+                                    {% set has_high_risk = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if has_high_risk %}
+                                danger
+                            {% else %}
+                                warning
+                            {% endif %}
+                        {% else %}
+                            safe
+                        {% endif %}">
+                        <div class="conclusion-header">
+                            <i class="fas fa-
+                                {% if results.security_scan and results.security_scan|length > 0 %}
+                                    {% set has_high_risk = false %}
+                                    {% for vuln in results.security_scan %}
+                                        {% if vuln.level == 'Yuqori' %}
+                                            {% set has_high_risk = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if has_high_risk %}
+                                        exclamation-triangle
+                                    {% else %}
+                                        exclamation-circle
+                                    {% endif %}
+                                {% else %}
+                                    check-circle
+                                {% endif %}"></i>
+                            <h3>Umumiy Xavfsizlik Bahosi</h3>
+                        </div>
+                        <div class="conclusion-body">
+                            {% if results.security_scan and results.security_scan|length > 0 %}
+                                {% set has_high_risk = false %}
+                                {% for vuln in results.security_scan %}
+                                    {% if vuln.level == 'Yuqori' %}
+                                        {% set has_high_risk = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if has_high_risk %}
+                                    <p><strong>Xavfli:</strong> Saytda kritik xavfsizlik muammolari mavjud. Darhol tuzatish tavsiya etiladi.</p>
+                                {% else %}
+                                    <p><strong>Qoniqarli:</strong> Sayt asosiy xavfsizlik talablariga javob beradi. Ba'zi o'rta darajadagi muammolar mavjud.</p>
+                                {% endif %}
+                            {% else %}
+                                <p><strong>A'lo:</strong> Sayt yuqori xavfsizlik standartlariga ega. Hech qanday kritik muammo topilmadi.</p>
+                            {% endif %}
+
+                            <div class="recommendations">
+                                <h4>Tavsiyalar:</h4>
+                                <ul>
+                                    {% if results.security_scan and results.security_scan|length > 0 %}
+                                        <li>Xavfsizlik muammolarini darhol tuzatish</li>
+                                    {% endif %}
+                                    {% if results.port_scan and results.port_scan.open_ports and results.port_scan.open_ports|length > 0 %}
+                                        <li>Keraksiz ochiq portlarni yopish</li>
+                                    {% endif %}
+                                    <li>Muntazam xavfsizlik tekshiruvlarini o'tkazish</li>
+                                    <li>SSL sertifikatini yangilab turish</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Links Conclusion -->
+                    {% elif results.scan_type == 'links' %}
+                    <div class="conclusion-card
+                        {% if results.link_check and results.link_check.broken_links and results.link_check.broken_links|length > 0 %}
+                            warning
+                        {% else %}
+                            safe
+                        {% endif %}">
+                        <div class="conclusion-header">
+                            <i class="fas fa-{% if results.link_check and results.link_check.broken_links and results.link_check.broken_links|length > 0 %}exclamation-circle{% else %}check-circle{% endif %}"></i>
+                            <h3>Link Tekshiruvi Bahosi</h3>
+                        </div>
+                        <div class="conclusion-body">
+                            {% if results.link_check and results.link_check.broken_links and results.link_check.broken_links|length > 0 %}
+                                <p><strong>Ogohlantirish:</strong> Saytda {{ results.link_check.broken_links|length }} ta buzilgan link topildi.</p>
+                            {% else %}
+                                <p><strong>Yaxshi:</strong> Barcha linklar to'g'ri ishlayapti.</p>
+                            {% endif %}
+
+                            <div class="recommendations">
+                                <h4>Tavsiyalar:</h4>
+                                <ul>
+                                    {% if results.link_check and results.link_check.broken_links and results.link_check.broken_links|length > 0 %}
+                                        <li>Buzilgan linklarni tuzatish</li>
+                                    {% endif %}
+                                    <li>Muntazam link tekshiruvlarini o'tkazish</li>
+                                    <li>404 xatolari uchun maxsus sahifa yaratish</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- APK Conclusion -->
+                    {% elif results.scan_type == 'apk' %}
+                    <div class="conclusion-card
+                        {% if results.apk_analysis and results.apk_analysis.malware_analysis and results.apk_analysis.malware_analysis.risk_score > 50 %}
+                            warning
+                        {% else %}
+                            safe
+                        {% endif %}">
+                        <div class="conclusion-header">
+                            <i class="fas fa-{% if results.apk_analysis and results.apk_analysis.malware_analysis and results.apk_analysis.malware_analysis.risk_score > 50 %}exclamation-circle{% else %}check-circle{% endif %}"></i>
+                            <h3>APK Xavfsizlik Bahosi</h3>
+                        </div>
+                        <div class="conclusion-body">
+                            {% if results.apk_analysis and results.apk_analysis.malware_analysis %}
+                                {% if results.apk_analysis.malware_analysis.risk_score > 70 %}
+                                    <p><strong>Xavfli:</strong> APK faylida yuqori darajadagi zararli belgilar aniqlandi. Ilovani ishlatish tavsiya etilmaydi!</p>
+                                {% elif results.apk_analysis.malware_analysis.risk_score > 40 %}
+                                    <p><strong>Ogohlantirish:</strong> APK faylida o'rta darajadagi xavfsizlik muammolari mavjud. Diqqat bilan foydalaning.</p>
+                                {% else %}
+                                    <p><strong>Xavfsiz:</strong> APK fayli asosiy xavfsizlik tekshiruvlaridan muvaffaqiyatli o'tdi.</p>
+                                {% endif %}
+                            {% else %}
+                                <p><strong>Xavfsiz:</strong> APK fayli asosiy xavfsizlik tekshiruvlaridan o'tdi.</p>
+                            {% endif %}
+
+                            <div class="recommendations">
+                                <h4>Tavsiyalar:</h4>
+                                <ul>
+                                    {% if results.apk_analysis and results.apk_analysis.malware_analysis and results.apk_analysis.malware_analysis.risk_score > 50 %}
+                                        <li>Ilovani ishlatmaslik tavsiya etiladi</li>
+                                        <li>Antivirus dasturi bilan to'liq skanerlash</li>
+                                    {% endif %}
+                                    <li>Ilovani rasmiy do'konlardan yuklab olish</li>
+                                    <li>Muntazam yangilanishlarni tekshirish</li>
+                                    <li>Shubhali ruxsatlarni bermaslik</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p><strong>Skanerlash vaqti:</strong> {{ results.scan_time }}</p>
+            {% if results.scan_type == 'website' %}
+                <p><strong>Domen:</strong> {{ results.domain }}</p>
+            {% elif results.scan_type == 'links' %}
+                <p><strong>Sayt:</strong> {{ results.website }}</p>
+            {% elif results.scan_type == 'apk' %}
+                <p><strong>Fayl:</strong> {{ results.apk_analysis.file_info.file_name if results.apk_analysis and results.apk_analysis.file_info else 'Noma\'lum' }}</p>
+            {% endif %}
+            <p>&copy; 2024 Veb-sayt Skanneri. Barcha huquqlar himoyalangan.</p>
+        </div>
+    </footer>
+
+    <style>
+        .back-button {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .seo-performance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .seo-card, .performance-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-value.good { color: #28a745; font-weight: bold; }
+        .metric-value.bad { color: #dc3545; font-weight: bold; }
+
+        .whois-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .whois-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .conclusion-card {
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid;
+        }
+
+        .conclusion-card.safe { border-color: #28a745; background: #f8fff8; }
+        .conclusion-card.warning { border-color: #ffc107; background: #fffef0; }
+        .conclusion-card.danger { border-color: #dc3545; background: #fff5f5; }
+
+        .conclusion-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .recommendations {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendations li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .recommendations li:before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .recommendations li:last-child {
+            border-bottom: none;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+        }
+
+        .no-data i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .file-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .file-info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .hash-value {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #495057;
+        }
+
+        .app-info-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .app-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .app-info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .permissions-grid {
+            display: grid;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .permission-card-detailed {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid;
+            transition: transform 0.2s;
+        }
+
+        .permission-card-detailed:hover {
+            transform: translateX(5px);
+        }
+
+        .permission-card-detailed.high-risk {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .permission-card-detailed.medium-risk {
+            border-left-color: #ffc107;
+            background: #fffbf0;
+        }
+
+        .permission-card-detailed.low-risk {
+            border-left-color: #17a2b8;
+            background: #f0f9ff;
+        }
+
+        .permission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .permission-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .permission-risk-badge {
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .permission-risk-badge.high-risk {
+            background: #dc3545;
+            color: white;
+        }
+
+        .permission-risk-badge.medium-risk {
+            background: #fd7e14;
+            color: white;
+        }
+
+        .permission-risk-badge.low-risk {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .permission-description {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .permission-damage {
+            color: #721c24;
+            background: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .malware-analysis {
+            margin-top: 20px;
+        }
+
+        .malware-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .malware-stat {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .malware-stat.high-risk { background: #dc3545; }
+        .malware-stat.medium-risk { background: #fd7e14; }
+        .malware-stat.low-risk { background: #28a745; }
+        .malware-stat.info { background: #17a2b8; }
+
+        .malware-signatures {
+            display: grid;
+            gap: 15px;
+        }
+
+        .malware-signature-card {
+            border-radius: 10px;
+            padding: 25px;
+            border-left: 5px solid;
+        }
+
+        .malware-signature-card.high-risk {
+            background: #ffe6e6;
+            border-left-color: #dc3545;
+        }
+
+        .malware-signature-card.medium-risk {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+
+        .malware-signature-card.low-risk {
+            background: #d1ecf1;
+            border-left-color: #17a2b8;
+        }
+
+        .signature-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .signature-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detection-badge {
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .detection-badge.detected {
+            background: #dc3545;
+            color: white;
+        }
+
+        .detection-badge.clean {
+            background: #28a745;
+            color: white;
+        }
+
+        .signature-details {
+            display: grid;
+            gap: 12px;
+        }
+
+        .signature-detail {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .signature-detail strong {
+            min-width: 100px;
+            color: #333;
+            flex-shrink: 0;
+        }
+
+        .signature-detail p {
+            margin: 0;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .security-issues-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .security-issue-card {
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .security-issue-card.yuqori {
+            background: #ffe6e6;
+            border-left-color: #dc3545;
+        }
+
+        .security-issue-card.o'rta {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+
+        .security-issue-card.ma lumot {
+            background: #d1ecf1;
+            border-left-color: #17a2b8;
+        }
+
+        .link-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .link-stat {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .link-stat.safe { background: #28a745; }
+        .link-stat.danger { background: #dc3545; }
+        .link-stat.info { background: #17a2b8; }
+
+        .broken-links-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .broken-link-card {
+            background: #fff5f5;
+            border: 1px solid #f8d7da;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .links-grid {
+            display: grid;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+        }
+
+        .link-status {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .link-status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        @media (max-width: 768px) {
+            .seo-performance-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .whois-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .file-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .app-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .permissions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .malware-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .link-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .malware-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .link-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>
