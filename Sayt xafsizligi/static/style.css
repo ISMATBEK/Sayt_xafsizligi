@@ -1,0 +1,769 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ===== HEADER STYLES ===== */
+.main-header {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 60px 20px;
+    border-radius: 15px;
+    margin-bottom: 40px;
+    backdrop-filter: blur(10px);
+}
+
+.header-content h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.tagline {
+    font-size: 1.5rem;
+    opacity: 0.9;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+/* ===== STATS SECTION ===== */
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card i {
+    font-size: 2.5rem;
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+/* ===== MAIN SCAN SECTION ===== */
+.main-scan-section {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+}
+
+.input-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 15px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+}
+
+.scan-btn {
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: transform 0.2s;
+}
+
+.scan-btn:hover {
+    transform: translateY(-2px);
+}
+
+.form-note {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+/* ===== FEATURES SECTION ===== */
+.features-section {
+    margin-bottom: 40px;
+}
+
+.feature-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.feature-icon {
+    font-size: 2rem;
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.feature-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.feature-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.feature-btn {
+    padding: 10px 20px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.file-input {
+    flex: 1;
+    padding: 10px;
+    border: 2px dashed #ddd;
+    border-radius: 5px;
+    background: #f8f9fa;
+}
+
+/* ===== TUTORIAL SECTION ===== */
+.tutorial-section {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+}
+
+.tutorial-steps {
+    display: grid;
+    gap: 20px;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.step-number {
+    background: #667eea;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* ===== ERROR AND SUCCESS MESSAGES ===== */
+.error-message {
+    background: #ffe6e6;
+    color: #dc3545;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+    border-left: 4px solid #dc3545;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+    border-left: 4px solid #28a745;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ===== RESULTS STYLES ===== */
+.results-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 0;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.results-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.result-section {
+    padding: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.result-section:last-child {
+    border-bottom: none;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.status-badge {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.status-badge.safe { background: #e8f5e8; color: #2e7d32; }
+.status-badge.danger { background: #ffebee; color: #c62828; }
+.status-badge.info { background: #e3f2fd; color: #1565c0; }
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.summary-card {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.summary-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+/* ===== PORT ANALYSIS ===== */
+.port-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.stat {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.ports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.port-card {
+    background: white;
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+.port-card.critical { border-color: #dc3545; background: #fff5f5; }
+.port-card.warning { border-color: #ffc107; background: #fffbf0; }
+.port-card.info { border-color: #17a2b8; background: #f0f9ff; }
+
+/* ===== VULNERABILITY CARDS ===== */
+.vulnerability-card {
+    border-radius: 10px;
+    padding: 25px;
+    border-left: 5px solid;
+    margin-bottom: 15px;
+}
+
+.vulnerability-card.yuqori {
+    background: #ffe6e6;
+    border-left-color: #dc3545;
+}
+
+.vulnerability-card.orta {
+    background: #fff3cd;
+    border-left-color: #ffc107;
+}
+
+.vulnerability-card.past {
+    background: #d1ecf1;
+    border-left-color: #17a2b8;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    background: #343a40;
+    color: white;
+    text-align: center;
+    padding: 30px 0;
+    margin-top: 60px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .header-content h1 {
+        font-size: 2rem;
+    }
+
+    .input-group {
+        flex-direction: column;
+    }
+
+    .feature-form {
+        flex-direction: column;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* ===== MALWARE ANALYSIS STYLES ===== */
+.malware-analysis {
+    margin-top: 20px;
+}
+
+.malware-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.malware-stat {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    transition: transform 0.2s;
+}
+
+.malware-stat:hover {
+    transform: translateY(-2px);
+}
+
+.malware-stat.high-risk { background: #dc3545; }
+.malware-stat.medium-risk { background: #fd7e14; }
+.malware-stat.low-risk { background: #28a745; }
+.malware-stat.info { background: #17a2b8; }
+
+.malware-signatures {
+    display: grid;
+    gap: 15px;
+}
+
+.malware-signature-card {
+    border-radius: 10px;
+    padding: 25px;
+    border-left: 5px solid;
+    transition: transform 0.2s;
+}
+
+.malware-signature-card:hover {
+    transform: translateX(5px);
+}
+
+.malware-signature-card.high-risk {
+    background: #ffe6e6;
+    border-left-color: #dc3545;
+}
+
+.malware-signature-card.medium-risk {
+    background: #fff3cd;
+    border-left-color: #ffc107;
+}
+
+.malware-signature-card.low-risk {
+    background: #d1ecf1;
+    border-left-color: #17a2b8;
+}
+
+.signature-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.signature-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.signature-name h4 {
+    margin: 0;
+    color: #333;
+}
+
+.detection-badge {
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.detection-badge.detected {
+    background: #dc3545;
+    color: white;
+}
+
+.detection-badge.clean {
+    background: #28a745;
+    color: white;
+}
+
+.signature-details {
+    display: grid;
+    gap: 12px;
+}
+
+.signature-detail {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.signature-detail strong {
+    min-width: 100px;
+    color: #333;
+    flex-shrink: 0;
+}
+
+.signature-detail p {
+    margin: 0;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* ===== LINK RISK ANALYSIS ===== */
+.link-risk-analysis {
+    margin-top: 20px;
+}
+
+.link-risk-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.link-risk-stat {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+}
+
+.link-risk-stat.malicious { background: #dc3545; }
+.link-risk-stat.suspicious { background: #fd7e14; }
+.link-risk-stat.safe { background: #28a745; }
+.link-risk-stat.external { background: #17a2b8; }
+
+.risky-links-list {
+    display: grid;
+    gap: 15px;
+}
+
+.risky-link-card {
+    border-radius: 10px;
+    padding: 25px;
+    border-left: 5px solid;
+}
+
+.risky-link-card.high-risk {
+    background: #ffe6e6;
+    border-left-color: #dc3545;
+}
+
+.risky-link-card.medium-risk {
+    background: #fff3cd;
+    border-left-color: #ffc107;
+}
+
+.risky-link-card.low-risk {
+    background: #d1ecf1;
+    border-left-color: #17a2b8;
+}
+
+.link-risk-details {
+    display: grid;
+    gap: 12px;
+}
+
+.link-risk-detail {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.link-risk-detail strong {
+    min-width: 80px;
+    color: #333;
+    flex-shrink: 0;
+}
+
+.link-risk-detail p {
+    margin: 0;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* ===== APP INFO SECTION ===== */
+.app-info-section {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.app-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.app-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: white;
+    border-radius: 8px;
+}
+
+/* ===== PERMISSION DETAILS ===== */
+.permission-details {
+    margin-top: 20px;
+}
+
+.permission-card-detailed {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 4px solid;
+    transition: transform 0.2s;
+}
+
+.permission-card-detailed:hover {
+    transform: translateX(5px);
+}
+
+.permission-card-detailed.high-risk {
+    border-left-color: #dc3545;
+    background: #fff5f5;
+}
+
+.permission-card-detailed.medium-risk {
+    border-left-color: #ffc107;
+    background: #fffbf0;
+}
+
+.permission-card-detailed.low-risk {
+    border-left-color: #17a2b8;
+    background: #f0f9ff;
+}
+
+.permission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.permission-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.permission-risk-badge {
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.permission-risk-badge.high-risk {
+    background: #dc3545;
+    color: white;
+}
+
+.permission-risk-badge.medium-risk {
+    background: #fd7e14;
+    color: white;
+}
+
+.permission-risk-badge.low-risk {
+    background: #17a2b8;
+    color: white;
+}
+
+.permission-description {
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.permission-damage {
+    color: #721c24;
+    background: #f8d7da;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+/* ===== INFO PANELS ===== */
+.info-panel {
+    background: #e3f2fd;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-left: 5px solid #2196f3;
+}
+
+.info-panel h3 {
+    color: #0d47a1;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-panel p {
+    color: #1565c0;
+    line-height: 1.6;
+}
+
+.tool-info {
+    background: #f3e5f5;
+    border-left-color: #9c27b0;
+}
+
+.tool-info h3 {
+    color: #4a148c;
+}
+
+.tool-info p {
+    color: #6a1b9a;
+}
+
+.warning-panel {
+    background: #fff3e0;
+    border-left-color: #ff9800;
+}
+
+.warning-panel h3 {
+    color: #e65100;
+}
+
+.warning-panel p {
+    color: #ef6c00;
+}
+
+/* ===== RESPONSIVE UPDATES ===== */
+@media (max-width: 768px) {
+    .malware-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .link-risk-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .app-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .permission-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .malware-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .link-risk-stats {
+        grid-template-columns: 1fr;
+    }
+}
