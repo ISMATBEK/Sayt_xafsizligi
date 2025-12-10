@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory
 import socket
 import requests
 from bs4 import BeautifulSoup
@@ -21,6 +21,33 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 app = Flask(__name__)
 app.secret_key = 'veb-sayt-skanneri-secret-key-2024'
+
+
+# ========== ADS.TXT FAYLINI SERVE QILISH ==========
+@app.route('/ads.txt')
+def serve_ads_txt():
+    """
+    Google AdSense tasdiqlash faylini serve qilish
+    """
+    return send_from_directory('static', 'ads.txt')
+
+
+# ========== GOOGLE VERIFICATION FAYLINI SERVE QILISH ==========
+@app.route('/google-adsense-verification.html')
+def serve_verification_file():
+    """
+    Google AdSense verification faylini serve qilish
+    """
+    return send_from_directory('static', 'google-adsense-verification.html')
+
+
+# ========== BOSHQA STATIC FAYLLARNI SERVE QILISH ==========
+@app.route('/robots.txt')
+def serve_robots_txt():
+    """
+    robots.txt faylini serve qilish
+    """
+    return send_from_directory('static', 'robots.txt')
 
 
 # ========== Kengaytirilgan Port Skanerlash ==========
