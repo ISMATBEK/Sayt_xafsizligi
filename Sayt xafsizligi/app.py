@@ -2,24 +2,18 @@ from flask import Flask, render_template, request, jsonify, session, redirect, u
 import socket
 import requests
 from bs4 import BeautifulSoup
-import threading
-from urllib.parse import urlparse, urljoin
-import time
-import concurrent.futures
-import whois
-from datetime import datetime
+from urllib.parse import urlparse
+import datetime
 import os
-import tempfile
 import hashlib
-import json
 import random
+import json
 
-# Vercel muhiti uchun sozlamalar
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'veb-sayt-skanneri-secret-key-2025')
-app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB maksimal fayl hajmi
+app.secret_key = os.environ.get('SECRET_KEY', 'cyberdash-secret-key-2025')
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB
 
-# Kiberxavfsizlik maslahatlari va ma'lumotlar bazasi
+# ========== Kiberxavfsizlik ma'lumotlar bazasi ==========
 CYBER_TIPS = [
     {
         "id": 1,
@@ -32,7 +26,7 @@ CYBER_TIPS = [
     {
         "id": 2,
         "title": "📱 Ikki Bosqichli Autentifikatsiya",
-        "content": "Google, Telegram va boshqa xizmatlarda 2FA (ikki bosqichli autentifikatsiya) ni yoqing. Bu akkauntingizni himoya qiladi.",
+        "content": "Google, Telegram va boshqa xizmatlarda 2FA (ikki bosqichli autentifikatsiya) ni yoqing.",
         "icon": "fas fa-mobile-alt",
         "color": "#28a745",
         "category": "2fa"
@@ -40,7 +34,7 @@ CYBER_TIPS = [
     {
         "id": 3,
         "title": "⚠️ Fishingdan Saqlaning",
-        "content": "Shubhali linklarga kirmang. Bank, ijtimoiy tarmoq xabarlariga ishonmang. Har doim manzilni tekshiring.",
+        "content": "Shubhali linklarga kirmang. Bank, ijtimoiy tarmoq xabarlariga ishonmang.",
         "icon": "fas fa-exclamation-triangle",
         "color": "#ffc107",
         "category": "phishing"
@@ -48,99 +42,29 @@ CYBER_TIPS = [
     {
         "id": 4,
         "title": "🔄 Dasturlarni Yangilang",
-        "content": "Operatsion tizim, brauzer va antivirus dasturlaringizni muntazam yangilab turing. Bu xavfsizlik teshiklarini yopadi.",
+        "content": "Operatsion tizim, brauzer va antivirus dasturlaringizni muntazam yangilab turing.",
         "icon": "fas fa-sync-alt",
         "color": "#17a2b8",
         "category": "updates"
     },
     {
         "id": 5,
-        "title": "📊 Shaxsiy Ma'lumotlar",
-        "content": "Ijtimoiy tarmoqlarda shaxsiy ma'lumotlaringizni (manzil, telefon, tug'ilgan sana) yashiring.",
-        "icon": "fas fa-user-secret",
-        "color": "#6f42c1",
-        "category": "privacy"
-    },
-    {
-        "id": 6,
-        "title": "📧 Spam Xabarlar",
-        "content": "Noma'lum manzillardan kelgan xabarlarni ochmang. Ulardagi link va fayllar xavfli bo'lishi mumkin.",
-        "icon": "fas fa-envelope",
-        "color": "#20c997",
-        "category": "email"
-    },
-    {
-        "id": 7,
-        "title": "🔍 Antivirus Tekshiruvi",
-        "content": "Har hafta antivirus dasturi bilan to'liq skanerlash o'tkazing. Telefon va kompyuteringizni himoyalang.",
-        "icon": "fas fa-shield-virus",
-        "color": "#fd7e14",
-        "category": "antivirus"
-    },
-    {
-        "id": 8,
-        "title": "📱 Ruxsatlarni Tekshiring",
-        "content": "Ilovalarga berilgan ruxsatlarni tekshiring. Keraksiz ruxsatlarni olib tashlang (masalan, chiroqqa internet ruxsati kerakmas).",
-        "icon": "fas fa-permission",
-        "color": "#e83e8c",
-        "category": "permissions"
-    },
-    {
-        "id": 9,
         "title": "🌐 Ochiq Wi-Fi Xavfi",
         "content": "Jamoat Wi-Fi tarmoqlarida bank, email kabi muhim ma'lumotlarni kiritmang. VPN ishlating.",
         "icon": "fas fa-wifi",
         "color": "#6610f2",
         "category": "wifi"
-    },
-    {
-        "id": 10,
-        "title": "💾 Zaxira Nusxa",
-        "content": "Muhim fayllaringizni bulut va tashqi xotiraga nusxalab qo'ying. Ransomware hujumlaridan saqlaning.",
-        "icon": "fas fa-database",
-        "color": "#d63384",
-        "category": "backup"
     }
 ]
 
-CYBER_STATS = {
-    "daily_attacks": "5000+",
-    "protected_users": "1M+",
-    "scanned_sites": "100K+",
-    "threats_blocked": "50K+"
-}
-
-# ========== Kiberxavfsizlik Yangiliklari ==========
-CYBER_NEWS = [
-    {
-        "title": "Yangi Android banking trojani aniqlandi",
-        "date": "2025-02-20",
-        "summary": "Xavfli dastur banking ilovalari ma'lumotlarini o'g'irlayapti",
-        "source": "Kaspersky"
-    },
-    {
-        "title": "Telegram fishing hujumlari kuchaydi",
-        "date": "2025-02-18",
-        "summary": "Soxta Telegram akkauntlari orqali ma'lumotlar o'g'irlanmoqda",
-        "source": "ESET"
-    },
-    {
-        "title": "WhatsApp'da yangi xavfsizlik muammosi",
-        "date": "2025-02-15",
-        "summary": "Zararli linklar orqali akkauntlarni egallash holatlari",
-        "source": "Check Point"
-    }
-]
-
-# ========== Kiberxavfsizlik Vikipediyasi ==========
 CYBER_WIKI = {
     "phishing": {
-        "title": "Fishing (Phishing) Nima?",
+        "title": "Fishing (Phishing)",
         "description": "Fishing - bu firibgarlarning soxta veb-saytlar yoki xabarlar orqali shaxsiy ma'lumotlarni o'g'irlash usuli.",
         "signs": [
             "Shoshilinch xabarlar (Hisobingiz yopiladi)",
             "Sovrin yutdingiz degan xabarlar",
-            "Soxta domenlar (g00gle.com, faceb00k.com)",
+            "Soxta domenlar (g00gle.com)",
             "Grammatik xatolar"
         ],
         "protection": [
@@ -150,254 +74,209 @@ CYBER_WIKI = {
         ]
     },
     "malware": {
-        "title": "Zararli Dasturlar (Malware)",
+        "title": "Zararli Dasturlar",
         "description": "Kompyuter yoki telefoningizga zarar yetkazuvchi dasturlar.",
         "types": [
             "Virus - fayllarni buzadi",
             "Trojan - boshqa dastur ko'rinishida",
-            "Ransomware - fayllarni qulflab, pul talab qiladi",
-            "Spyware - kuzatuv dasturi"
+            "Ransomware - fayllarni qulflab, pul talab qiladi"
         ],
         "protection": [
             "Antivirus o'rnating",
-            "Noma'lum manbalardan dastur o'rnatmang",
-            "Muntazam yangilang"
-        ]
-    },
-    "password": {
-        "title": "Xavfsiz Parollar",
-        "description": "Kuchli parollar akkauntlaringizni himoya qiladi.",
-        "rules": [
-            "Kamida 8 belgi",
-            "Katta va kichik harflar",
-            "Raqamlar va maxsus belgilar",
-            "Har bir sayt uchun unikal parol"
-        ],
-        "tools": [
-            "Parol menejerlari (Bitwarden, LastPass)",
-            "Ikki bosqichli autentifikatsiya"
-        ]
-    },
-    "2fa": {
-        "title": "Ikki Bosqichli Autentifikatsiya (2FA)",
-        "description": "Akkauntlaringizga qo'shimcha himoya qatlami.",
-        "methods": [
-            "SMS kodlari (xavfsiz emas)",
-            "Authenticator ilovalari (Google Authenticator)",
-            "Hardware tokenlar (YubiKey)"
-        ]
-    },
-    "vpn": {
-        "title": "VPN (Virtual Private Network)",
-        "description": "Internetdagi maxfiylik va xavfsizlikni ta'minlaydi.",
-        "benefits": [
-            "IP manzilingizni yashiradi",
-            "Ma'lumotlaringizni shifrlaydi",
-            "Ochiq Wi-Fi tarmoqlarida himoya"
+            "Noma'lum manbalardan dastur o'rnatmang"
         ]
     }
 }
 
-# ========== ASOSIY ROUTE ==========
+# ========== ROUTES ==========
+
 @app.route('/')
 def index():
-    """Bosh sahifa - kiberxavfsizlik maslahatlari bilan"""
-    # Kunlik maslahat
+    """Bosh sahifa"""
     daily_tip = random.choice(CYBER_TIPS)
-    
-    # Kategoriyalar bo'yicha maslahatlar
-    tips_by_category = {}
-    for tip in CYBER_TIPS:
-        cat = tip['category']
-        if cat not in tips_by_category:
-            tips_by_category[cat] = []
-        tips_by_category[cat].append(tip)
-    
     return render_template('index.html', 
                          daily_tip=daily_tip,
                          cyber_tips=CYBER_TIPS,
-                         cyber_stats=CYBER_STATS,
-                         cyber_news=CYBER_NEWS,
-                         cyber_wiki=CYBER_WIKI,
-                         tips_by_category=tips_by_category)
+                         active_page='home')
 
-@app.route('/wiki/<topic>')
-def cyber_wiki_topic(topic):
+@app.route('/scanner')
+def scanner():
+    """Website scanner sahifasi"""
+    return render_template('scanner.html', active_page='scanner')
+
+@app.route('/link-checker')
+def link_checker():
+    """Link checker sahifasi"""
+    return render_template('link_checker.html', active_page='link_checker')
+
+@app.route('/apk-analyzer')
+def apk_analyzer():
+    """APK analyzer sahifasi"""
+    return render_template('apk_analyzer.html', active_page='apk_analyzer')
+
+@app.route('/cyber-tips')
+def cyber_tips():
+    """Kiberxavfsizlik maslahatlari"""
+    return render_template('cyber_tips.html', 
+                         cyber_tips=CYBER_TIPS,
+                         active_page='cyber_tips')
+
+@app.route('/cyber-wiki')
+def cyber_wiki():
     """Kiberxavfsizlik vikipediyasi"""
-    if topic in CYBER_WIKI:
-        return jsonify(CYBER_WIKI[topic])
-    return jsonify({"error": "Mavzu topilmadi"}), 404
+    return render_template('cyber_wiki.html', 
+                         cyber_wiki=CYBER_WIKI,
+                         active_page='cyber_wiki')
 
-@app.route('/daily-tip')
-def daily_tip():
-    """Kunlik maslahat"""
-    return jsonify(random.choice(CYBER_TIPS))
-
-@app.route('/scan', methods=['POST'])
+@app.route('/scan-website', methods=['POST'])
 def scan_website():
-    """Sayt skanerlash"""
+    """Saytni skanerlash"""
     try:
         website = request.form.get('website', '').strip()
         
         if not website:
-            return render_template('index.html', 
-                                 daily_tip=random.choice(CYBER_TIPS),
-                                 cyber_tips=CYBER_TIPS,
-                                 cyber_stats=CYBER_STATS,
-                                 error='Sayt manzilini kiriting!')
+            return jsonify({'error': 'Sayt manzilini kiriting!'})
         
-        # Domenni ajratib olish
+        # Domainni ajratish
         if website.startswith(('http://', 'https://')):
             domain = urlparse(website).netloc
         else:
             domain = website.split('/')[0]
         
-        # Tezkor skanerlash (demo ma'lumotlar)
+        # Demo skanerlash natijalari
         results = {
             'scan_type': 'website',
             'domain': domain,
             'website': website,
-            'scan_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'port_scan': {
-                'ip': socket.gethostbyname(domain) if domain else '0.0.0.0',
-                'open_ports': [
-                    {'port': 80, 'service': 'HTTP', 'status': 'open'},
-                    {'port': 443, 'service': 'HTTPS', 'status': 'open'}
-                ] if not domain.startswith('test') else []
-            },
+            'scan_time': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'security_scan': [
                 {
                     'type': 'HTTPS Tekshiruvi',
                     'level': 'Yuqori' if not website.startswith('https') else 'Past',
-                    'description': 'Sayt HTTPS dan foydalanmayapti' if not website.startswith('https') else 'HTTPS ishlatilgan',
-                    'recommendation': 'SSL sertifikatini o\'rnating' if not website.startswith('https') else 'Yaxshi'
+                    'description': 'Sayt HTTPS dan foydalanmayapti. Ma\'lumotlar shifrlanmayapti!' if not website.startswith('https') else 'HTTPS ishlatilgan. Xavfsiz ulanish.',
+                    'recommendation': 'SSL sertifikatini o\'rnating va HTTPS ga o\'tishingiz kerak' if not website.startswith('https') else 'Yaxshi, HTTPS ishlatilyapti'
+                },
+                {
+                    'type': 'Server Ma\'lumoti',
+                    'level': 'O\'rta',
+                    'description': 'Server: nginx/1.18.0',
+                    'recommendation': 'Server versiyasini yashirishingiz tavsiya etiladi'
                 }
             ]
         }
         
         session['last_results'] = results
-        return render_template('results.html', results=results)
+        return jsonify({'success': True, 'redirect': url_for('results')})
         
     except Exception as e:
-        return render_template('index.html', 
-                             daily_tip=random.choice(CYBER_TIPS),
-                             cyber_tips=CYBER_TIPS,
-                             cyber_stats=CYBER_STATS,
-                             error=f'Skanerlashda xatolik: {str(e)}')
+        return jsonify({'error': str(e)})
 
 @app.route('/check-links', methods=['POST'])
-def check_links_route():
+def check_links():
     """Linklarni tekshirish"""
     try:
         website = request.form.get('website', '').strip()
         
         if not website:
-            return render_template('index.html', 
-                                 daily_tip=random.choice(CYBER_TIPS),
-                                 cyber_tips=CYBER_TIPS,
-                                 cyber_stats=CYBER_STATS,
-                                 error='Sayt manzilini kiriting!')
+            return jsonify({'error': 'Sayt manzilini kiriting!'})
         
         # Demo link tekshiruvi
-        link_results = {
-            'total_links': 15,
-            'broken_links': [],
-            'suspicious_links': [],
-            'malicious_links': [],
-            'internal_links': [
-                {'url': '/about', 'text': 'Biz haqimizda'},
-                {'url': '/contact', 'text': 'Bog\'lanish'}
-            ],
-            'external_links': [
-                {'url': 'https://google.com', 'text': 'Google'}
-            ]
-        }
-        
         results = {
             'scan_type': 'links',
             'website': website,
-            'scan_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'link_check': link_results
-        }
-        
-        session['last_results'] = results
-        return render_template('results.html', results=results)
-        
-    except Exception as e:
-        return render_template('index.html', 
-                             daily_tip=random.choice(CYBER_TIPS),
-                             cyber_tips=CYBER_TIPS,
-                             cyber_stats=CYBER_STATS,
-                             error=f'Link tekshiruvida xatolik: {str(e)}')
-
-@app.route('/analyze-apk', methods=['POST'])
-def analyze_apk_route():
-    """APK faylni tahlil qilish"""
-    try:
-        if 'file' not in request.files:
-            return render_template('index.html', 
-                                 daily_tip=random.choice(CYBER_TIPS),
-                                 cyber_tips=CYBER_TIPS,
-                                 cyber_stats=CYBER_STATS,
-                                 error='APK faylini yuklang')
-        
-        file = request.files['file']
-        if file.filename == '':
-            return render_template('index.html', error='Fayl tanlanmagan')
-        
-        if not file.filename.lower().endswith('.apk'):
-            return render_template('index.html', error='Faqat APK fayllar qabul qilinadi')
-        
-        # Demo APK tahlili
-        apk_results = {
-            'file_info': {
-                'file_name': file.filename,
-                'file_size_mb': round(len(file.read()) / (1024 * 1024), 2)
-            },
-            'permissions': [
-                {
-                    'name': 'Internet',
-                    'risk': 'PAST',
-                    'description': 'Internetga ulanish imkoniyati'
-                },
-                {
-                    'name': 'Read Contacts',
-                    'risk': 'O\'RTA',
-                    'description': 'Kontaktlarni o\'qish'
-                }
-            ],
-            'security_issues': [],
-            'malware_analysis': {
-                'risk_score': 25,
-                'detected': 0,
-                'verdict': 'XAVFSIZ'
+            'scan_time': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'link_check': {
+                'total_links': 15,
+                'broken_links': [],
+                'internal_links': [
+                    {'url': '/about', 'text': 'Biz haqimizda'},
+                    {'url': '/contact', 'text': 'Bog\'lanish'}
+                ],
+                'external_links': [
+                    {'url': 'https://google.com', 'text': 'Google'}
+                ]
             }
         }
         
+        session['last_results'] = results
+        return jsonify({'success': True, 'redirect': url_for('results')})
+        
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+@app.route('/analyze-apk', methods=['POST'])
+def analyze_apk():
+    """APK faylni tahlil qilish"""
+    try:
+        if 'file' not in request.files:
+            return jsonify({'error': 'APK faylini yuklang!'})
+        
+        file = request.files['file']
+        
+        if file.filename == '':
+            return jsonify({'error': 'Fayl tanlanmagan!'})
+        
+        if not file.filename.lower().endswith('.apk'):
+            return jsonify({'error': 'Faqat .apk fayllar qabul qilinadi!'})
+        
+        # Faylni o'qish
+        file_data = file.read()
+        file_size = len(file_data) / (1024 * 1024)  # MB
+        
+        if file_size > 10:
+            return jsonify({'error': 'Fayl hajmi 10MB dan katta!'})
+        
+        # Demo APK tahlili
         results = {
             'scan_type': 'apk',
-            'scan_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'apk_analysis': apk_results
+            'scan_time': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'apk_analysis': {
+                'file_info': {
+                    'file_name': file.filename,
+                    'file_size_mb': round(file_size, 2)
+                },
+                'permissions': [
+                    {
+                        'name': 'Internet',
+                        'risk': 'PAST',
+                        'description': 'Internetga ulanish imkoniyati'
+                    },
+                    {
+                        'name': 'Read Contacts',
+                        'risk': 'O\'RTA',
+                        'description': 'Kontaktlarni o\'qish'
+                    }
+                ],
+                'malware_analysis': {
+                    'risk_score': random.randint(10, 90),
+                    'detected': random.randint(0, 2),
+                    'verdict': random.choice(['XAVFSIZ', 'SHAXBILI', 'XAVFLI'])
+                }
+            }
         }
         
         session['last_results'] = results
-        return render_template('results.html', results=results)
+        return jsonify({'success': True, 'redirect': url_for('results')})
         
     except Exception as e:
-        return render_template('index.html', 
-                             daily_tip=random.choice(CYBER_TIPS),
-                             cyber_tips=CYBER_TIPS,
-                             cyber_stats=CYBER_STATS,
-                             error=f'APK tahlilida xatolik: {str(e)}')
+        return jsonify({'error': str(e)})
 
 @app.route('/results')
-def show_results():
+def results():
     """Natijalarni ko'rsatish"""
     results = session.get('last_results')
     if not results:
         return redirect(url_for('index'))
-    return render_template('results.html', results=results)
+    return render_template('results.html', results=results, active_page='results')
 
+@app.route('/wiki/<topic>')
+def wiki_topic(topic):
+    """Wiki mavzusini qaytarish"""
+    if topic in CYBER_WIKI:
+        return jsonify(CYBER_WIKI[topic])
+    return jsonify({'error': 'Mavzu topilmadi'}), 404
+
+# ========== STATIC FILES ==========
 @app.route('/ads.txt')
 def serve_ads_txt():
     return send_from_directory('static', 'ads.txt')
@@ -410,8 +289,5 @@ def serve_verification_file():
 def serve_robots_txt():
     return send_from_directory('static', 'robots.txt')
 
-# Vercel uchun
-app.debug = False
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
