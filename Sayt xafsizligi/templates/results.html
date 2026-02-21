@@ -1,562 +1,331 @@
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Skanerlash Natijalari - KiberXavfsizlik Markazi</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 15px;
-        }
-        
-        .results-header {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 25px 20px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .results-header h1 {
-            font-size: clamp(22px, 5vw, 28px);
-            color: #2d3748;
-            margin-bottom: 10px;
-        }
-        
-        .back-button {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 25px;
-            text-decoration: none;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-        
-        .result-section {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .section-header h2 {
-            font-size: 18px;
-            color: #2d3748;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        
-        .status-badge.info { background: #4299e1; color: white; }
-        .status-badge.safe { background: #48bb78; color: white; }
-        .status-badge.warning { background: #ed8936; color: white; }
-        .status-badge.danger { background: #f56565; color: white; }
-        
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-        
-        @media (min-width: 768px) {
-            .summary-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        
-        .summary-card {
-            background: #f7fafc;
-            border-radius: 15px;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .summary-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-        
-        .summary-content h3 {
-            font-size: 12px;
-            color: #718096;
-            margin-bottom: 3px;
-        }
-        
-        .summary-value {
-            font-size: 14px;
-            font-weight: 600;
-            color: #2d3748;
-        }
-        
-        .summary-value.danger { color: #f56565; }
-        .summary-value.warning { color: #ed8936; }
-        .summary-value.safe { color: #48bb78; }
-        
-        .vulnerabilities-list {
-            display: grid;
-            gap: 12px;
-        }
-        
-        .vulnerability-card {
-            border-left: 4px solid;
-            border-radius: 10px;
-            padding: 15px;
-            background: #f7fafc;
-        }
-        
-        .vulnerability-card.yuqori { border-left-color: #f56565; }
-        .vulnerability-card.orta { border-left-color: #ed8936; }
-        .vulnerability-card.past { border-left-color: #48bb78; }
-        
-        .vuln-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        
-        .vuln-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .vuln-title i { font-size: 16px; }
-        .vuln-title h4 { font-size: 15px; color: #2d3748; }
-        
-        .severity-badge {
-            padding: 3px 10px;
-            border-radius: 15px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        
-        .severity-badge.yuqori { background: #f56565; color: white; }
-        .severity-badge.orta { background: #ed8936; color: white; }
-        .severity-badge.past { background: #48bb78; color: white; }
-        
-        .vuln-body {
-            font-size: 13px;
-            color: #4a5568;
-        }
-        
-        .vuln-description, .vuln-recommendation {
-            margin-bottom: 8px;
-        }
-        
-        .vuln-description strong, .vuln-recommendation strong {
-            display: block;
-            margin-bottom: 3px;
-            color: #2d3748;
-        }
-        
-        .ports-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .port-card {
-            background: #f7fafc;
-            border-radius: 10px;
-            padding: 12px;
-            text-align: center;
-        }
-        
-        .port-card.critical { border-left: 3px solid #f56565; }
-        .port-card.warning { border-left: 3px solid #ed8936; }
-        .port-card.info { border-left: 3px solid #4299e1; }
-        
-        .port-number {
-            font-size: 16px;
-            font-weight: 600;
-            color: #2d3748;
-        }
-        
-        .port-service {
-            font-size: 12px;
-            color: #718096;
-            margin: 5px 0;
-        }
-        
-        .port-risk {
-            font-size: 11px;
-        }
-        
-        .conclusion-card {
-            border-radius: 15px;
-            padding: 20px;
-            border: 2px solid;
-        }
-        
-        .conclusion-card.safe { border-color: #48bb78; }
-        .conclusion-card.warning { border-color: #ed8936; }
-        .conclusion-card.danger { border-color: #f56565; }
-        
-        .conclusion-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .conclusion-header i { font-size: 20px; }
-        .conclusion-header h3 { font-size: 16px; color: #2d3748; }
-        
-        .conclusion-body {
-            font-size: 14px;
-            color: #4a5568;
-            line-height: 1.5;
-        }
-        
-        .recommendations {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #e2e8f0;
-        }
-        
-        .recommendations h4 {
-            font-size: 14px;
-            color: #2d3748;
-            margin-bottom: 10px;
-        }
-        
-        .recommendations ul {
-            list-style: none;
-        }
-        
-        .recommendations li {
-            padding: 5px 0;
-            font-size: 13px;
-        }
-        
-        .recommendations li:before {
-            content: "✓";
-            color: #48bb78;
-            margin-right: 8px;
-            font-weight: bold;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: rgba(255,255,255,0.9);
-            font-size: 12px;
-        }
-        
-        .share-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .share-btn {
-            padding: 10px 20px;
-            border-radius: 25px;
-            color: white;
-            text-decoration: none;
-            font-size: 13px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .share-btn.telegram { background: #0088cc; }
-        .share-btn.facebook { background: #3b5998; }
-        .share-btn.twitter { background: #1da1f2; }
-        
-        @media (max-width: 480px) {
-            .summary-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .ports-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .share-buttons {
-                flex-direction: column;
-            }
-            
-            .share-btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header class="results-header">
-            <h1>
-                <i class="fas fa-{% if results.scan_type == 'website' %}file-alt{% elif results.scan_type == 'links' %}link{% elif results.scan_type == 'apk' %}mobile-alt{% endif %}"></i>
-                {% if results.scan_type == 'website' %}
-                    Sayt Skanerlash Natijalari
-                {% elif results.scan_type == 'links' %}
-                    Link Tekshiruvi Natijalari
-                {% elif results.scan_type == 'apk' %}
-                    APK Tahlili Natijalari
-                {% endif %}
-            </h1>
-            <p>Skanerlash vaqti: {{ results.scan_time }}</p>
-            <a href="{{ url_for('index') }}" class="back-button">
-                <i class="fas fa-arrow-left"></i> Bosh sahifa
-            </a>
-        </header>
+{% extends "base.html" %}
 
-        <div class="results-container">
-            <!-- Umumiy ma'lumotlar -->
-            <div class="result-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-chart-bar"></i> Umumiy Ma'lumot</h2>
-                </div>
+{% block page_title %}
+    {% if results.scan_type == 'website' %}
+        Sayt Skanerlash Natijalari
+    {% elif results.scan_type == 'links' %}
+        Link Tekshiruvi Natijalari
+    {% elif results.scan_type == 'apk' %}
+        APK Tahlili Natijalari
+    {% endif %}
+{% endblock %}
 
-                <div class="summary-grid">
-                    {% if results.scan_type == 'website' %}
-                    <div class="summary-card">
-                        <div class="summary-icon"><i class="fas fa-globe"></i></div>
-                        <div class="summary-content">
-                            <h3>Domen</h3>
-                            <p class="summary-value">{{ results.domain }}</p>
-                        </div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-icon"><i class="fas fa-server"></i></div>
-                        <div class="summary-content">
-                            <h3>IP Manzil</h3>
-                            <p class="summary-value">{{ results.port_scan.ip if results.port_scan else 'Noma\'lum' }}</p>
-                        </div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-icon"><i class="fas fa-shield-alt"></i></div>
-                        <div class="summary-content">
-                            <h3>Xavfsizlik</h3>
-                            <p class="summary-value {{ 'danger' if results.security_scan|length > 0 }}">
-                                {{ results.security_scan|length }} muammo
-                            </p>
-                        </div>
-                    </div>
-                    {% elif results.scan_type == 'links' %}
-                    <div class="summary-card">
-                        <div class="summary-icon"><i class="fas fa-link"></i></div>
-                        <div class="summary-content">
-                            <h3>Sayt</h3>
-                            <p class="summary-value">{{ results.website }}</p>
-                        </div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-icon"><i class="fas fa-list"></i></div>
-                        <div class="summary-content">
-                            <h3>Jami Linklar</h3>
-                            <p class="summary-value">{{ results.link_check.total_links }}</p>
-                        </div>
-                    </div>
-                    {% elif results.scan_type == 'apk' %}
-                    <div class="summary-card">
-                        <div class="summary-icon"><i class="fas fa-file"></i></div>
-                        <div class="summary-content">
-                            <h3>Fayl nomi</h3>
-                            <p class="summary-value">{{ results.apk_analysis.file_info.file_name }}</p>
-                        </div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-icon"><i class="fas fa-weight"></i></div>
-                        <div class="summary-content">
-                            <h3>Hajmi</h3>
-                            <p class="summary-value">{{ results.apk_analysis.file_info.file_size_mb }} MB</p>
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
+{% block page_subtitle %}
+    Skanerlash vaqti: {{ results.scan_time }}
+{% endblock %}
 
-            <!-- Website Scan Results -->
-            {% if results.scan_type == 'website' and results.security_scan %}
-            <div class="result-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-shield-alt"></i> Xavfsizlik Tahlili</h2>
-                </div>
-                
-                <div class="vulnerabilities-list">
-                    {% for vuln in results.security_scan %}
-                    <div class="vulnerability-card {{ vuln.level.lower() }}">
-                        <div class="vuln-header">
-                            <div class="vuln-title">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <h4>{{ vuln.type }}</h4>
-                            </div>
-                            <span class="severity-badge {{ vuln.level.lower() }}">{{ vuln.level }}</span>
-                        </div>
-                        <div class="vuln-body">
-                            <div class="vuln-description">
-                                <strong>Tavsif:</strong>
-                                <p>{{ vuln.description }}</p>
-                            </div>
-                            <div class="vuln-recommendation">
-                                <strong>Tavsiya:</strong>
-                                <p>{{ vuln.recommendation }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-
-            <!-- Xulosa -->
-            <div class="result-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-clipboard-check"></i> Xulosa</h2>
-                </div>
-
-                <div class="conclusion-card 
-                    {% if results.scan_type == 'website' %}
-                        {% if results.security_scan|length > 2 %}danger{% elif results.security_scan|length > 0 %}warning{% else %}safe{% endif %}
-                    {% elif results.scan_type == 'apk' %}
-                        {% if results.apk_analysis.malware_analysis.risk_score > 50 %}warning{% else %}safe{% endif %}
-                    {% else %}
-                        safe
-                    {% endif %}">
-                    
-                    <div class="conclusion-header">
-                        <i class="fas fa-{% if results.scan_type == 'website' %}
-                            {% if results.security_scan|length > 2 %}exclamation-triangle{% elif results.security_scan|length > 0 %}exclamation-circle{% else %}check-circle{% endif %}
-                        {% else %}check-circle{% endif %}"></i>
-                        <h3>
-                            {% if results.scan_type == 'website' %}
-                                {% if results.security_scan|length > 2 %}
-                                    Xavfli
-                                {% elif results.security_scan|length > 0 %}
-                                    Qoniqarli
-                                {% else %}
-                                    Xavfsiz
-                                {% endif %}
-                            {% elif results.scan_type == 'apk' %}
-                                {% if results.apk_analysis.malware_analysis.risk_score > 50 %}
-                                    Ogohlantirish
-                                {% else %}
-                                    Xavfsiz
-                                {% endif %}
-                            {% else %}
-                                Xavfsiz
-                            {% endif %}
-                        </h3>
-                    </div>
-
-                    <div class="conclusion-body">
-                        {% if results.scan_type == 'website' %}
-                            {% if results.security_scan|length > 2 %}
-                                <p>Saytda jiddiy xavfsizlik muammolari mavjud. Darhol tuzatish tavsiya etiladi.</p>
-                            {% elif results.security_scan|length > 0 %}
-                                <p>Saytda ba'zi xavfsizlik muammolari mavjud. Tez orada tuzatish kerak.</p>
-                            {% else %}
-                                <p>Sayt xavfsizlik talablariga javob beradi. Hech qanday muammo topilmadi.</p>
-                            {% endif %}
-                        {% elif results.scan_type == 'apk' %}
-                            {% if results.apk_analysis.malware_analysis.risk_score > 50 %}
-                                <p>APK faylida shubhali elementlar topildi. Ehtiyot bo'ling!</p>
-                            {% else %}
-                                <p>APK fayli xavfsiz ko'rinadi. Hech qanday jiddiy muammo yo'q.</p>
-                            {% endif %}
-                        {% else %}
-                            <p>Sayt linklari tekshirildi. Barcha linklar ishlayapti.</p>
-                        {% endif %}
-
-                        <div class="recommendations">
-                            <h4>Tavsiyalar:</h4>
-                            <ul>
-                                <li>Antivirus dasturini yangilab turing</li>
-                                <li>Shubhali linklarga kirmang</li>
-                                <li>Muntazam xavfsizlik tekshiruvlarini o'tkazing</li>
-                                <li>Ikki bosqichli autentifikatsiyadan foydalaning</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Share Results -->
-            <div class="share-buttons">
-                <a href="#" class="share-btn telegram" onclick="shareTelegram()">
-                    <i class="fab fa-telegram"></i> Telegram'da ulashish
-                </a>
-                <a href="#" class="share-btn facebook" onclick="shareFacebook()">
-                    <i class="fab fa-facebook"></i> Facebook'da ulashish
-                </a>
-                <a href="#" class="share-btn twitter" onclick="shareTwitter()">
-                    <i class="fab fa-twitter"></i> Twitter'da ulashish
-                </a>
+{% block content %}
+<!-- Umumiy ma'lumotlar -->
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-chart-bar"></i>
+        <h2>Umumiy ma'lumotlar</h2>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        {% if results.scan_type == 'website' %}
+        <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
+            <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 5px;">🌐 Domen</div>
+            <div style="font-size: 18px; font-weight: 600;">{{ results.domain }}</div>
+        </div>
+        <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
+            <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 5px;">🛡️ Xavfsizlik</div>
+            <div style="font-size: 18px; font-weight: 600; color: {% if results.security_scan|length > 2 %}#ef4444{% elif results.security_scan|length > 0 %}#f59e0b{% else %}#10b981{% endif %};">
+                {{ results.security_scan|length }} ta muammo
             </div>
         </div>
-
-        <footer class="footer">
-            <p>© 2025 KiberXavfsizlik Markazi | Barcha huquqlar himoyalangan</p>
-        </footer>
+        
+        {% elif results.scan_type == 'links' %}
+        <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
+            <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 5px;">🔗 Jami linklar</div>
+            <div style="font-size: 18px; font-weight: 600;">{{ results.link_check.total_links }}</div>
+        </div>
+        <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
+            <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 5px;">🏠 Ichki linklar</div>
+            <div style="font-size: 18px; font-weight: 600;">{{ results.link_check.internal_links|length }}</div>
+        </div>
+        <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
+            <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 5px;">🌍 Tashqi linklar</div>
+            <div style="font-size: 18px; font-weight: 600;">{{ results.link_check.external_links|length }}</div>
+        </div>
+        
+        {% elif results.scan_type == 'apk' %}
+        <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
+            <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 5px;">📁 Fayl nomi</div>
+            <div style="font-size: 16px; font-weight: 600; word-break: break-all;">{{ results.apk_analysis.file_info.file_name }}</div>
+        </div>
+        <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
+            <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 5px;">📦 Hajmi</div>
+            <div style="font-size: 18px; font-weight: 600;">{{ results.apk_analysis.file_info.file_size_mb }} MB</div>
+        </div>
+        <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
+            <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 5px;">⚡ Xavf darajasi</div>
+            <div style="font-size: 18px; font-weight: 600; color: {% if results.apk_analysis.malware_analysis.risk_score > 70 %}#ef4444{% elif results.apk_analysis.malware_analysis.risk_score > 30 %}#f59e0b{% else %}#10b981{% endif %};">
+                {{ results.apk_analysis.malware_analysis.risk_score }}%
+            </div>
+        </div>
+        {% endif %}
     </div>
+</div>
 
-    <script>
-        function shareTelegram() {
-            const text = encodeURIComponent("Men saytimni xavfsizlikka tekshirdim. Siz ham tekshirib ko'ring! 🔐");
-            const url = encodeURIComponent(window.location.href);
-            window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
-        }
+<!-- Website security results -->
+{% if results.scan_type == 'website' and results.security_scan %}
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-shield-alt"></i>
+        <h2>Xavfsizlik tahlili</h2>
+    </div>
+    
+    <div style="display: grid; gap: 15px;">
+        {% for vuln in results.security_scan %}
+        <div style="background: {% if vuln.level == 'Yuqori' %}rgba(239,68,68,0.1){% elif vuln.level == 'O\'rta' %}rgba(245,158,11,0.1){% else %}rgba(16,185,129,0.1){% endif %}; border-left: 4px solid {% if vuln.level == 'Yuqori' %}#ef4444{% elif vuln.level == 'O\'rta' %}#f59e0b{% else %}#10b981{% endif %}; padding: 20px; border-radius: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-{% if vuln.level == 'Yuqori' %}exclamation-triangle{% elif vuln.level == 'O\'rta' %}exclamation-circle{% else %}info-circle{% endif %}" style="color: {% if vuln.level == 'Yuqori' %}#ef4444{% elif vuln.level == 'O\'rta' %}#f59e0b{% else %}#10b981{% endif %};"></i>
+                    <h3 style="margin: 0; font-size: 16px;">{{ vuln.type }}</h3>
+                </div>
+                <span class="badge {% if vuln.level == 'Yuqori' %}badge-danger{% elif vuln.level == 'O\'rta' %}badge-warning{% else %}badge-success{% endif %}">
+                    {{ vuln.level }}
+                </span>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 10px;">{{ vuln.description }}</p>
+            <div style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
+                <i class="fas fa-lightbulb" style="color: #f59e0b; margin-right: 8px;"></i>
+                <strong>Tavsiya:</strong> {{ vuln.recommendation }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Link check results -->
+{% if results.scan_type == 'links' %}
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-link"></i>
+        <h2>Link tahlili</h2>
+    </div>
+    
+    {% if results.link_check.internal_links %}
+    <div style="margin-bottom: 25px;">
+        <h3 style="margin-bottom: 15px; color: var(--text-secondary);">
+            <i class="fas fa-home"></i> Ichki linklar ({{ results.link_check.internal_links|length }})
+        </h3>
+        <div style="display: grid; gap: 10px;">
+            {% for link in results.link_check.internal_links %}
+            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-link" style="color: #10b981;"></i>
+                <div style="flex: 1;">
+                    <div style="font-weight: 500;">{{ link.text }}</div>
+                    <div style="color: var(--text-secondary); font-size: 12px;">{{ link.url }}</div>
+                </div>
+                <span class="badge badge-success">XAVFSIZ</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if results.link_check.external_links %}
+    <div>
+        <h3 style="margin-bottom: 15px; color: var(--text-secondary);">
+            <i class="fas fa-external-link-alt"></i> Tashqi linklar ({{ results.link_check.external_links|length }})
+        </h3>
+        <div style="display: grid; gap: 10px;">
+            {% for link in results.link_check.external_links %}
+            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-external-link-alt" style="color: #f59e0b;"></i>
+                <div style="flex: 1;">
+                    <div style="font-weight: 500;">{{ link.text }}</div>
+                    <div style="color: var(--text-secondary); font-size: 12px;">{{ link.url }}</div>
+                </div>
+                <span class="badge badge-warning">TASHQI</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- APK results -->
+{% if results.scan_type == 'apk' %}
+<!-- Malware analysis -->
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-virus"></i>
+        <h2>Zararli dastur tahlili</h2>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
+        <div style="background: {% if results.apk_analysis.malware_analysis.risk_score > 70 %}rgba(239,68,68,0.2){% elif results.apk_analysis.malware_analysis.risk_score > 30 %}rgba(245,158,11,0.2){% else %}rgba(16,185,129,0.2){% endif %}; padding: 20px; border-radius: 10px; text-align: center;">
+            <div style="font-size: 28px; font-weight: 700; color: {% if results.apk_analysis.malware_analysis.risk_score > 70 %}#ef4444{% elif results.apk_analysis.malware_analysis.risk_score > 30 %}#f59e0b{% else %}#10b981{% endif %};">{{ results.apk_analysis.malware_analysis.risk_score }}%</div>
+            <div style="color: var(--text-secondary); font-size: 13px;">Xavf darajasi</div>
+        </div>
+        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 10px; text-align: center;">
+            <div style="font-size: 28px; font-weight: 700;">{{ results.apk_analysis.malware_analysis.detected }}</div>
+            <div style="color: var(--text-secondary); font-size: 13px;">Aniqlangan zararli belgilar</div>
+        </div>
+        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 10px; text-align: center;">
+            <div style="font-size: 24px; font-weight: 700; color: {% if results.apk_analysis.malware_analysis.verdict == 'XAVFLI' %}#ef4444{% elif results.apk_analysis.malware_analysis.verdict == 'SHAXBILI' %}#f59e0b{% else %}#10b981{% endif %};">
+                {{ results.apk_analysis.malware_analysis.verdict }}
+            </div>
+            <div style="color: var(--text-secondary); font-size: 13px;">Yakuniy baho</div>
+        </div>
+    </div>
+    
+    {% if results.apk_analysis.malware_analysis.signatures %}
+    <h3 style="margin-bottom: 15px;">Aniqlangan zararli belgilar:</h3>
+    <div style="display: grid; gap: 15px;">
+        {% for sig in results.apk_analysis.malware_analysis.signatures %}
+        {% if sig.detected %}
+        <div style="background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; padding: 20px; border-radius: 10px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <h4 style="margin: 0;">{{ sig.name }}</h4>
+                <span class="badge badge-danger">{{ sig.severity }}</span>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 8px;">{{ sig.description }}</p>
+            <p style="font-size: 14px;"><strong>Ta'siri:</strong> {{ sig.action }}</p>
+            <p style="font-size: 14px; color: #10b981;"><strong>Himoya:</strong> {{ sig.protection }}</p>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Permissions -->
+{% if results.apk_analysis.permissions %}
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-shield-alt"></i>
+        <h2>Ruxsatlar tahlili</h2>
+    </div>
+    
+    <div style="display: grid; gap: 15px;">
+        {% for perm in results.apk_analysis.permissions %}
+        <div style="background: {% if perm.risk == 'YUQORI' %}rgba(239,68,68,0.1){% elif perm.risk == 'O\'RTA' %}rgba(245,158,11,0.1){% else %}rgba(16,185,129,0.1){% endif %}; padding: 15px; border-radius: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <h4 style="margin: 0;">{{ perm.display_name }}</h4>
+                <span class="badge {% if perm.risk == 'YUQORI' %}badge-danger{% elif perm.risk == 'O\'RTA' %}badge-warning{% else %}badge-success{% endif %}">
+                    {{ perm.risk }}
+                </span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13px;">{{ perm.description }}</p>
+            {% if perm.damage %}
+            <p style="font-size: 13px; color: #ef4444; margin-top: 8px;">
+                <i class="fas fa-exclamation-triangle"></i> {{ perm.damage }}
+            </p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endif %}
+
+<!-- Xulosa -->
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-clipboard-check"></i>
+        <h2>Xulosa va tavsiyalar</h2>
+    </div>
+    
+    <div style="background: {% if results.scan_type == 'website' %}
+        {% if results.security_scan|length > 2 %}rgba(239,68,68,0.1){% elif results.security_scan|length > 0 %}rgba(245,158,11,0.1){% else %}rgba(16,185,129,0.1){% endif %}
+    {% elif results.scan_type == 'apk' %}
+        {% if results.apk_analysis.malware_analysis.risk_score > 70 %}rgba(239,68,68,0.1){% elif results.apk_analysis.malware_analysis.risk_score > 30 %}rgba(245,158,11,0.1){% else %}rgba(16,185,129,0.1){% endif %}
+    {% else %}
+        rgba(16,185,129,0.1)
+    {% endif %}; padding: 25px; border-radius: 15px;">
         
-        function shareFacebook() {
-            const url = encodeURIComponent(window.location.href);
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-        }
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+            <i class="fas fa-{% if results.scan_type == 'website' %}
+                {% if results.security_scan|length > 2 %}exclamation-triangle{% elif results.security_scan|length > 0 %}exclamation-circle{% else %}check-circle{% endif %}
+            {% elif results.scan_type == 'apk' %}
+                {% if results.apk_analysis.malware_analysis.risk_score > 70 %}exclamation-triangle{% elif results.apk_analysis.malware_analysis.risk_score > 30 %}exclamation-circle{% else %}check-circle{% endif %}
+            {% else %}
+                check-circle
+            {% endif %}" style="font-size: 30px; color: {% if results.scan_type == 'website' %}
+                {% if results.security_scan|length > 2 %}#ef4444{% elif results.security_scan|length > 0 %}#f59e0b{% else %}#10b981{% endif %}
+            {% elif results.scan_type == 'apk' %}
+                {% if results.apk_analysis.malware_analysis.risk_score > 70 %}#ef4444{% elif results.apk_analysis.malware_analysis.risk_score > 30 %}#f59e0b{% else %}#10b981{% endif %}
+            {% else %}
+                #10b981
+            {% endif %};"></i>
+            
+            <h3 style="margin: 0; font-size: 20px;">
+                {% if results.scan_type == 'website' %}
+                    {% if results.security_scan|length > 2 %}
+                        Xavfli - darhol chora ko'ring!
+                    {% elif results.security_scan|length > 0 %}
+                        Qoniqarli - ba'zi muammolar bor
+                    {% else %}
+                        Ajoyib! Hech qanday muammo topilmadi
+                    {% endif %}
+                {% elif results.scan_type == 'apk' %}
+                    {% if results.apk_analysis.malware_analysis.risk_score > 70 %}
+                        Xavfli - bu ilovani ishlatmang!
+                    {% elif results.apk_analysis.malware_analysis.risk_score > 30 %}
+                        Shubhali - ehtiyot bo'ling
+                    {% else %}
+                        Xavfsiz - ilovadan foydalanishingiz mumkin
+                    {% endif %}
+                {% else %}
+                    Barcha linklar xavfsiz
+                {% endif %}
+            </h3>
+        </div>
         
-        function shareTwitter() {
-            const text = encodeURIComponent("KiberXavfsizlik Markazi orqali saytimni tekshirdim. Natijalar: ");
-            const url = encodeURIComponent(window.location.href);
-            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
-        }
-    </script>
-</body>
-</html>
+        <div style="margin-bottom: 20px;">
+            <h4 style="margin-bottom: 10px;">📋 Asosiy tavsiyalar:</h4>
+            <ul style="list-style: none;">
+                <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                    Antivirus dasturini yangilab turing
+                </li>
+                <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                    Shubhali linklarga kirmang
+                </li>
+                <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                    Muntazam xavfsizlik tekshiruvlarini o'tkazing
+                </li>
+                <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                    Ikki bosqichli autentifikatsiyadan foydalaning
+                </li>
+            </ul>
+        </div>
+        
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="window.print()">
+                <i class="fas fa-print"></i> Hisobotni chop etish
+            </button>
+            <button class="btn btn-outline" onclick="shareResults()">
+                <i class="fas fa-share-alt"></i> Ulashish
+            </button>
+            <a href="{{ url_for('index') }}" class="btn btn-outline">
+                <i class="fas fa-home"></i> Bosh sahifa
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+function shareResults() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Kiberxavfsizlik skanerlash natijalari',
+            text: 'Men saytimni xavfsizlikka tekshirdim. Siz ham tekshirib ko\'ring!',
+            url: window.location.href
+        })
+        .catch(console.error);
+    } else {
+        alert('Ulashish uchun linkni nusxalang: ' + window.location.href);
+    }
+}
+</script>
+{% endblock %}
