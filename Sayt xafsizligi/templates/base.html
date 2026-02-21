@@ -1,1 +1,493 @@
-
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>CyberDash - Kiberxavfsizlik Skanneri</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        :root {
+            --bg-primary: #0a0f1e;
+            --bg-secondary: #151f32;
+            --bg-card: #1e2a3a;
+            --accent-primary: #667eea;
+            --accent-secondary: #764ba2;
+            --text-primary: #ffffff;
+            --text-secondary: #b8c2e0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+        
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        /* ===== SIDE MENU (MOBILE FRIENDLY) ===== */
+        .side-menu {
+            width: 280px;
+            background: var(--bg-secondary);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .menu-header {
+            padding: 25px 20px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            text-align: center;
+        }
+        
+        .menu-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .menu-header p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .menu-items {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            margin-bottom: 5px;
+        }
+        
+        .menu-item i {
+            width: 30px;
+            font-size: 18px;
+        }
+        
+        .menu-item span {
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .menu-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--text-primary);
+            border-left-color: var(--accent-primary);
+        }
+        
+        .menu-item.active {
+            background: linear-gradient(90deg, rgba(102,126,234,0.2), transparent);
+            color: var(--text-primary);
+            border-left-color: var(--accent-primary);
+        }
+        
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+        
+        /* ===== MOBILE MENU TOGGLE ===== */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: none;
+        }
+        
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            backdrop-filter: blur(3px);
+        }
+        
+        /* ===== CONTENT WRAPPER ===== */
+        .content-wrapper {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* ===== TOP BAR ===== */
+        .top-bar {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 20px 25px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary), #b8c2e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .page-title p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        
+        .date-display {
+            background: rgba(102,126,234,0.1);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            border: 1px solid rgba(102,126,234,0.3);
+        }
+        
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 992px) {
+            .side-menu {
+                transform: translateX(-100%);
+                box-shadow: 2px 0 20px rgba(0,0,0,0.3);
+            }
+            
+            .side-menu.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .menu-overlay {
+                display: block;
+            }
+            
+            .menu-overlay.hidden {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+                padding-top: 80px;
+            }
+            
+            .top-bar {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .date-display {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .content-wrapper {
+                padding: 15px;
+                padding-top: 80px;
+            }
+            
+            .top-bar {
+                padding: 15px;
+            }
+            
+            .page-title h1 {
+                font-size: 20px;
+            }
+        }
+        
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
+        }
+        
+        /* ===== COMMON COMPONENTS ===== */
+        .card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            color: var(--accent-primary);
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--accent-primary);
+            color: var(--text-primary);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(102,126,234,0.1);
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 15px;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+        
+        .input-group input::placeholder {
+            color: var(--text-secondary);
+        }
+        
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-success { background: var(--success); color: white; }
+        .badge-warning { background: var(--warning); color: white; }
+        .badge-danger { background: var(--danger); color: white; }
+        .badge-info { background: var(--info); color: white; }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Menu Toggle Button (Mobile) -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Menu Overlay (Mobile) -->
+    <div class="menu-overlay hidden" id="menuOverlay"></div>
+    
+    <!-- Side Menu -->
+    <div class="side-menu" id="sideMenu">
+        <div class="menu-header">
+            <h2><i class="fas fa-shield-alt"></i> CyberDash</h2>
+            <p>Kiberxavfsizlik Skanneri</p>
+        </div>
+        
+        <div class="menu-items">
+            <a href="{{ url_for('index') }}" class="menu-item {% if active_page == 'home' %}active{% endif %}">
+                <i class="fas fa-home"></i>
+                <span>Bosh Sahifa</span>
+            </a>
+            
+            <a href="{{ url_for('scanner') }}" class="menu-item {% if active_page == 'scanner' %}active{% endif %}">
+                <i class="fas fa-search"></i>
+                <span>Website Scanner</span>
+            </a>
+            
+            <a href="{{ url_for('link_checker') }}" class="menu-item {% if active_page == 'link_checker' %}active{% endif %}">
+                <i class="fas fa-link"></i>
+                <span>Link Tekshiruvi</span>
+            </a>
+            
+            <a href="{{ url_for('apk_analyzer') }}" class="menu-item {% if active_page == 'apk_analyzer' %}active{% endif %}">
+                <i class="fas fa-mobile-alt"></i>
+                <span>APK Analyzer</span>
+            </a>
+            
+            <a href="{{ url_for('cyber_tips') }}" class="menu-item {% if active_page == 'cyber_tips' %}active{% endif %}">
+                <i class="fas fa-lightbulb"></i>
+                <span>Kiber Maslahatlar</span>
+            </a>
+            
+            <a href="{{ url_for('cyber_wiki') }}" class="menu-item {% if active_page == 'cyber_wiki' %}active{% endif %}">
+                <i class="fas fa-book"></i>
+                <span>Cyber Wiki</span>
+            </a>
+            
+            <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 20px;"></div>
+            
+            <a href="#" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Sozlamalar</span>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="fas fa-question-circle"></i>
+                <span>Yordam</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="content-wrapper">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>{% block page_title %}CyberDash{% endblock %}</h1>
+                    <p>{% block page_subtitle %}Kiberxavfsizlik monitoringi{% endblock %}</p>
+                </div>
+                <div class="date-display">
+                    <i class="far fa-calendar-alt"></i>
+                    {{ now.strftime('%d %B %Y') if now else '' }}
+                </div>
+            </div>
+            
+            <!-- Page Content -->
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sideMenu = document.getElementById('sideMenu');
+            const menuOverlay = document.getElementById('menuOverlay');
+            
+            function openMenu() {
+                sideMenu.classList.add('open');
+                menuOverlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            function closeMenu() {
+                sideMenu.classList.remove('open');
+                menuOverlay.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+            
+            menuToggle.addEventListener('click', openMenu);
+            menuOverlay.addEventListener('click', closeMenu);
+            
+            // Menu itemlarni bosganda avtomatik yopish (mobile)
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 992) {
+                        closeMenu();
+                    }
+                });
+            });
+            
+            // Window resize da menu holatini sozlash
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 992) {
+                    sideMenu.classList.remove('open');
+                    menuOverlay.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
