@@ -1,1 +1,112 @@
+{% extends "base.html" %}
 
+{% block page_title %}Website Scanner{% endblock %}
+{% block page_subtitle %}Sayt xavfsizligini tekshirish{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-search"></i>
+        <h2>Saytni Skanerlash</h2>
+    </div>
+    
+    <form id="scanForm" action="{{ url_for('scan_website') }}" method="POST">
+        <div class="input-group" style="margin-bottom: 15px;">
+            <input type="text" name="website" placeholder="https://example.com" required>
+            <button type="submit" class="btn btn-primary" id="scanBtn">
+                <i class="fas fa-play"></i> Skanerlash
+            </button>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 13px;">
+            <i class="fas fa-info-circle"></i> Masalan: https://google.com yoki example.com
+        </p>
+    </form>
+    
+    <div id="loading" style="display: none; text-align: center; padding: 30px;">
+        <div style="width: 50px; height: 50px; border: 3px solid var(--bg-secondary); border-top-color: var(--accent-primary); border-radius: 50%; margin: 0 auto 15px; animation: spin 1s linear infinite;"></div>
+        <p>Skanerlash davom etmoqda...</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-question-circle"></i>
+        <h2>Nima tekshiriladi?</h2>
+    </div>
+    
+    <div style="display: grid; gap: 15px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="width: 40px; height: 40px; background: rgba(102,126,234,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-lock" style="color: var(--accent-primary);"></i>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 3px;">SSL/HTTPS tekshiruvi</h4>
+                <p style="color: var(--text-secondary); font-size: 13px;">Sayt xavfsiz ulanishdan foydalanayaptimi?</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="width: 40px; height: 40px; background: rgba(16,185,129,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-shield-alt" style="color: var(--success);"></i>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 3px;">Security Headers</h4>
+                <p style="color: var(--text-secondary); font-size: 13px;">X-Frame-Options, HSTS va boshqalar</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="width: 40px; height: 40px; background: rgba(245,158,11,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-server" style="color: var(--warning);"></i>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 3px;">Server ma'lumotlari</h4>
+                <p style="color: var(--text-secondary); font-size: 13px;">Server versiyasi, texnologiyalar</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('scanForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const form = this;
+    const formData = new FormData(form);
+    const scanBtn = document.getElementById('scanBtn');
+    const loading = document.getElementById('loading');
+    
+    scanBtn.disabled = true;
+    scanBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Skanerlash...';
+    loading.style.display = 'block';
+    
+    fetch(form.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = data.redirect;
+        } else {
+            alert('Xatolik: ' + data.error);
+            scanBtn.disabled = false;
+            scanBtn.innerHTML = '<i class="fas fa-play"></i> Skanerlash';
+            loading.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        alert('Xatolik yuz berdi: ' + error);
+        scanBtn.disabled = false;
+        scanBtn.innerHTML = '<i class="fas fa-play"></i> Skanerlash';
+        loading.style.display = 'none';
+    });
+});
+</script>
+
+<style>
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}
