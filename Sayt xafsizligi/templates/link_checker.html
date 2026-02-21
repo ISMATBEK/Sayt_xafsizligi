@@ -1,1 +1,155 @@
+{% extends "base.html" %}
 
+{% block page_title %}Link Tekshiruvi{% endblock %}
+{% block page_subtitle %}Xavfli va buzilgan linklarni aniqlash{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-link"></i>
+        <h2>Linklarni tekshirish</h2>
+    </div>
+    
+    <div style="text-align: center; margin-bottom: 20px;">
+        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b98120, #05966920); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-chain-broken" style="font-size: 40px; color: #10b981;"></i>
+        </div>
+        <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
+            Saytdagi buzilgan, fishing va zararli linklarni aniqlang
+        </p>
+    </div>
+    
+    <form id="linkForm" action="{{ url_for('check_links') }}" method="POST">
+        <div class="input-group" style="margin-bottom: 15px;">
+            <input type="text" name="website" placeholder="https://example.com" required>
+            <button type="submit" class="btn btn-primary" id="checkBtn" style="background: linear-gradient(135deg, #10b981, #059669);">
+                <i class="fas fa-check-circle"></i> Tekshirish
+            </button>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 13px;">
+            <i class="fas fa-info-circle"></i> To'liq sayt manzilini kiriting (masalan: https://example.com)
+        </p>
+    </form>
+    
+    <div id="loading" style="display: none; text-align: center; padding: 30px;">
+        <div style="width: 50px; height: 50px; border: 3px solid var(--bg-secondary); border-top-color: #10b981; border-radius: 50%; margin: 0 auto 15px; animation: spin 1s linear infinite;"></div>
+        <p>Linklar tekshirilmoqda...</p>
+        <p style="color: var(--text-secondary); font-size: 13px;">Bu bir necha soniya davom etishi mumkin</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h2>Xavfli link turlari</h2>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+        <div style="background: rgba(239,68,68,0.1); border-radius: 10px; padding: 20px;">
+            <i class="fas fa-fish" style="color: #ef4444; font-size: 24px; margin-bottom: 10px;"></i>
+            <h4 style="margin-bottom: 8px;">Fishing linklar</h4>
+            <p style="color: var(--text-secondary); font-size: 13px;">Soxta saytlarga yo'naltiruvchi linklar (masalan: go0gle.com)</p>
+        </div>
+        
+        <div style="background: rgba(239,68,68,0.1); border-radius: 10px; padding: 20px;">
+            <i class="fas fa-virus" style="color: #ef4444; font-size: 24px; margin-bottom: 10px;"></i>
+            <h4 style="margin-bottom: 8px;">Malware linklar</h4>
+            <p style="color: var(--text-secondary); font-size: 13px;">Zararli dastur yuklab oladigan linklar</p>
+        </div>
+        
+        <div style="background: rgba(245,158,11,0.1); border-radius: 10px; padding: 20px;">
+            <i class="fas fa-chain-broken" style="color: #f59e0b; font-size: 24px; margin-bottom: 10px;"></i>
+            <h4 style="margin-bottom: 8px;">Buzilgan linklar</h4>
+            <p style="color: var(--text-secondary); font-size: 13px;">Mavjud bo'lmagan yoki 404 xato qaytaruvchi linklar</p>
+        </div>
+        
+        <div style="background: rgba(245,158,11,0.1); border-radius: 10px; padding: 20px;">
+            <i class="fas fa-redirect" style="color: #f59e0b; font-size: 24px; margin-bottom: 10px;"></i>
+            <h4 style="margin-bottom: 8px;">Redirect linklar</h4>
+            <p style="color: var(--text-secondary); font-size: 13px;">Boshqa saytlarga yo'naltiruvchi linklar</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-shield-alt"></i>
+        <h2>Link xavfsizligi bo'yicha maslahatlar</h2>
+    </div>
+    
+    <div style="display: grid; gap: 15px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="width: 40px; height: 40px; background: rgba(16,185,129,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-mouse-pointer" style="color: #10b981;"></i>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 3px;">Link ustiga olib boring</h4>
+                <p style="color: var(--text-secondary); font-size: 13px;">Haqiqiy manzilni ko'rish uchun link ustiga olib boring</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="width: 40px; height: 40px; background: rgba(16,185,129,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-lock" style="color: #10b981;"></i>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 3px;">HTTPS ni tekshiring</h4>
+                <p style="color: var(--text-secondary); font-size: 13px;">Xavfsiz saytlar https:// bilan boshlanadi</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="width: 40px; height: 40px; background: rgba(16,185,129,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-alarm-clock" style="color: #10b981;"></i>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 3px;">Shoshilmang</h4>
+                <p style="color: var(--text-secondary); font-size: 13px;">"Tezda kir, aks holda yopiladi" degan linklardan saqlaning</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('linkForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const form = this;
+    const formData = new FormData(form);
+    const checkBtn = document.getElementById('checkBtn');
+    const loading = document.getElementById('loading');
+    
+    checkBtn.disabled = true;
+    checkBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Tekshirilmoqda...';
+    loading.style.display = 'block';
+    
+    fetch(form.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = data.redirect;
+        } else {
+            alert('Xatolik: ' + data.error);
+            checkBtn.disabled = false;
+            checkBtn.innerHTML = '<i class="fas fa-check-circle"></i> Tekshirish';
+            loading.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        alert('Xatolik yuz berdi: ' + error);
+        checkBtn.disabled = false;
+        checkBtn.innerHTML = '<i class="fas fa-check-circle"></i> Tekshirish';
+        loading.style.display = 'none';
+    });
+});
+</script>
+
+<style>
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}
