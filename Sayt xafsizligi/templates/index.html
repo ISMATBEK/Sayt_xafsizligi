@@ -3,21 +3,591 @@
 <head>
     <meta name="google-site-verification" content="Itcr-9Gs9kkWc-d2NEWqFX_3JXZMsWTAkcvlLe0z_Gg" />
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Veb-sayt Skanneri - Professional Xavfsizlik Asbobi</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>KiberXavfsizlik Markazi - Veb-sayt va APK Skanneri</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3420015027589799"
-     crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+        
+        /* Header */
+        .main-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .header-content h1 {
+            font-size: clamp(24px, 5vw, 32px);
+            color: #2d3748;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .header-content h1 i {
+            color: #667eea;
+        }
+        
+        .tagline {
+            font-size: clamp(14px, 4vw, 16px);
+            color: #4a5568;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: clamp(13px, 3.5vw, 15px);
+            color: #718096;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card i {
+            font-size: clamp(20px, 5vw, 24px);
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        
+        .stat-card h3 {
+            font-size: clamp(14px, 4vw, 16px);
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card p {
+            font-size: clamp(12px, 3.5vw, 14px);
+            color: #718096;
+        }
+        
+        /* Daily Tip */
+        .daily-tip {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .daily-tip::before {
+            content: "💡";
+            position: absolute;
+            right: -10px;
+            bottom: -10px;
+            font-size: 80px;
+            opacity: 0.2;
+            transform: rotate(15deg);
+        }
+        
+        .tip-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .tip-header i {
+            font-size: 24px;
+        }
+        
+        .tip-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .daily-tip p {
+            font-size: 15px;
+            line-height: 1.5;
+            opacity: 0.95;
+        }
+        
+        /* Main Scan */
+        .main-scan-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .main-scan-section h2 {
+            font-size: 20px;
+            color: #2d3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .scan-form {
+            width: 100%;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        @media (min-width: 768px) {
+            .input-group {
+                flex-direction: row;
+            }
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            width: 100%;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .scan-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .scan-btn {
+                width: auto;
+            }
+        }
+        
+        .scan-btn:hover {
+            transform: scale(1.02);
+        }
+        
+        .form-note {
+            font-size: 13px;
+            color: #718096;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        /* Features Grid */
+        .features-section {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .feature-card {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .feature-content {
+            flex: 1;
+        }
+        
+        .feature-content h3 {
+            font-size: 18px;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .feature-content p {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 12px;
+        }
+        
+        .feature-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .feature-form {
+                flex-direction: row;
+            }
+        }
+        
+        .feature-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+        
+        .file-input {
+            flex: 1;
+            padding: 10px;
+            border: 2px dashed #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+        
+        .feature-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        
+        /* Cyber Tips Grid */
+        .cyber-tips-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .cyber-tips-section h2 {
+            font-size: 20px;
+            color: #2d3748;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .tips-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .tip-item {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 4px solid;
+            transition: transform 0.3s;
+        }
+        
+        .tip-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .tip-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .tip-title i {
+            font-size: 20px;
+        }
+        
+        .tip-title h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .tip-item p {
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .tip-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #e2e8f0;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Cyber News */
+        .news-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .news-section h2 {
+            font-size: 20px;
+            color: #2d3748;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .news-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .news-item {
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .news-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .news-summary {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 8px;
+        }
+        
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #a0aec0;
+        }
+        
+        .news-source {
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 12px;
+            color: #4a5568;
+        }
+        
+        /* Wiki Section */
+        .wiki-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .wiki-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .wiki-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .wiki-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .wiki-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .wiki-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .wiki-card p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        
+        .wiki-details {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .wiki-card.active .wiki-details {
+            display: block;
+        }
+        
+        .wiki-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+        
+        .wiki-list li {
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .wiki-list li i {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .error-message {
+            background: #fff5f5;
+            border: 1px solid #fc8181;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #c53030;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255,255,255,0.9);
+            font-size: 13px;
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .main-header {
+                padding: 20px 15px;
+            }
+            
+            .feature-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .feature-input, .file-input {
+                width: 100%;
+            }
+            
+            .tip-item {
+                padding: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header Section -->
+        <!-- Header -->
         <header class="main-header">
             <div class="header-content">
-                <h1><i class="fas fa-shield-alt"></i> Veb-sayt Skanneri</h1>
-                <p class="tagline">Professional veb-xavfsizlik va audit asbobi</p>
-                <p class="subtitle">Saytlarning xavfsizlik zaifliklarini, ochiq portlarini va SEO parametrlarini tekshiring</p>
+                <h1>
+                    <i class="fas fa-shield-alt"></i>
+                    KiberXavfsizlik Markazi
+                </h1>
+                <p class="tagline">Veb-sayt va APK xavfsizlik skaneri</p>
+                <p class="subtitle">Kiberhujumlardan himoyalaning, xavfsizlikni tekshiring</p>
             </div>
         </header>
 
@@ -28,60 +598,74 @@
         </div>
         {% endif %}
 
-        <!-- Stats Section -->
-        <div class="stats-section">
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-shield-virus"></i>
+                <h3>{{ cyber_stats.daily_attacks }}</h3>
+                <p>Kunlik hujumlar</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <h3>{{ cyber_stats.protected_users }}</h3>
+                <p>Himoyalangan foydalanuvchi</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-globe"></i>
+                <h3>{{ cyber_stats.scanned_sites }}</h3>
+                <p>Skanerlangan saytlar</p>
+            </div>
             <div class="stat-card">
                 <i class="fas fa-bug"></i>
-                <h3>Xavfsizlik Tekshiruvi</h3>
-                <p>SQL Injection, XSS va boshqa zaifliklarni toping</p>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-network-wired"></i>
-                <h3>Port Skanerlash</h3>
-                <p>30+ portni tezkor skanerlash</p>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-search"></i>
-                <h3>SEO Tahlili</h3>
-                <p>Sayt optimallashtirish bo'yicha tavsiyalar</p>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-mobile-alt"></i>
-                <h3>APK Tahlili</h3>
-                <p>Android ilovalarini xavfsizlik tekshiruvi</p>
+                <h3>{{ cyber_stats.threats_blocked }}</h3>
+                <p>To'xtatilgan tahdidlar</p>
             </div>
         </div>
 
-        <!-- Main Scan Section -->
+        <!-- Daily Tip -->
+        <div class="daily-tip">
+            <div class="tip-header">
+                <i class="{{ daily_tip.icon }}"></i>
+                <h3>{{ daily_tip.title }}</h3>
+            </div>
+            <p>{{ daily_tip.content }}</p>
+        </div>
+
+        <!-- Main Scan -->
         <div class="main-scan-section">
-            <h2><i class="fas fa-rocket"></i> Tezkor Skanerlash</h2>
+            <h2>
+                <i class="fas fa-search"></i>
+                Tezkor Skanerlash
+            </h2>
             <form action="/scan" method="POST" class="scan-form">
                 <div class="input-group">
-                    <input type="text" name="website" placeholder="https://example.com yoki example.com" required>
+                    <input type="text" name="website" placeholder="https://example.com" required>
                     <button type="submit" class="scan-btn">
-                        <i class="fas fa-search"></i> Skanerlashni Boshlash
+                        <i class="fas fa-search"></i>
+                        <span>Skanerlash</span>
                     </button>
                 </div>
-                <p class="form-note">Enter tugmasini bosing yoki skanerlash tugmasini bosing</p>
+                <p class="form-note">
+                    <i class="fas fa-info-circle"></i>
+                    Sayt manzilini kiriting va "Skanerlash" tugmasini bosing
+                </p>
             </form>
         </div>
 
-        <!-- Advanced Features Section -->
+        <!-- Features -->
         <div class="features-section">
-            <h2><i class="fas fa-tools"></i> Qo'shimcha Imkoniyatlar</h2>
-
             <!-- Link Checker -->
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-link"></i>
                 </div>
                 <div class="feature-content">
-                    <h3>🔗 Linklar Tekshiruvi</h3>
-                    <p>Saytdagi buzilgan, redirect va xavfli linklarni toping</p>
+                    <h3>🔗 Link Tekshiruvi</h3>
+                    <p>Xavfli va buzilgan linklarni aniqlang</p>
                     <form action="/check-links" method="POST" class="feature-form">
-                        <input type="text" name="website" placeholder="Sayt manzilini kiriting" class="feature-input" required>
+                        <input type="text" name="website" placeholder="Sayt manzili" class="feature-input" required>
                         <button type="submit" class="feature-btn">
-                            <i class="fas fa-check-circle"></i> Linklarni Tekshirish
+                            <i class="fas fa-check-circle"></i> Tekshirish
                         </button>
                     </form>
                 </div>
@@ -90,115 +674,154 @@
             <!-- APK Analyzer -->
             <div class="feature-card">
                 <div class="feature-icon">
-                    <i class="fas fa-mobile"></i>
+                    <i class="fas fa-mobile-alt"></i>
                 </div>
                 <div class="feature-content">
                     <h3>📱 APK Tahlili</h3>
-                    <p>Android ilovalarining xavfsizlik parametrlarini tekshiring</p>
+                    <p>Android ilovalar xavfsizligini tekshiring</p>
                     <form action="/analyze-apk" method="POST" enctype="multipart/form-data" class="feature-form">
                         <input type="file" name="file" accept=".apk" class="file-input" required>
                         <button type="submit" class="feature-btn">
-                            <i class="fas fa-upload"></i> APK ni Yuklash va Tahlil Qilish
+                            <i class="fas fa-upload"></i> Tahlil qilish
                         </button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- How to Use Section -->
-        <div class="tutorial-section">
-            <h2><i class="fas fa-graduation-cap"></i> Qanday Foydalanish Kerak?</h2>
-            <div class="tutorial-steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h3>Sayt Manzilini Kiriting</h3>
-                        <p>Tekshirmoqchi bo'lgan saytingizning manzilini kiriting</p>
+        <!-- Cyber Tips -->
+        <div class="cyber-tips-section">
+            <h2>
+                <i class="fas fa-lightbulb"></i>
+                Kiberxavfsizlik Maslahatlari
+            </h2>
+            <div class="tips-grid">
+                {% for tip in cyber_tips[:4] %}
+                <div class="tip-item" style="border-left-color: {{ tip.color }};">
+                    <div class="tip-title">
+                        <i class="{{ tip.icon }}" style="color: {{ tip.color }};"></i>
+                        <h3>{{ tip.title }}</h3>
+                    </div>
+                    <p>{{ tip.content }}</p>
+                    <span class="tip-category">{{ tip.category }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Cyber News -->
+        <div class="news-section">
+            <h2>
+                <i class="fas fa-newspaper"></i>
+                So'nggi Yangiliklar
+            </h2>
+            <div class="news-list">
+                {% for news in cyber_news %}
+                <div class="news-item">
+                    <div class="news-title">{{ news.title }}</div>
+                    <div class="news-summary">{{ news.summary }}</div>
+                    <div class="news-meta">
+                        <span><i class="far fa-calendar"></i> {{ news.date }}</span>
+                        <span class="news-source">{{ news.source }}</span>
                     </div>
                 </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h3>Skanerlashni Boshlang</h3>
-                        <p>"Skanerlashni Boshlash" tugmasini bosing</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Cyber Wiki -->
+        <div class="wiki-section">
+            <h2>
+                <i class="fas fa-book"></i>
+                Kiberxavfsizlik Vikipediyasi
+            </h2>
+            <div class="wiki-grid">
+                {% for key, wiki in cyber_wiki.items() %}
+                <div class="wiki-card" onclick="toggleWiki(this)">
+                    <h3>
+                        <i class="fas fa-{% if key == 'phishing' %}fish{% elif key == 'malware' %}virus{% elif key == 'password' %}key{% elif key == '2fa' %}mobile-alt{% elif key == 'vpn' %}shield-alt{% endif %}"></i>
+                        {{ wiki.title }}
+                    </h3>
+                    <p>{{ wiki.description[:100] }}...</p>
+                    <div class="wiki-details">
+                        {% if wiki.signs %}
+                        <strong>Belgilari:</strong>
+                        <ul class="wiki-list">
+                            {% for sign in wiki.signs %}
+                            <li><i class="fas fa-exclamation-circle"></i> {{ sign }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        
+                        {% if wiki.protection %}
+                        <strong>Himoya:</strong>
+                        <ul class="wiki-list">
+                            {% for prot in wiki.protection %}
+                            <li><i class="fas fa-check-circle"></i> {{ prot }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        
+                        {% if wiki.types %}
+                        <strong>Turlari:</strong>
+                        <ul class="wiki-list">
+                            {% for type in wiki.types %}
+                            <li><i class="fas fa-tag"></i> {{ type }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                     </div>
                 </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h3>Natijalarni Ko'ring</h3>
-                        <p>Barcha tahlil natijalari avtomatik ko'rsatiladi</p>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
-<!-- Tool Information Section -->
-<div class="info-panel tool-info">
-    <h3><i class="fas fa-info-circle"></i> Veb-sayt Skanneri Haqida</h3>
-    <p>
-        <strong>Veb-sayt Skanneri</strong> - bu professional veb-xavfsizlik audit asbobi bo'lib,
-        quyidagi imkoniyatlarga ega:
-    </p>
-    <div class="capabilities-grid">
-        <div class="capability-item">
-            <i class="fas fa-shield-check"></i>
-            <h4>Xavfsizlik Tekshiruvi</h4>
-            <ul>
-                <li>SQL Injection zaifliklari</li>
-                <li>XSS (Cross-site Scripting)</li>
-                <li>Security Headers tekshiruvi</li>
-                <li>Admin panel topish</li>
-            </ul>
-        </div>
-        <div class="capability-item">
-            <i class="fas fa-link"></i>
-            <h4>Link Tekshiruvi</h4>
-            <ul>
-                <li>Zararli linklarni aniqlash</li>
-                <li>Fishing saytlarini topish</li>
-                <li>Shubhali linklarni ko'rsatish</li>
-                <li>Buzilgan linklarni aniqlash</li>
-            </ul>
-        </div>
-        <div class="capability-item">
-            <i class="fas fa-mobile-alt"></i>
-            <h4>APK Tahlili</h4>
-            <ul>
-                <li>Zararli dasturlarni aniqlash</li>
-                <li>Ruxsatlarni tahlil qilish</li>
-                <li>Sertifikat tekshiruvi</li>
-                <li>Xavfsizlik bahosi</li>
-            </ul>
-        </div>
-        <div class="capability-item">
-            <i class="fas fa-chart-line"></i>
-            <h4>SEO va Performance</h4>
-            <ul>
-                <li>Yuklanish tezligi</li>
-                <li>SEO optimallashtirish</li>
-                <li>Meta taglar tahlili</li>
-                <li>WHOIS ma'lumotlari</li>
-            </ul>
-        </div>
-    </div>
-</div>
 
-<!-- Warning Panel -->
-<div class="info-panel warning-panel">
-    <h3><i class="fas fa-exclamation-triangle"></i> Muhim Ogohlantirish</h3>
-    <p>
-        <strong>Diqqat!</strong> Ushbu asbob faqat xavfsizlikni tekshirish va ogohlantirish
-        maqsadida ishlatiladi. Barcha tahlil natijalari taxminiy bo'lib, to'liq xavfsizlik
-        kafolatini bermaydi. Muhim saytlar va ilovalarni professional xavfsizlik
-        mutaxassislari tomonidan tekshirishni tavsiya etamiz.
-    </p>
-</div>
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 Veb-sayt Skanneri. Barcha huquqlar himoyalangan.</p>
-        </div>
+        <p>
+            <i class="fas fa-shield-alt"></i>
+            KiberXavfsizlik Markazi - 2025 | Barcha huquqlar himoyalangan
+        </p>
+        <p style="margin-top: 5px; font-size: 11px;">
+            <i class="fas fa-exclamation-triangle"></i>
+            Ma'lumotlar faqat ma'lumot uchun. To'liq xavfsizlik kafolatlanmaydi.
+        </p>
     </footer>
+
+    <script>
+        // Wiki toggle
+        function toggleWiki(element) {
+            element.classList.toggle('active');
+        }
+        
+        // Auto refresh daily tip
+        function refreshDailyTip() {
+            fetch('/daily-tip')
+                .then(response => response.json())
+                .then(data => {
+                    const tipDiv = document.querySelector('.daily-tip');
+                    if (tipDiv) {
+                        tipDiv.innerHTML = `
+                            <div class="tip-header">
+                                <i class="${data.icon}"></i>
+                                <h3>${data.title}</h3>
+                            </div>
+                            <p>${data.content}</p>
+                        `;
+                    }
+                });
+        }
+        
+        // Refresh tip every 6 hours
+        // setInterval(refreshDailyTip, 6 * 60 * 60 * 1000);
+        
+        // Mobile menu adjustments
+        if (window.innerWidth <= 768) {
+            document.querySelectorAll('.feature-btn').forEach(btn => {
+                btn.style.width = '100%';
+            });
+        }
+    </script>
 </body>
 </html>
