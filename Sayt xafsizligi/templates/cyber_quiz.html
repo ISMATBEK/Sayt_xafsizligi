@@ -4,40 +4,64 @@
 {% block page_subtitle %}Bilimingizni sinab ko'ring{% endblock %}
 
 {% block content %}
+<!-- Test statistikasi -->
+<div class="grid-4" style="margin-bottom: 25px;">
+    <div class="card" style="text-align: center; padding: 20px;">
+        <i class="fas fa-question-circle" style="font-size: 30px; color: var(--accent-primary); margin-bottom: 10px;"></i>
+        <h3 style="font-size: 28px;" id="totalQuestions">20</h3>
+        <p style="color: var(--text-secondary);">Savollar</p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 20px;">
+        <i class="fas fa-clock" style="font-size: 30px; color: var(--warning); margin-bottom: 10px;"></i>
+        <h3 style="font-size: 28px;" id="totalTime">10</h3>
+        <p style="color: var(--text-secondary);">Daqiqa</p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 20px;">
+        <i class="fas fa-trophy" style="font-size: 30px; color: var(--success); margin-bottom: 10px;"></i>
+        <h3 style="font-size: 28px;" id="maxScore">100</h3>
+        <p style="color: var(--text-secondary);">Maksimal ball</p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 20px;">
+        <i class="fas fa-users" style="font-size: 30px; color: var(--info); margin-bottom: 10px;"></i>
+        <h3 style="font-size: 28px;" id="totalUsers">1,234</h3>
+        <p style="color: var(--text-secondary);">Ishtirokchilar</p>
+    </div>
+</div>
+
 <!-- Test boshlanishi -->
 <div class="card" id="quizStart">
     <div class="card-title">
-        <i class="fas fa-question-circle"></i>
-        <h2>Kiberxavfsizlik bo'yicha test</h2>
+        <i class="fas fa-play-circle"></i>
+        <h2>Testni boshlash</h2>
     </div>
     
-    <div style="text-align: center;">
-        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #667eea20, #764ba220); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-            <i class="fas fa-graduation-cap" style="font-size: 50px; color: var(--accent-primary);"></i>
+    <div style="text-align: center; padding: 20px;">
+        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border-radius: 60px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+            <i class="fas fa-graduation-cap" style="font-size: 60px; color: white;"></i>
         </div>
         
-        <h3 style="margin-bottom: 10px;">Test haqida ma'lumot</h3>
-        <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 20px;">
+        <h3 style="margin-bottom: 15px;">Kiberxavfsizlik bo'yicha test</h3>
+        
+        <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 25px;">
             Bu test sizning kiberxavfsizlik bo'yicha bilimingizni aniqlaydi. 
-            20 ta savol, har bir savol uchun 30 soniya vaqt.
+            20 ta savol, har bir savol uchun 30 soniya vaqt beriladi.
         </p>
         
-        <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 30px; flex-wrap: wrap;">
-            <div style="text-align: center;">
-                <div style="font-size: 30px; font-weight: 700; color: var(--accent-primary);">20</div>
-                <div style="color: var(--text-secondary);">savol</div>
+        <div style="background: var(--bg-secondary); border-radius: 10px; padding: 20px; margin-bottom: 25px; max-width: 400px; margin-left: auto; margin-right: auto;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span><i class="fas fa-check-circle" style="color: var(--success);"></i> To'g'ri javob: +5 ball</span>
+                <span><i class="fas fa-times-circle" style="color: var(--danger);"></i> Noto'g'ri: 0 ball</span>
             </div>
-            <div style="text-align: center;">
-                <div style="font-size: 30px; font-weight: 700; color: var(--accent-primary);">30</div>
-                <div style="color: var(--text-secondary);">soniya</div>
-            </div>
-            <div style="text-align: center;">
-                <div style="font-size: 30px; font-weight: 700; color: var(--accent-primary);">100</div>
-                <div style="color: var(--text-secondary);">maksimal ball</div>
+            <div style="display: flex; justify-content: space-between;">
+                <span><i class="fas fa-clock" style="color: var(--warning);"></i> Vaqt: 30 soniya</span>
+                <span><i class="fas fa-redo" style="color: var(--info);"></i> Qayta urinish: 3 marta</span>
             </div>
         </div>
         
-        <button class="btn btn-primary" onclick="startQuiz()" style="padding: 15px 40px;">
+        <button class="btn btn-primary" onclick="startQuiz()" style="padding: 15px 50px; font-size: 16px;">
             <i class="fas fa-play"></i> Testni boshlash
         </button>
     </div>
@@ -45,32 +69,47 @@
 
 <!-- Test jarayoni -->
 <div class="card" id="quizProcess" style="display: none;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <div>
-            <span class="badge badge-info" id="questionCounter">1/20</span>
+    <!-- Progress va timer -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span class="badge badge-primary" style="font-size: 14px; padding: 8px 15px;" id="questionCounter">1/20</span>
+            <span class="badge badge-info" style="font-size: 14px; padding: 8px 15px;">
+                <i class="fas fa-star"></i> Ball: <span id="currentScore">0</span>
+            </span>
         </div>
+        
         <div style="display: flex; align-items: center; gap: 10px;">
-            <i class="far fa-clock"></i>
-            <span id="timer">30</span> soniya
+            <i class="far fa-clock" style="color: var(--warning); font-size: 20px;"></i>
+            <div style="background: var(--bg-secondary); padding: 8px 20px; border-radius: 30px;">
+                <span id="timer" style="font-size: 20px; font-weight: 700; color: var(--warning);">30</span>
+                <span style="color: var(--text-secondary);">soniya</span>
+            </div>
         </div>
     </div>
     
-    <div class="progress-bar" style="margin-bottom: 30px;">
+    <!-- Progress bar -->
+    <div class="progress-bar" style="margin-bottom: 30px; height: 10px;">
         <div class="progress-fill" id="progressFill" style="width: 5%;"></div>
     </div>
     
+    <!-- Savol -->
     <div id="questionContainer">
-        <h3 id="questionText" style="margin-bottom: 25px;">Savol yuklanmoqda...</h3>
+        <div style="background: var(--bg-secondary); border-radius: 15px; padding: 30px; margin-bottom: 25px;">
+            <h3 id="questionText" style="font-size: 20px; line-height: 1.6;">Savol yuklanmoqda...</h3>
+        </div>
         
+        <!-- Javob variantlari -->
         <div style="display: grid; gap: 12px;" id="optionsContainer">
-            <!-- Javob variantlari JS orqali qo'shiladi -->
+            <!-- JS orqali to'ldiriladi -->
         </div>
     </div>
     
-    <div style="display: flex; justify-content: space-between; margin-top: 25px;">
+    <!-- Navigatsiya tugmalari -->
+    <div style="display: flex; justify-content: space-between; margin-top: 30px;">
         <button class="btn btn-outline" onclick="previousQuestion()" id="prevBtn" disabled>
             <i class="fas fa-arrow-left"></i> Oldingi
         </button>
+        
         <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn">
             Keyingi <i class="fas fa-arrow-right"></i>
         </button>
@@ -85,30 +124,76 @@
     </div>
     
     <div style="text-align: center; margin-bottom: 30px;">
-        <div style="width: 150px; height: 150px; margin: 0 auto 20px; position: relative;">
-            <svg viewBox="0 0 100 100" style="transform: rotate(-90deg); width: 150px; height: 150px;">
+        <div style="width: 180px; height: 180px; margin: 0 auto 20px; position: relative;">
+            <!-- SVG doira -->
+            <svg viewBox="0 0 100 100" style="transform: rotate(-90deg); width: 180px; height: 180px;">
                 <circle cx="50" cy="50" r="45" fill="none" stroke="var(--bg-secondary)" stroke-width="10"/>
                 <circle cx="50" cy="50" r="45" fill="none" stroke="var(--accent-primary)" stroke-width="10" 
                         stroke-dasharray="283" stroke-dashoffset="283" id="scoreCircle"/>
             </svg>
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 36px; font-weight: 700;" id="scoreDisplay">0</div>
+            
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                <span style="font-size: 48px; font-weight: 700;" id="scoreDisplay">0</span>
+                <span style="color: var(--text-secondary);">/100</span>
+            </div>
         </div>
         
-        <h3 id="resultMessage" style="margin-bottom: 10px;"></h3>
-        <p id="resultAdvice" style="color: var(--text-secondary);"></p>
+        <h3 id="resultMessage" style="font-size: 24px; margin-bottom: 10px;"></h3>
+        <p id="resultAdvice" style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;"></p>
     </div>
     
-    <div style="display: flex; gap: 10px; justify-content: center;">
+    <!-- Batafsil statistika -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px;">
+        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 10px; text-align: center;">
+            <div style="font-size: 24px; font-weight: 700; color: var(--success);" id="correctCount">0</div>
+            <div style="color: var(--text-secondary);">To'g'ri</div>
+        </div>
+        
+        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 10px; text-align: center;">
+            <div style="font-size: 24px; font-weight: 700; color: var(--danger);" id="wrongCount">0</div>
+            <div style="color: var(--text-secondary);">Noto'g'ri</div>
+        </div>
+        
+        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 10px; text-align: center;">
+            <div style="font-size: 24px; font-weight: 700; color: var(--warning);" id="skippedCount">0</div>
+            <div style="color: var(--text-secondary);">O'tkazib yuborilgan</div>
+        </div>
+    </div>
+    
+    <!-- Tugmalar -->
+    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
         <button class="btn btn-primary" onclick="restartQuiz()">
             <i class="fas fa-redo"></i> Qayta boshlash
         </button>
+        
         <button class="btn btn-outline" onclick="showAnswers()">
             <i class="fas fa-eye"></i> Javoblarni ko'rish
+        </button>
+        
+        <button class="btn btn-outline" onclick="shareResults()">
+            <i class="fas fa-share-alt"></i> Ulashish
         </button>
     </div>
 </div>
 
-<!-- Test savollari (JavaScript) -->
+<!-- Javoblar tahlili -->
+<div class="card" id="answersAnalysis" style="display: none;">
+    <div class="card-title">
+        <i class="fas fa-list"></i>
+        <h2>Javoblar tahlili</h2>
+    </div>
+    
+    <div id="answersList">
+        <!-- JS orqali to'ldiriladi -->
+    </div>
+    
+    <div style="text-align: center; margin-top: 20px;">
+        <button class="btn btn-primary" onclick="backToResults()">
+            <i class="fas fa-arrow-left"></i> Natijalarga qaytish
+        </button>
+    </div>
+</div>
+
 <script>
 // Test savollari
 const quizQuestions = [
@@ -216,6 +301,116 @@ const quizQuestions = [
         ],
         correct: 1,
         explanation: "Shaxsiy ma'lumotlarni (manzil, telefon) ijtimoiy tarmoqlarda yozish xavfli."
+    },
+    {
+        question: "Spam xabar qanday belgilar bilan aniqlanadi?",
+        options: [
+            "Rasmlar bilan",
+            "Shoshilinch, sovrin yutdingiz degan so'zlar",
+            "Uzun matn",
+            "Video bilan"
+        ],
+        correct: 1,
+        explanation: "Spam xabarlar odatda shoshilinch, sovrin yutdingiz kabi so'zlar bilan keladi."
+    },
+    {
+        question: "Keylogger nima?",
+        options: [
+            "Klaviatura dasturi",
+            "Tugmalarni bosishni yozib oluvchi dastur",
+            "Ekran dasturi",
+            "Ovoz yozish dasturi"
+        ],
+        correct: 1,
+        explanation: "Keylogger - foydalanuvchining klaviaturada bosgan tugmalarini yozib oluvchi dastur."
+    },
+    {
+        question: "Botnet nima?",
+        options: [
+            "Robotlar tarmog'i",
+            "Zararli dasturlar tarmog'i",
+            "Antivirus dasturi",
+            "Brauzer"
+        ],
+        correct: 1,
+        explanation: "Botnet - zararli dasturlar bilan boshqariladigan kompyuterlar tarmog'i."
+    },
+    {
+        question: "DDoS hujumi nima?",
+        options: [
+            "Ma'lumot o'g'irlash",
+            "Serverga haddan tashqari ko'p so'rov yuborish",
+            "Virus tarqatish",
+            "Parol o'g'irlash"
+        ],
+        correct: 1,
+        explanation: "DDoS - serverga juda ko'p so'rov yuborib, uni ishdan chiqarish hujumi."
+    },
+    {
+        question: "Xavfsiz parol qancha uzunlikda bo'lishi kerak?",
+        options: [
+            "4-6 belgi",
+            "8-12 belgi",
+            "12-16 belgi",
+            "20+ belgi"
+        ],
+        correct: 2,
+        explanation: "Xavfsiz parol kamida 12-16 belgidan iborat bo'lishi kerak."
+    },
+    {
+        question: "Social engineering nima?",
+        options: [
+            "Ijtimoiy tarmoq",
+            "Odamlarni aldab ma'lumot olish",
+            "Dasturlash",
+            "Shifrlash"
+        ],
+        correct: 1,
+        explanation: "Social engineering - odamlarni aldab, maxfiy ma'lumotlarni olish usuli."
+    },
+    {
+        question: "Zero-day exploit nima?",
+        options: [
+            "0 kunlik hujum",
+            "Yangi aniqlangan xavfsizlik zaifligi",
+            "Antivirus dasturi",
+            "Shifrlash usuli"
+        ],
+        correct: 1,
+        explanation: "Zero-day - hali hech kim bilmagan va tuzatilmagan xavfsizlik zaifligi."
+    },
+    {
+        question: "Man-in-the-Middle hujumi nima?",
+        options: [
+            "O'rtadagi odam hujumi",
+            "Virus tarqatish",
+            "Parol o'g'irlash",
+            "Spam yuborish"
+        ],
+        correct: 0,
+        explanation: "Man-in-the-Middle - hujumchi ikki tomon o'rtasidagi aloqani ushlab turishi."
+    },
+    {
+        question: "Biometrik autentifikatsiya nima?",
+        options: [
+            "Parol bilan kirish",
+            "Barmoq izi, yuz tanish orqali kirish",
+            "SMS kod bilan kirish",
+            "Email bilan kirish"
+        ],
+        correct: 1,
+        explanation: "Biometrik autentifikatsiya - barmoq izi, yuz tanish kabi biologik xususiyatlar orqali kirish."
+    },
+    {
+        question: "Adware nima?",
+        options: [
+            "Reklama ko'rsatuvchi dastur",
+            "Antivirus dasturi",
+            "Brauzer",
+            "Shifrlash dasturi"
+        ],
+        correct: 0,
+        explanation: "Adware - doimiy reklamalar ko'rsatuvchi dastur."
     }
 ];
 
@@ -224,6 +419,9 @@ let userAnswers = new Array(quizQuestions.length).fill(-1);
 let timer;
 let timeLeft = 30;
 let score = 0;
+let correctAnswers = 0;
+let wrongAnswers = 0;
+let skippedAnswers = 0;
 
 function startQuiz() {
     document.getElementById('quizStart').style.display = 'none';
@@ -235,31 +433,37 @@ function startQuiz() {
 function loadQuestion(index) {
     const q = quizQuestions[index];
     document.getElementById('questionText').textContent = q.question;
-    document.getElementById('questionCounter').textContent = `${index + 1}/${quizQuestions.length}`;
+    document.getElementById('questionCounter').innerHTML = `<i class="fas fa-question"></i> ${index + 1}/${quizQuestions.length}`;
     
     // Progress barni yangilash
     const progress = ((index + 1) / quizQuestions.length) * 100;
     document.getElementById('progressFill').style.width = progress + '%';
     
+    // Ballarni yangilash
+    document.getElementById('currentScore').textContent = score;
+    
     // Variantlarni ko'rsatish
     let optionsHtml = '';
     q.options.forEach((opt, i) => {
         const isSelected = userAnswers[index] === i;
+        const letters = ['A', 'B', 'C', 'D'];
         optionsHtml += `
             <div onclick="selectOption(${i})" 
+                 class="option-card"
+                 id="option-${index}-${i}"
                  style="background: ${isSelected ? 'var(--accent-primary)' : 'var(--bg-secondary)'}; 
-                        padding: 15px; 
-                        border-radius: 10px; 
+                        padding: 18px 20px; 
+                        border-radius: 12px; 
                         cursor: pointer;
                         transition: all 0.3s;
-                        border: 2px solid ${isSelected ? 'var(--accent-primary)' : 'transparent'};"
-                 id="option-${index}-${i}">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="width: 25px; height: 25px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                        ${String.fromCharCode(65 + i)}
-                    </span>
-                    ${opt}
+                        border: 2px solid ${isSelected ? 'var(--accent-primary)' : 'transparent'};
+                        display: flex;
+                        align-items: center;
+                        gap: 15px;">
+                <div style="width: 35px; height: 35px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">
+                    ${letters[i]}
                 </div>
+                <div style="flex: 1; font-size: 16px;">${opt}</div>
             </div>
         `;
     });
@@ -268,12 +472,31 @@ function loadQuestion(index) {
     // Oldingi/keyingi tugmalar holati
     document.getElementById('prevBtn').disabled = index === 0;
     document.getElementById('nextBtn').innerHTML = index === quizQuestions.length - 1 ? 
-        'Tugatish <i class="fas fa-check"></i>' : 
+        '<i class="fas fa-check"></i> Tugatish' : 
         'Keyingi <i class="fas fa-arrow-right"></i>';
 }
 
 function selectOption(optIndex) {
+    // Agar oldin javob berilgan bo'lsa, ballni qaytarish
+    if (userAnswers[currentQuestion] !== -1) {
+        const oldAnswer = userAnswers[currentQuestion];
+        if (oldAnswer === quizQuestions[currentQuestion].correct) {
+            score -= 5;
+            correctAnswers--;
+        } else {
+            wrongAnswers--;
+        }
+    }
+    
     userAnswers[currentQuestion] = optIndex;
+    
+    // Yangi javob bo'yicha ball hisoblash
+    if (optIndex === quizQuestions[currentQuestion].correct) {
+        score += 5;
+        correctAnswers++;
+    } else {
+        wrongAnswers++;
+    }
     
     // Barcha variantlardan selection ni olib tashlash
     for (let i = 0; i < quizQuestions[currentQuestion].options.length; i++) {
@@ -290,6 +513,8 @@ function selectOption(optIndex) {
         selectedOpt.style.background = 'var(--accent-primary)';
         selectedOpt.style.border = '2px solid var(--accent-primary)';
     }
+    
+    document.getElementById('currentScore').textContent = score;
 }
 
 function previousQuestion() {
@@ -315,8 +540,19 @@ function startTimer() {
         timeLeft--;
         document.getElementById('timer').textContent = timeLeft;
         
+        // Vaqt tugashiga 5 soniya qolganda qizil rang
+        if (timeLeft <= 5) {
+            document.getElementById('timer').style.color = 'var(--danger)';
+        }
+        
         if (timeLeft <= 0) {
             clearInterval(timer);
+            
+            // Agar javob berilmagan bo'lsa, o'tkazib yuborilgan deb hisoblash
+            if (userAnswers[currentQuestion] === -1) {
+                skippedAnswers++;
+            }
+            
             if (currentQuestion < quizQuestions.length - 1) {
                 nextQuestion();
             } else {
@@ -330,18 +566,16 @@ function resetTimer() {
     clearInterval(timer);
     timeLeft = 30;
     document.getElementById('timer').textContent = timeLeft;
+    document.getElementById('timer').style.color = 'var(--warning)';
     startTimer();
 }
 
 function finishQuiz() {
     clearInterval(timer);
     
-    // Ballarni hisoblash
-    score = 0;
-    userAnswers.forEach((answer, index) => {
-        if (answer === quizQuestions[index].correct) {
-            score += 5;
-        }
+    // O'tkazib yuborilganlarni hisoblash
+    userAnswers.forEach(answer => {
+        if (answer === -1) skippedAnswers++;
     });
     
     // Natijalarni ko'rsatish
@@ -354,22 +588,25 @@ function finishQuiz() {
     circle.style.strokeDashoffset = 283 - scorePercent;
     
     document.getElementById('scoreDisplay').textContent = score;
+    document.getElementById('correctCount').textContent = correctAnswers;
+    document.getElementById('wrongCount').textContent = wrongAnswers;
+    document.getElementById('skippedCount').textContent = skippedAnswers;
     
     // Natija xabari
     let message = '';
     let advice = '';
     if (score >= 80) {
         message = "Ajoyib! Siz kiberxavfsizlik bo'yicha mutaxassissiz! 🎉";
-        advice = "Bilimingizni yanada oshirish uchun cyber wiki bo'limini o'qishingiz mumkin.";
+        advice = "Bilimingizni yanada oshirish uchun Cyber Wiki bo'limini o'qishingiz mumkin.";
     } else if (score >= 60) {
         message = "Yaxshi! Sizda asosiy bilimlar mavjud. 👍";
-        advice = "Xatolaringizni tahlil qilib, cyber tips bo'limini o'qing.";
+        advice = "Xatolaringizni tahlil qilib, Cyber Tips bo'limini o'qing.";
     } else if (score >= 40) {
         message = "Qoniqarli, lekin ko'proq o'rganishingiz kerak. 📚";
         advice = "Kiberxavfsizlik asoslarini o'rganishni tavsiya qilamiz.";
     } else {
         message = "Sizga ko'proq o'rganish kerak. Kiberxavfsizlik muhim! ⚠️";
-        advice = "Cyber wiki va cyber tips bo'limlarini diqqat bilan o'qing.";
+        advice = "Cyber Wiki va Cyber Tips bo'limlarini diqqat bilan o'qing.";
     }
     
     document.getElementById('resultMessage').textContent = message;
@@ -380,32 +617,83 @@ function restartQuiz() {
     currentQuestion = 0;
     userAnswers = new Array(quizQuestions.length).fill(-1);
     score = 0;
+    correctAnswers = 0;
+    wrongAnswers = 0;
+    skippedAnswers = 0;
     timeLeft = 30;
     
     document.getElementById('quizResults').style.display = 'none';
+    document.getElementById('answersAnalysis').style.display = 'none';
     document.getElementById('quizStart').style.display = 'block';
 }
 
 function showAnswers() {
-    let answersHtml = '<div style="margin-top: 20px;"><h3>To\'g\'ri javoblar:</h3>';
+    document.getElementById('quizResults').style.display = 'none';
+    document.getElementById('answersAnalysis').style.display = 'block';
+    
+    let answersHtml = '';
     quizQuestions.forEach((q, index) => {
         const userAnswer = userAnswers[index];
         const isCorrect = userAnswer === q.correct;
+        const letters = ['A', 'B', 'C', 'D'];
+        
         answersHtml += `
-            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px; margin-bottom: 10px;">
-                <p><strong>${index + 1}. ${q.question}</strong></p>
-                <p>To\'g\'ri javob: ${q.options[q.correct]}</p>
-                <p style="color: ${isCorrect ? '#10b981' : '#ef4444'};">
-                    Sizning javob: ${userAnswer !== -1 ? q.options[userAnswer] : 'Javob berilmagan'}
-                </p>
-                <p style="color: var(--text-secondary);">${q.explanation}</p>
+            <div style="background: var(--bg-secondary); padding: 20px; border-radius: 12px; margin-bottom: 15px; border-left: 4px solid ${isCorrect ? 'var(--success)' : 'var(--danger)'};">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <h4>${index + 1}. ${q.question}</h4>
+                    <span class="badge ${isCorrect ? 'badge-success' : 'badge-danger'}">
+                        ${isCorrect ? '✓ To\'g\'ri' : '✗ Noto\'g\'ri'}
+                    </span>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px;">
+                    ${q.options.map((opt, i) => `
+                        <div style="padding: 8px 12px; background: ${i === q.correct ? 'rgba(16,185,129,0.2)' : i === userAnswer && i !== q.correct ? 'rgba(239,68,68,0.2)' : 'transparent'}; border-radius: 8px;">
+                            ${letters[i]}. ${opt}
+                            ${i === q.correct ? ' <i class="fas fa-check" style="color: var(--success);"></i>' : ''}
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                    <i class="fas fa-info-circle" style="color: var(--info);"></i>
+                    ${q.explanation}
+                </div>
             </div>
         `;
     });
-    answersHtml += '</div>';
     
-    const resultsDiv = document.getElementById('quizResults');
-    resultsDiv.innerHTML += answersHtml;
+    document.getElementById('answersList').innerHTML = answersHtml;
+}
+
+function backToResults() {
+    document.getElementById('answersAnalysis').style.display = 'none';
+    document.getElementById('quizResults').style.display = 'block';
+}
+
+function shareResults() {
+    const text = `Kiberxavfsizlik testidan ${score} ball to'pladim! Siz ham sinab ko'ring!`;
+    if (navigator.share) {
+        navigator.share({
+            title: 'Cyber Quiz natijalari',
+            text: text,
+            url: window.location.href
+        });
+    } else {
+        copyToClipboard(text);
+        showNotification('Natija nusxalandi!', 'success');
+    }
 }
 </script>
+
+<style>
+.option-card:hover {
+    transform: translateX(5px);
+    border-color: var(--accent-primary) !important;
+}
+
+#timer {
+    transition: color 0.3s;
+}
+</style>
 {% endblock %}
