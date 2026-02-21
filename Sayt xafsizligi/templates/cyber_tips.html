@@ -1,1 +1,28 @@
+{% extends "base.html" %}
 
+{% block page_title %}Kiberxavfsizlik Maslahatlari{% endblock %}
+{% block page_subtitle %}Xavfsiz internet uchun tavsiyalar{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-lightbulb"></i>
+        <h2>Barcha Maslahatlar</h2>
+    </div>
+    
+    <div style="display: grid; gap: 15px;">
+        {% for tip in cyber_tips %}
+        <div style="background: var(--bg-secondary); border-radius: 10px; padding: 20px; border-left: 4px solid {{ tip.color }};">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                <i class="{{ tip.icon }}" style="color: {{ tip.color }}; font-size: 20px;"></i>
+                <h3 style="margin: 0;">{{ tip.title }}</h3>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 10px;">{{ tip.content }}</p>
+            <span style="background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; font-size: 12px;">
+                {{ tip.category }}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
