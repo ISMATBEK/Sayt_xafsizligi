@@ -1,1 +1,213 @@
+{% extends "base.html" %}
 
+{% block page_title %}APK Analyzer{% endblock %}
+{% block page_subtitle %}Android ilovalar xavfsizlik tahlili{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-mobile-alt"></i>
+        <h2>APK Faylni Tahlil Qilish</h2>
+    </div>
+    
+    <div style="text-align: center; margin-bottom: 20px;">
+        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #f59e0b20, #d9770620); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-file-code" style="font-size: 40px; color: #f59e0b;"></i>
+        </div>
+        <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
+            Android ilovalaridagi xavfli ruxsatlar, zararli kodlar va xavfsizlik muammolarini aniqlang
+        </p>
+    </div>
+    
+    <form id="apkForm" action="{{ url_for('analyze_apk') }}" method="POST" enctype="multipart/form-data">
+        <div style="background: var(--bg-secondary); border-radius: 15px; padding: 30px; text-align: center; border: 2px dashed rgba(255,255,255,0.1);">
+            <i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: var(--accent-primary); margin-bottom: 15px;"></i>
+            <h3 style="margin-bottom: 10px;">APK faylni yuklang</h3>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 20px;">Maksimal hajm: 10MB</p>
+            
+            <div style="position: relative; display: inline-block;">
+                <input type="file" name="file" id="apkFile" accept=".apk" style="position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+                <button type="button" class="btn btn-primary" style="pointer-events: none;">
+                    <i class="fas fa-folder-open"></i> Fayl tanlash
+                </button>
+            </div>
+            
+            <div id="selectedFile" style="margin-top: 15px; color: var(--text-secondary); font-size: 13px; display: none;">
+                Tanlangan fayl: <span id="fileName"></span> (<span id="fileSize"></span> MB)
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button type="submit" class="btn btn-primary" id="analyzeBtn" style="width: 100%; padding: 15px;" disabled>
+                <i class="fas fa-search"></i> Tahlil qilish
+            </button>
+        </div>
+    </form>
+    
+    <div id="loading" style="display: none; text-align: center; padding: 30px;">
+        <div style="width: 50px; height: 50px; border: 3px solid var(--bg-secondary); border-top-color: var(--accent-primary); border-radius: 50%; margin: 0 auto 15px; animation: spin 1s linear infinite;"></div>
+        <p>APK tahlil qilinmoqda...</p>
+        <p style="color: var(--text-secondary); font-size: 13px;">Bu bir necha soniya davom etishi mumkin</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h2>Xavfli Ruxsatlar</h2>
+    </div>
+    
+    <div style="display: grid; gap: 15px;">
+        <div style="background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; padding: 15px; border-radius: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <i class="fas fa-envelope" style="color: #ef4444;"></i>
+                <h4 style="margin: 0;">SMS yuborish</h4>
+                <span class="badge badge-danger">YUQORI XAVF</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13px;">Pullik SMS yuborish orqali pul yechib olish mumkin</p>
+        </div>
+        
+        <div style="background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; padding: 15px; border-radius: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <i class="fas fa-map-marker-alt" style="color: #ef4444;"></i>
+                <h4 style="margin: 0;">Joylashuv</h4>
+                <span class="badge badge-warning">O'RTA XAVF</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13px;">Foydalanuvchi joylashuvini kuzatish imkoniyati</p>
+        </div>
+        
+        <div style="background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; padding: 15px; border-radius: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <i class="fas fa-address-book" style="color: #ef4444;"></i>
+                <h4 style="margin: 0;">Kontaktlarni o'qish</h4>
+                <span class="badge badge-warning">O'RTA XAVF</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13px;">Barcha kontaktlarni o'g'irlash imkoniyati</p>
+        </div>
+        
+        <div style="background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; padding: 15px; border-radius: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <i class="fas fa-camera" style="color: #ef4444;"></i>
+                <h4 style="margin: 0;">Kamera</h4>
+                <span class="badge badge-warning">O'RTA XAVF</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13px;">Yashirincha suratga olish va video yozish</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-shield-alt"></i>
+        <h2>Xavfsizlik bo'yicha tavsiyalar</h2>
+    </div>
+    
+    <div style="display: grid; gap: 15px;">
+        <div style="display: flex; gap: 15px;">
+            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+            <div>
+                <h4 style="margin-bottom: 5px;">Rasmiy manbalardan yuklab oling</h4>
+                <p style="color: var(--text-secondary); font-size: 13px;">Google Play Store, Samsung Galaxy Store kabi rasmiy do'konlardan foydalaning</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px;">
+            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+            <div>
+                <h4 style="margin-bottom: 5px;">Ruxsatlarni tekshiring</h4>
+                <p style="color: var(--text-secondary); font-size: 13px;">Ilovaga keraksiz ruxsatlar bermang (masalan, chiroq ilovasiga kontakt kerak emas)</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px;">
+            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+            <div>
+                <h4 style="margin-bottom: 5px;">Antivirus ishlating</h4>
+                <p style="color: var(--text-secondary); font-size: 13px;">Telefoningizda antivirus dasturi bo'lsin va muntazam tekshirib turing</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('apkFile').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const selectedFileDiv = document.getElementById('selectedFile');
+    const fileNameSpan = document.getElementById('fileName');
+    const fileSizeSpan = document.getElementById('fileSize');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    
+    if (file) {
+        // Fayl nomi va hajmi
+        fileNameSpan.textContent = file.name;
+        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        fileSizeSpan.textContent = fileSizeMB;
+        
+        // Hajm tekshiruvi (10MB)
+        if (fileSizeMB > 10) {
+            alert('Fayl hajmi 10MB dan katta! Kichikroq fayl tanlang.');
+            this.value = '';
+            selectedFileDiv.style.display = 'none';
+            analyzeBtn.disabled = true;
+            return;
+        }
+        
+        // Kengaytma tekshiruvi
+        if (!file.name.toLowerCase().endsWith('.apk')) {
+            alert('Faqat .apk fayllar qabul qilinadi!');
+            this.value = '';
+            selectedFileDiv.style.display = 'none';
+            analyzeBtn.disabled = true;
+            return;
+        }
+        
+        selectedFileDiv.style.display = 'block';
+        analyzeBtn.disabled = false;
+    } else {
+        selectedFileDiv.style.display = 'none';
+        analyzeBtn.disabled = true;
+    }
+});
+
+document.getElementById('apkForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const form = this;
+    const formData = new FormData(form);
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const loading = document.getElementById('loading');
+    
+    analyzeBtn.disabled = true;
+    analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Tahlil qilinmoqda...';
+    loading.style.display = 'block';
+    
+    fetch(form.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = data.redirect;
+        } else {
+            alert('Xatolik: ' + data.error);
+            analyzeBtn.disabled = false;
+            analyzeBtn.innerHTML = '<i class="fas fa-search"></i> Tahlil qilish';
+            loading.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        alert('Xatolik yuz berdi: ' + error);
+        analyzeBtn.disabled = false;
+        analyzeBtn.innerHTML = '<i class="fas fa-search"></i> Tahlil qilish';
+        loading.style.display = 'none';
+    });
+});
+</script>
+
+<style>
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}
