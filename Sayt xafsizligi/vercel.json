@@ -27,11 +27,5 @@
   "env": {
     "PYTHONPATH": ".",
     "PYTHONUNBUFFERED": "1"
-  },
-  "functions": {
-    "app.py": {
-      "maxDuration": 10,
-      "memory": 1024
-    }
   }
 }
