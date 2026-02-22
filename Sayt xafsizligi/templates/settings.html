@@ -1,538 +1,245 @@
 {% extends "base.html" %}
 
 {% block page_title %}Sozlamalar{% endblock %}
-{% block page_subtitle %}Hisobingiz va ilova sozlamalari{% endblock %}
+{% block page_subtitle %}Hisob va ilova sozlamalari{% endblock %}
 
 {% block content %}
 <div class="grid-2">
     <!-- Chap ustun -->
     <div>
-        <!-- Profil sozlamalari -->
+        <!-- Profil -->
         <div class="card">
-            <div class="card-title">
-                <i class="fas fa-user-circle"></i>
-                <h2>Profil ma'lumotlari</h2>
-            </div>
-            
-            <div style="display: flex; gap: 30px; align-items: center; flex-wrap: wrap;">
-                <div style="text-align: center;">
-                    <div style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                        <span style="font-size: 40px; color: white;">U</span>
-                    </div>
-                    <button class="btn btn-outline" style="font-size: 12px;" onclick="changeAvatar()">
-                        <i class="fas fa-camera"></i> Rasm yuklash
-                    </button>
+            <h2 style="margin-bottom: 20px;">Profil</h2>
+            <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <span style="font-size: 40px; color: white;">U</span>
                 </div>
-                
-                <div style="flex: 1;">
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">Foydalanuvchi nomi</label>
-                        <input type="text" id="username" value="CyberUser" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: var(--text-primary);">
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">Email</label>
-                        <input type="email" id="email" value="user@example.com" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: var(--text-primary);">
-                    </div>
-                    
-                    <button class="btn btn-primary" onclick="saveProfile()">
-                        <i class="fas fa-save"></i> Saqlash
+                <div>
+                    <h3>Foydalanuvchi</h3>
+                    <p style="color: var(--text-secondary);">user@example.com</p>
+                    <button class="btn btn-outline" style="padding: 5px 15px;" onclick="changePhoto()">
+                        <i class="fas fa-camera"></i> Rasm o'zgartirish
                     </button>
                 </div>
             </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Ism</label>
+                <input type="text" value="Foydalanuvchi" style="width: 100%; padding: 10px; border-radius: 8px; background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary);">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Email</label>
+                <input type="email" value="user@example.com" style="width: 100%; padding: 10px; border-radius: 8px; background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary);">
+            </div>
+            <button class="btn btn-primary" onclick="saveProfile()">
+                <i class="fas fa-save"></i> Saqlash
+            </button>
         </div>
         
-        <!-- Xabarnoma sozlamalari -->
+        <!-- Xabarnomalar -->
         <div class="card">
-            <div class="card-title">
-                <i class="fas fa-bell"></i>
-                <h2>Xabarnomalar</h2>
+            <h2 style="margin-bottom: 20px;">Xabarnomalar</h2>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <div>
+                    <h4>Email xabarnomalar</h4>
+                    <p style="color: var(--text-secondary);">Yangiliklar va maslahatlar</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="emailNotify" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
             
-            <div style="display: grid; gap: 15px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <h4>Email xabarnomalar</h4>
-                        <p style="color: var(--text-secondary); font-size: 13px;">Yangiliklar va maslahatlar</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="emailNotifications" checked>
-                        <span class="slider round"></span>
-                    </label>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <div>
+                    <h4>Test natijalari</h4>
+                    <p style="color: var(--text-secondary);">Test tugagach xabar olish</p>
                 </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <h4>Test natijalari</h4>
-                        <p style="color: var(--text-secondary); font-size: 13px;">Test tugagach xabar olish</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="testNotifications" checked>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <h4>Xavfsizlik yangiliklari</h4>
-                        <p style="color: var(--text-secondary); font-size: 13px;">Yangi xavflar haqida</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="securityNotifications">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <h4>Brauzer xabarnomalari</h4>
-                        <p style="color: var(--text-secondary); font-size: 13px;">To'g'ridan-to'g'ri bildirishnomalar</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="browserNotifications">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Til sozlamalari -->
-        <div class="card">
-            <div class="card-title">
-                <i class="fas fa-language"></i>
-                <h2>Til sozlamalari</h2>
+                <label class="switch">
+                    <input type="checkbox" id="quizNotify" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
             
-            <div style="display: grid; gap: 10px;">
-                <div onclick="setLanguage('uz')" style="display: flex; align-items: center; gap: 15px; padding: 12px; background: var(--bg-secondary); border-radius: 10px; cursor: pointer; border: 2px solid var(--accent-primary);" id="langUz">
-                    <img src="https://flagcdn.com/uz.svg" style="width: 30px; height: 20px; border-radius: 3px;">
-                    <div>
-                        <h4>O'zbek tili</h4>
-                        <p style="color: var(--text-secondary); font-size: 12px;">Uzbek</p>
-                    </div>
-                    <i class="fas fa-check" style="margin-left: auto; color: var(--success);"></i>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h4>Xavfsizlik yangiliklari</h4>
+                    <p style="color: var(--text-secondary);">Yangi xavflar haqida</p>
                 </div>
-                
-                <div onclick="setLanguage('ru')" style="display: flex; align-items: center; gap: 15px; padding: 12px; background: var(--bg-secondary); border-radius: 10px; cursor: pointer;" id="langRu">
-                    <img src="https://flagcdn.com/ru.svg" style="width: 30px; height: 20px; border-radius: 3px;">
-                    <div>
-                        <h4>Русский язык</h4>
-                        <p style="color: var(--text-secondary); font-size: 12px;">Russian</p>
-                    </div>
-                </div>
-                
-                <div onclick="setLanguage('en')" style="display: flex; align-items: center; gap: 15px; padding: 12px; background: var(--bg-secondary); border-radius: 10px; cursor: pointer;" id="langEn">
-                    <img src="https://flagcdn.com/us.svg" style="width: 30px; height: 20px; border-radius: 3px;">
-                    <div>
-                        <h4>English</h4>
-                        <p style="color: var(--text-secondary); font-size: 12px;">English</p>
-                    </div>
-                </div>
+                <label class="switch">
+                    <input type="checkbox" id="securityNotify">
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
     </div>
     
     <!-- O'ng ustun -->
     <div>
-        <!-- Ko'rinish sozlamalari -->
+        <!-- Ko'rinish -->
         <div class="card">
-            <div class="card-title">
-                <i class="fas fa-palette"></i>
-                <h2>Ko'rinish</h2>
-            </div>
+            <h2 style="margin-bottom: 20px;">Ko'rinish</h2>
             
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
-                <div onclick="setTheme('dark')" style="background: var(--bg-secondary); padding: 20px; border-radius: 10px; text-align: center; cursor: pointer; border: 2px solid var(--accent-primary);" id="darkTheme">
-                    <i class="fas fa-moon" style="font-size: 30px; color: var(--accent-primary); margin-bottom: 10px;"></i>
-                    <h4>Qorong'i</h4>
-                    <p style="color: var(--text-secondary); font-size: 12px;">Kecha rejimi</p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                <div onclick="setTheme('dark')" style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid var(--accent-primary);" id="darkTheme">
+                    <i class="fas fa-moon" style="font-size: 24px;"></i>
+                    <p>Qorong'i</p>
                 </div>
-                
-                <div onclick="setTheme('light')" style="background: var(--bg-secondary); padding: 20px; border-radius: 10px; text-align: center; cursor: pointer;" id="lightTheme">
-                    <i class="fas fa-sun" style="font-size: 30px; color: #f59e0b; margin-bottom: 10px;"></i>
-                    <h4>Yorug'</h4>
-                    <p style="color: var(--text-secondary); font-size: 12px;">Kunduzgi rejim</p>
+                <div onclick="setTheme('light')" style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; text-align: center; cursor: pointer;" id="lightTheme">
+                    <i class="fas fa-sun" style="font-size: 24px;"></i>
+                    <p>Yorug'</p>
                 </div>
-                
-                <div onclick="setTheme('auto')" style="background: var(--bg-secondary); padding: 20px; border-radius: 10px; text-align: center; cursor: pointer;" id="autoTheme">
-                    <i class="fas fa-cog" style="font-size: 30px; color: var(--text-secondary); margin-bottom: 10px;"></i>
-                    <h4>Avtomatik</h4>
-                    <p style="color: var(--text-secondary); font-size: 12px;">Tizim sozlamasiga mos</p>
+                <div onclick="setTheme('auto')" style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; text-align: center; cursor: pointer;" id="autoTheme">
+                    <i class="fas fa-cog" style="font-size: 24px;"></i>
+                    <p>Avto</p>
                 </div>
             </div>
         </div>
         
-        <!-- Xavfsizlik sozlamalari -->
+        <!-- Xavfsizlik -->
         <div class="card">
-            <div class="card-title">
-                <i class="fas fa-lock"></i>
-                <h2>Xavfsizlik</h2>
+            <h2 style="margin-bottom: 20px;">Xavfsizlik</h2>
+            
+            <div style="margin-bottom: 20px;">
+                <h4>Parolni o'zgartirish</h4>
+                <input type="password" id="currentPass" placeholder="Joriy parol" style="width: 100%; padding: 10px; border-radius: 8px; margin-bottom: 10px; background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.1);">
+                <input type="password" id="newPass" placeholder="Yangi parol" style="width: 100%; padding: 10px; border-radius: 8px; margin-bottom: 10px; background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.1);">
+                <input type="password" id="confirmPass" placeholder="Yangi parol (takror)" style="width: 100%; padding: 10px; border-radius: 8px; margin-bottom: 10px; background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.1);">
+                <button class="btn btn-primary" onclick="changePassword()">
+                    <i class="fas fa-key"></i> Yangilash
+                </button>
             </div>
             
-            <div style="display: grid; gap: 20px;">
-                <div>
-                    <h4 style="margin-bottom: 15px;">Parolni o'zgartirish</h4>
-                    <input type="password" id="currentPassword" placeholder="Joriy parol" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: var(--text-primary); margin-bottom: 10px;">
-                    <input type="password" id="newPassword" placeholder="Yangi parol" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: var(--text-primary); margin-bottom: 10px;">
-                    <input type="password" id="confirmPassword" placeholder="Yangi parol (takror)" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: var(--text-primary); margin-bottom: 15px;">
-                    
-                    <!-- Parol kuchi indikatori -->
-                    <div style="margin-bottom: 15px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                            <span>Parol kuchi:</span>
-                            <span id="passwordStrength">Kuchsiz</span>
-                        </div>
-                        <div class="progress-bar" style="height: 8px;">
-                            <div class="progress-fill" id="passwordStrengthBar" style="width: 0%;"></div>
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-primary" onclick="changePassword()">Parolni yangilash</button>
-                </div>
-                
-                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                    <h4 style="margin-bottom: 10px;">Ikki bosqichli autentifikatsiya (2FA)</h4>
-                    <p style="color: var(--text-secondary); margin-bottom: 15px;">Hisobingiz xavfsizligini oshiring</p>
-                    <button class="btn btn-outline" onclick="enable2FA()">
-                        <i class="fas fa-qrcode"></i> Yoqish
-                    </button>
-                </div>
-                
-                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                    <h4 style="margin-bottom: 10px;">Faol sessiyalar</h4>
-                    <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px; margin-bottom: 10px;">
-                        <div style="display: flex; justify-content: space-between;">
-                            <div>
-                                <p><i class="fas fa-laptop"></i> Bu qurilma</p>
-                                <p style="color: var(--text-secondary); font-size: 12px;">Toshkent, O'zbekiston • Hozir faol</p>
-                            </div>
-                            <span class="badge badge-success">Faol</span>
-                        </div>
-                    </div>
-                    <button class="btn btn-outline" style="color: var(--danger); border-color: var(--danger);">
-                        <i class="fas fa-sign-out-alt"></i> Barcha qurilmalardan chiqish
-                    </button>
-                </div>
+            <div>
+                <h4>Ikki bosqichli autentifikatsiya</h4>
+                <p style="color: var(--text-secondary); margin-bottom: 10px;">Hisobingiz xavfsizligini oshiring</p>
+                <button class="btn btn-outline" onclick="enable2FA()">
+                    <i class="fas fa-qrcode"></i> Yoqish
+                </button>
             </div>
         </div>
         
-        <!-- Ma'lumotlarni boshqarish -->
+        <!-- Ma'lumotlar -->
         <div class="card">
-            <div class="card-title">
-                <i class="fas fa-database"></i>
-                <h2>Ma'lumotlar</h2>
-            </div>
+            <h2 style="margin-bottom: 20px;">Ma'lumotlar</h2>
             
-            <div style="display: grid; gap: 15px;">
-                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                    <button class="btn btn-outline" onclick="exportData()" style="flex: 1;">
-                        <i class="fas fa-download"></i> Ma'lumotlarni yuklash
-                    </button>
-                    <button class="btn btn-outline" onclick="importData()" style="flex: 1;">
-                        <i class="fas fa-upload"></i> Ma'lumotlarni tiklash
-                    </button>
-                </div>
-                
-                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                    <button class="btn btn-outline" onclick="clearHistory()" style="flex: 1;">
-                        <i class="fas fa-trash"></i> Tarixni tozalash
-                    </button>
-                    <button class="btn btn-outline" onclick="resetSettings()" style="flex: 1;">
-                        <i class="fas fa-undo"></i> Standart sozlamalar
-                    </button>
-                </div>
-                
-                <button class="btn btn-danger" onclick="deleteAccount()" style="width: 100%;">
-                    <i class="fas fa-exclamation-triangle"></i> Hisobni o'chirish
+            <div style="display: grid; gap: 10px;">
+                <button class="btn btn-outline" onclick="exportData()">
+                    <i class="fas fa-download"></i> Ma'lumotlarni yuklash
+                </button>
+                <button class="btn btn-outline" onclick="importData()">
+                    <i class="fas fa-upload"></i> Ma'lumotlarni tiklash
+                </button>
+                <button class="btn btn-outline" style="border-color: var(--danger); color: var(--danger);" onclick="deleteAccount()">
+                    <i class="fas fa-trash"></i> Hisobni o'chirish
                 </button>
             </div>
         </div>
     </div>
 </div>
 
+<style>
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-secondary);
+    transition: .3s;
+    border-radius: 24px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: var(--accent-primary);
+}
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+</style>
+
 <script>
-// Theme sozlamalari
 function setTheme(theme) {
-    const root = document.documentElement;
-    const body = document.body;
-    
-    // Barcha theme cardlaridan border olib tashlash
     document.getElementById('darkTheme').style.border = '2px solid transparent';
     document.getElementById('lightTheme').style.border = '2px solid transparent';
     document.getElementById('autoTheme').style.border = '2px solid transparent';
     
     if (theme === 'dark') {
-        body.classList.remove('light-mode');
+        document.body.classList.remove('light-mode');
         document.getElementById('darkTheme').style.border = '2px solid var(--accent-primary)';
-        localStorage.setItem('theme', 'dark');
     } else if (theme === 'light') {
-        body.classList.add('light-mode');
+        document.body.classList.add('light-mode');
         document.getElementById('lightTheme').style.border = '2px solid var(--accent-primary)';
-        localStorage.setItem('theme', 'light');
     } else {
-        // Tizim sozlamasiga moslash
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            body.classList.remove('light-mode');
-        } else {
-            body.classList.add('light-mode');
-        }
         document.getElementById('autoTheme').style.border = '2px solid var(--accent-primary)';
-        localStorage.setItem('theme', 'auto');
     }
-    
-    showNotification('Tema o\'zgartirildi', 'success');
 }
 
-// Til sozlamalari
-function setLanguage(lang) {
-    const langUz = document.getElementById('langUz');
-    const langRu = document.getElementById('langRu');
-    const langEn = document.getElementById('langEn');
-    
-    langUz.style.border = '2px solid transparent';
-    langRu.style.border = '2px solid transparent';
-    langEn.style.border = '2px solid transparent';
-    
-    langUz.querySelector('.fa-check')?.remove();
-    langRu.querySelector('.fa-check')?.remove();
-    langEn.querySelector('.fa-check')?.remove();
-    
-    if (lang === 'uz') {
-        langUz.style.border = '2px solid var(--success)';
-        langUz.innerHTML += '<i class="fas fa-check" style="margin-left: auto; color: var(--success);"></i>';
-    } else if (lang === 'ru') {
-        langRu.style.border = '2px solid var(--success)';
-        langRu.innerHTML += '<i class="fas fa-check" style="margin-left: auto; color: var(--success);"></i>';
-    } else {
-        langEn.style.border = '2px solid var(--success)';
-        langEn.innerHTML += '<i class="fas fa-check" style="margin-left: auto; color: var(--success);"></i>';
-    }
-    
-    localStorage.setItem('language', lang);
-    showNotification('Til o\'zgartirildi', 'success');
-}
-
-// Parol kuchini tekshirish
-document.getElementById('newPassword').addEventListener('input', function() {
-    const password = this.value;
-    let strength = 0;
-    
-    if (password.length >= 8) strength += 25;
-    if (password.length >= 12) strength += 15;
-    if (/[A-Z]/.test(password)) strength += 20;
-    if (/[a-z]/.test(password)) strength += 20;
-    if (/[0-9]/.test(password)) strength += 10;
-    if (/[^A-Za-z0-9]/.test(password)) strength += 10;
-    
-    const bar = document.getElementById('passwordStrengthBar');
-    const text = document.getElementById('passwordStrength');
-    
-    bar.style.width = strength + '%';
-    
-    if (strength < 40) {
-        bar.style.background = 'var(--danger)';
-        text.textContent = 'Kuchsiz';
-        text.style.color = 'var(--danger)';
-    } else if (strength < 70) {
-        bar.style.background = 'var(--warning)';
-        text.textContent = 'O\'rtacha';
-        text.style.color = 'var(--warning)';
-    } else {
-        bar.style.background = 'var(--success)';
-        text.textContent = 'Kuchli';
-        text.style.color = 'var(--success)';
-    }
-});
-
-// Profil saqlash
 function saveProfile() {
-    const username = document.getElementById('username').value;
-    const email = document.getElementById('email').value;
-    
-    // Bu yerda API ga so'rov yuborish kerak
-    showNotification('Profil saqlandi', 'success');
+    alert('Profil saqlandi!');
 }
 
-// Parol o'zgartirish
 function changePassword() {
-    const current = document.getElementById('currentPassword').value;
-    const newPass = document.getElementById('newPassword').value;
-    const confirm = document.getElementById('confirmPassword').value;
+    const current = document.getElementById('currentPass').value;
+    const newPass = document.getElementById('newPass').value;
+    const confirm = document.getElementById('confirmPass').value;
     
     if (!current || !newPass || !confirm) {
-        showNotification('Barcha maydonlarni to\'ldiring', 'warning');
+        alert('Barcha maydonlarni to\'ldiring!');
         return;
     }
     
     if (newPass !== confirm) {
-        showNotification('Yangi parollar mos kelmadi', 'danger');
+        alert('Yangi parollar mos kelmadi!');
         return;
     }
     
-    if (newPass.length < 8) {
-        showNotification('Parol kamida 8 belgidan iborat bo\'lishi kerak', 'warning');
-        return;
-    }
-    
-    // API ga so'rov
-    showNotification('Parol o\'zgartirildi', 'success');
-    
-    document.getElementById('currentPassword').value = '';
-    document.getElementById('newPassword').value = '';
-    document.getElementById('confirmPassword').value = '';
+    alert('Parol muvaffaqiyatli o\'zgartirildi!');
 }
 
-// Xabarnoma sozlamalarini saqlash
-function saveNotifications() {
-    const settings = {
-        email: document.getElementById('emailNotifications').checked,
-        test: document.getElementById('testNotifications').checked,
-        security: document.getElementById('securityNotifications').checked,
-        browser: document.getElementById('browserNotifications').checked
-    };
-    
-    localStorage.setItem('notificationSettings', JSON.stringify(settings));
-    showNotification('Xabarnoma sozlamalari saqlandi', 'success');
+function enable2FA() {
+    alert('2FA sozlamalari ochilmoqda...');
 }
 
-// Xabarnoma sozlamalarini yuklash
-function loadNotifications() {
-    const saved = localStorage.getItem('notificationSettings');
-    if (saved) {
-        const settings = JSON.parse(saved);
-        document.getElementById('emailNotifications').checked = settings.email;
-        document.getElementById('testNotifications').checked = settings.test;
-        document.getElementById('securityNotifications').checked = settings.security;
-        document.getElementById('browserNotifications').checked = settings.browser;
-    }
-}
-
-// Ma'lumotlarni yuklash
 function exportData() {
-    const data = {
-        settings: localStorage,
-        timestamp: new Date().toISOString()
-    };
-    
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'cyberdash-backup.json';
-    a.click();
-    
-    showNotification('Ma\'lumotlar yuklandi', 'success');
+    alert('Ma\'lumotlar yuklanmoqda...');
 }
 
-// Ma'lumotlarni tiklash
 function importData() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    
-    input.onchange = function(e) {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            try {
-                const data = JSON.parse(e.target.result);
-                // Ma'lumotlarni tiklash
-                showNotification('Ma\'lumotlar tiklandi', 'success');
-            } catch {
-                showNotification('Xato fayl formati', 'danger');
-            }
-        };
-        
-        reader.readAsText(file);
-    };
-    
-    input.click();
+    alert('Ma\'lumotlar tiklanmoqda...');
 }
 
-// Tarixni tozalash
-function clearHistory() {
-    if (confirm('Skanerlash tarixini tozalashni xohlaysizmi?')) {
-        localStorage.removeItem('passwordHistory');
-        localStorage.removeItem('scanHistory');
-        showNotification('Tarix tozalandi', 'success');
-    }
-}
-
-// Sozlamalarni standartga qaytarish
-function resetSettings() {
-    if (confirm('Barcha sozlamalarni standart holatga qaytarishni xohlaysizmi?')) {
-        localStorage.clear();
-        location.reload();
-    }
-}
-
-// Hisobni o'chirish
 function deleteAccount() {
     if (confirm('Hisobingizni o\'chirishni xohlaysizmi? Bu amalni qaytarib bo\'lmaydi!')) {
-        // API ga so'rov
-        showNotification('Hisob o\'chirildi', 'danger');
-        setTimeout(() => {
-            window.location.href = '/';
-        }, 2000);
+        alert('Hisob o\'chirildi');
     }
 }
 
-// 2FA yoqish
-function enable2FA() {
-    showNotification('2FA sozlamalari ochilmoqda...', 'info');
-    // 2FA modal oynasini ochish
-}
-
-// Rasm yuklash
-function changeAvatar() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    
-    input.onchange = function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            // Rasmni yuklash
-            showNotification('Rasm yuklandi', 'success');
-        }
-    };
-    
-    input.click();
-}
-
-// Sahifa yuklanganda
-document.addEventListener('DOMContentLoaded', function() {
-    // Saqlangan themeni yuklash
-    const savedTheme = localStorage.getItem('theme') || 'auto';
-    setTheme(savedTheme);
-    
-    // Saqlangan tilni yuklash
-    const savedLang = localStorage.getItem('language') || 'uz';
-    setLanguage(savedLang);
-    
-    // Xabarnoma sozlamalarini yuklash
-    loadNotifications();
-});
-
-function showNotification(message, type) {
-    const notification = document.createElement('div');
-    notification.className = `alert alert-${type}`;
-    notification.style.position = 'fixed';
-    notification.style.top = '20px';
-    notification.style.right = '20px';
-    notification.style.zIndex = '3000';
-    notification.style.maxWidth = '300px';
-    notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.remove();
-    }, 3000);
+function changePhoto() {
+    alert('Rasm yuklash oynasi ochiladi');
 }
 </script>
 {% endblock %}
