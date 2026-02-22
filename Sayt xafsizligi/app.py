@@ -812,7 +812,6 @@ def contact():
         email = data.get('email', '')
         message = data.get('message', '')
         
-        # Email jo'natish (hozircha faqat muvaffaqiyatli deb hisoblaymiz)
         return jsonify({
             'success': True,
             'message': 'Xabaringiz qabul qilindi. Tez orada javob beramiz!'
