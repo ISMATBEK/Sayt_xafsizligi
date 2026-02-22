@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block page_title %}Yordam{% endblock %}
-{% block page_subtitle %}Ko'p so'raladigan savollar va qo'llanmalar{% endblock %}
+{% block page_subtitle %}Ko'p so'raladigan savollar va qo'llanma{% endblock %}
 
 {% block content %}
 <!-- Qidiruv -->
@@ -14,250 +14,126 @@
     </div>
 </div>
 
-<!-- Tezkor yordam kategoriyalari -->
+<!-- Kategoriyalar -->
 <div class="grid-4" style="margin-bottom: 25px;">
     <div class="card" style="text-align: center; cursor: pointer;" onclick="scrollToSection('scanner')">
-        <i class="fas fa-search" style="font-size: 30px; color: var(--accent-primary); margin-bottom: 10px;"></i>
+        <i class="fas fa-search" style="font-size: 30px; color: var(--accent-primary);"></i>
         <h4>Website Scanner</h4>
-        <p style="color: var(--text-secondary); font-size: 12px;">Sayt xavfsizligi</p>
     </div>
-    
     <div class="card" style="text-align: center; cursor: pointer;" onclick="scrollToSection('apk')">
-        <i class="fas fa-mobile-alt" style="font-size: 30px; color: #f59e0b; margin-bottom: 10px;"></i>
+        <i class="fas fa-mobile-alt" style="font-size: 30px; color: #f59e0b;"></i>
         <h4>APK Analyzer</h4>
-        <p style="color: var(--text-secondary); font-size: 12px;">Android tahlili</p>
     </div>
-    
     <div class="card" style="text-align: center; cursor: pointer;" onclick="scrollToSection('quiz')">
-        <i class="fas fa-question-circle" style="font-size: 30px; color: #10b981; margin-bottom: 10px;"></i>
+        <i class="fas fa-question-circle" style="font-size: 30px; color: #10b981;"></i>
         <h4>Cyber Quiz</h4>
-        <p style="color: var(--text-secondary); font-size: 12px;">Testlar</p>
     </div>
-    
-    <div class="card" style="text-align: center; cursor: pointer;" onclick="scrollToSection('settings')">
-        <i class="fas fa-cog" style="font-size: 30px; color: var(--info); margin-bottom: 10px;"></i>
-        <h4>Sozlamalar</h4>
-        <p style="color: var(--text-secondary); font-size: 12px;">Profil va sozlamalar</p>
+    <div class="card" style="text-align: center; cursor: pointer;" onclick="scrollToSection('account')">
+        <i class="fas fa-user" style="font-size: 30px; color: var(--info);"></i>
+        <h4>Hisob</h4>
     </div>
 </div>
 
-<!-- FAQ - Ko'p so'raladigan savollar -->
+<!-- FAQ -->
 <div class="card" id="faq">
-    <div class="card-title">
-        <i class="fas fa-question-circle"></i>
-        <h2>Ko'p so'raladigan savollar</h2>
-    </div>
+    <h2 style="margin-bottom: 20px;">Ko'p so'raladigan savollar</h2>
     
-    <div style="display: grid; gap: 15px;">
-        <!-- Website Scanner FAQ -->
-        <div class="faq-category" id="scanner">
-            <h3 style="margin-bottom: 15px; color: var(--accent-primary);">
-                <i class="fas fa-search"></i> Website Scanner
-            </h3>
-            
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px; background: var(--bg-secondary); border-radius: 10px;">
-                    <h4>🌐 Saytni qanday skanerlash mumkin?</h4>
+    <div style="margin-bottom: 30px;" id="scanner">
+        <h3 style="color: var(--accent-primary); margin-bottom: 15px;">📱 Website Scanner</h3>
+        
+        <div class="faq-item" style="margin-bottom: 10px;">
+            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; cursor: pointer;" onclick="toggleFaq(this)">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h4>Saytni qanday skanerlash mumkin?</h4>
                     <i class="fas fa-chevron-down"></i>
                 </div>
-                <div class="faq-answer" style="display: none; padding: 20px;">
-                    <p>Saytni skanerlash uchun quyidagi amallarni bajaring:</p>
-                    <ol style="margin-left: 20px; color: var(--text-secondary);">
-                        <li>Website Scanner bo'limiga o'ting</li>
-                        <li>Sayt manzilini kiriting (masalan: https://example.com)</li>
-                        <li>"Skanerlash" tugmasini bosing</li>
-                        <li>Natijalarni kuting (bir necha soniya)</li>
-                    </ol>
-                    <div class="alert alert-info" style="margin-top: 10px;">
-                        <i class="fas fa-info-circle"></i> HTTPS va HTTP manzillar qabul qilinadi
-                    </div>
+                <div class="faq-answer" style="display: none; margin-top: 15px;">
+                    <p>Website Scanner bo'limiga o'ting, sayt manzilini kiriting va "Skanerlash" tugmasini bosing. Bir necha soniya ichida natijalar ko'rsatiladi.</p>
                 </div>
             </div>
-            
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px; background: var(--bg-secondary); border-radius: 10px;">
-                    <h4>🔍 Skaner qanday ma'lumotlarni tekshiradi?</h4>
+        </div>
+        
+        <div class="faq-item" style="margin-bottom: 10px;">
+            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; cursor: pointer;" onclick="toggleFaq(this)">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h4>Qanday ma'lumotlar tekshiriladi?</h4>
                     <i class="fas fa-chevron-down"></i>
                 </div>
-                <div class="faq-answer" style="display: none; padding: 20px;">
-                    <p>Website scanner quyidagilarni tekshiradi:</p>
-                    <ul style="margin-left: 20px; color: var(--text-secondary);">
-                        <li>SSL/HTTPS mavjudligi va sozlamalari</li>
-                        <li>Xavfsizlik headerlari (X-Frame-Options, HSTS, CSP)</li>
-                        <li>Server ma'lumotlari va versiyalari</li>
-                        <li>Ochiq portlar va xizmatlar</li>
-                        <li>Xavfli sozlamalar va zaifliklar</li>
+                <div class="faq-answer" style="display: none; margin-top: 15px;">
+                    <ul>
+                        <li>SSL/HTTPS mavjudligi</li>
+                        <li>Xavfsizlik headerlari</li>
+                        <li>Server ma'lumotlari</li>
+                        <li>Ochiq portlar</li>
                         <li>SEO parametrlari</li>
                     </ul>
                 </div>
             </div>
         </div>
-        
-        <!-- APK Analyzer FAQ -->
-        <div class="faq-category" id="apk">
-            <h3 style="margin-bottom: 15px; color: #f59e0b;">
-                <i class="fas fa-mobile-alt"></i> APK Analyzer
-            </h3>
-            
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px; background: var(--bg-secondary); border-radius: 10px;">
-                    <h4>📱 APK faylni qanday tahlil qilish mumkin?</h4>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 20px;">
-                    <p>APK faylni tahlil qilish uchun:</p>
-                    <ol style="margin-left: 20px; color: var(--text-secondary);">
-                        <li>APK Analyzer bo'limiga o'ting</li>
-                        <li>"Fayl tanlash" tugmasini bosing</li>
-                        <li>APK faylingizni tanlang (maksimal 10MB)</li>
-                        <li>"Tahlil qilish" tugmasini bosing</li>
-                        <li>Natijalarni kuting (bir necha soniya)</li>
-                    </ol>
-                    <div class="alert alert-warning" style="margin-top: 10px;">
-                        <i class="fas fa-exclamation-triangle"></i> Faqat .apk kengaytmali fayllar qabul qilinadi!
-                    </div>
-                </div>
-            </div>
-            
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px; background: var(--bg-secondary); border-radius: 10px;">
-                    <h4>⚠️ Qanday ruxsatlar xavfli hisoblanadi?</h4>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 20px;">
-                    <p>Xavfli ruxsatlar ro'yxati:</p>
-                    <ul style="margin-left: 20px; color: var(--text-secondary);">
-                        <li><span class="badge badge-danger">YUQORI</span> SMS yuborish/o'qish</li>
-                        <li><span class="badge badge-danger">YUQORI</span> Qo'ng'iroqlar qilish</li>
-                        <li><span class="badge badge-warning">O'RTA</span> Kontaktlarni o'qish</li>
-                        <li><span class="badge badge-warning">O'RTA</span> Joylashuv</li>
-                        <li><span class="badge badge-warning">O'RTA</span> Kamera va mikrofon</li>
-                        <li><span class="badge badge-info">PAST</span> Internet</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Cyber Quiz FAQ -->
-        <div class="faq-category" id="quiz">
-            <h3 style="margin-bottom: 15px; color: #10b981;">
-                <i class="fas fa-question-circle"></i> Cyber Quiz
-            </h3>
-            
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px; background: var(--bg-secondary); border-radius: 10px;">
-                    <h4>📊 Test natijalari qanday hisoblanadi?</h4>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 20px;">
-                    <p>Test 20 ta savoldan iborat. Har bir to'g'ri javob 5 ball. Maksimal ball 100.</p>
-                    <p>Natijalar:</p>
-                    <ul style="margin-left: 20px; color: var(--text-secondary);">
-                        <li><span style="color: #10b981;">80-100 ball</span> - Ajoyib (Mutaxassis)</li>
-                        <li><span style="color: #f59e0b;">60-79 ball</span> - Yaxshi (O'rta daraja)</li>
-                        <li><span style="color: #f59e0b;">40-59 ball</span> - Qoniqarli (Boshlang'ich)</li>
-                        <li><span style="color: #ef4444;">0-39 ball</span> - O'rganish kerak (Yangi boshlovchi)</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px; background: var(--bg-secondary); border-radius: 10px;">
-                    <h4>⏱️ Test uchun qancha vaqt beriladi?</h4>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 20px;">
-                    <p>Har bir savol uchun 30 soniya vaqt beriladi. Agar vaqt tugasa, keyingi savolga o'tadi.</p>
-                    <p>Jami test taxminan 10 daqiqa davom etadi.</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Sozlamalar FAQ -->
-        <div class="faq-category" id="settings">
-            <h3 style="margin-bottom: 15px; color: var(--info);">
-                <i class="fas fa-cog"></i> Sozlamalar
-            </h3>
-            
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px; background: var(--bg-secondary); border-radius: 10px;">
-                    <h4>🎨 Tema qanday o'zgartiriladi?</h4>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 20px;">
-                    <p>Sozlamalar bo'limida "Ko'rinish" qismidan:</p>
-                    <ul style="margin-left: 20px; color: var(--text-secondary);">
-                        <li><i class="fas fa-moon"></i> Qorong'i tema - tun rejimi</li>
-                        <li><i class="fas fa-sun"></i> Yorug' tema - kunduz rejimi</li>
-                        <li><i class="fas fa-cog"></i> Avtomatik - tizim sozlamasiga mos</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px; background: var(--bg-secondary); border-radius: 10px;">
-                    <h4>🔔 Xabarnomalarni qanday sozlash mumkin?</h4>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 20px;">
-                    <p>Xabarnoma sozlamalari:</p>
-                    <ul style="margin-left: 20px; color: var(--text-secondary);">
-                        <li>Email xabarnomalar - yangiliklar va maslahatlar</li>
-                        <li>Test natijalari - test tugagach xabar olish</li>
-                        <li>Xavfsizlik yangiliklari - yangi xavflar haqida</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Video qo'llanmalar -->
-<div class="card">
-    <div class="card-title">
-        <i class="fas fa-video"></i>
-        <h2>Video qo'llanmalar</h2>
     </div>
     
-    <div class="grid-3">
-        <div class="card" style="padding: 0; overflow: hidden;">
-            <div style="height: 180px; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center;">
-                <i class="fas fa-play-circle" style="font-size: 50px; color: white; opacity: 0.8;"></i>
-            </div>
-            <div style="padding: 20px;">
-                <h4>Website scanner qo'llanma</h4>
-                <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 10px;">Sayt xavfsizligini tekshirish</p>
+    <div style="margin-bottom: 30px;" id="apk">
+        <h3 style="color: #f59e0b; margin-bottom: 15px;">📱 APK Analyzer</h3>
+        
+        <div class="faq-item" style="margin-bottom: 10px;">
+            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; cursor: pointer;" onclick="toggleFaq(this)">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: var(--text-secondary); font-size: 12px;"><i class="far fa-clock"></i> 3:45</span>
-                    <button class="btn btn-outline" style="padding: 5px 15px;" onclick="playVideo('scanner')">Ko'rish</button>
+                    <h4>APK faylni qanday tahlil qilish mumkin?</h4>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer" style="display: none; margin-top: 15px;">
+                    <p>APK Analyzer bo'limiga o'ting, "Fayl tanlash" tugmasini bosing, APK faylingizni yuklang va "Tahlil qilish" tugmasini bosing.</p>
+                    <p class="alert alert-warning" style="margin-top: 10px;">Maksimal fayl hajmi: 10MB</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="margin-bottom: 30px;" id="quiz">
+        <h3 style="color: #10b981; margin-bottom: 15px;">📝 Cyber Quiz</h3>
+        
+        <div class="faq-item" style="margin-bottom: 10px;">
+            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; cursor: pointer;" onclick="toggleFaq(this)">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h4>Test qancha vaqt davom etadi?</h4>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer" style="display: none; margin-top: 15px;">
+                    <p>Test 20 ta savoldan iborat. Har bir savol uchun 30 soniya vaqt beriladi. Jami taxminan 10 daqiqa davom etadi.</p>
                 </div>
             </div>
         </div>
         
-        <div class="card" style="padding: 0; overflow: hidden;">
-            <div style="height: 180px; background: linear-gradient(135deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center;">
-                <i class="fas fa-play-circle" style="font-size: 50px; color: white; opacity: 0.8;"></i>
-            </div>
-            <div style="padding: 20px;">
-                <h4>APK tahlil qilish</h4>
-                <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 10px;">Android ilovalarni tekshirish</p>
+        <div class="faq-item" style="margin-bottom: 10px;">
+            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; cursor: pointer;" onclick="toggleFaq(this)">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: var(--text-secondary); font-size: 12px;"><i class="far fa-clock"></i> 4:20</span>
-                    <button class="btn btn-outline" style="padding: 5px 15px;" onclick="playVideo('apk')">Ko'rish</button>
+                    <h4>Ballar qanday hisoblanadi?</h4>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer" style="display: none; margin-top: 15px;">
+                    <p>Har bir to'g'ri javob 5 ball. Maksimal ball 100.</p>
+                    <ul>
+                        <li>80-100 ball: Ajoyib</li>
+                        <li>60-79 ball: Yaxshi</li>
+                        <li>40-59 ball: Qoniqarli</li>
+                        <li>0-39 ball: O'rganish kerak</li>
+                    </ul>
                 </div>
             </div>
         </div>
+    </div>
+    
+    <div style="margin-bottom: 30px;" id="account">
+        <h3 style="color: var(--info); margin-bottom: 15px;">👤 Hisob sozlamalari</h3>
         
-        <div class="card" style="padding: 0; overflow: hidden;">
-            <div style="height: 180px; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center;">
-                <i class="fas fa-play-circle" style="font-size: 50px; color: white; opacity: 0.8;"></i>
-            </div>
-            <div style="padding: 20px;">
-                <h4>Kiberxavfsizlik asoslari</h4>
-                <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 10px;">Boshlang'ichlar uchun</p>
+        <div class="faq-item" style="margin-bottom: 10px;">
+            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; cursor: pointer;" onclick="toggleFaq(this)">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: var(--text-secondary); font-size: 12px;"><i class="far fa-clock"></i> 15:30</span>
-                    <button class="btn btn-outline" style="padding: 5px 15px;" onclick="playVideo('basics')">Ko'rish</button>
+                    <h4>Parolni qanday o'zgartirish mumkin?</h4>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer" style="display: none; margin-top: 15px;">
+                    <p>Sozlamalar bo'limiga o'ting, "Xavfsizlik" qismidan parolingizni o'zgartirishingiz mumkin.</p>
                 </div>
             </div>
         </div>
@@ -266,39 +142,30 @@
 
 <!-- Bog'lanish -->
 <div class="card">
-    <div class="card-title">
-        <i class="fas fa-headset"></i>
-        <h2>Texnik yordam</h2>
-    </div>
-    
+    <h2 style="margin-bottom: 20px;">Bog'lanish</h2>
     <div class="grid-3">
         <div style="text-align: center;">
-            <i class="fas fa-envelope" style="font-size: 40px; color: var(--accent-primary); margin-bottom: 10px;"></i>
+            <i class="fas fa-envelope" style="font-size: 40px; color: var(--accent-primary);"></i>
             <h4>Email</h4>
-            <p style="color: var(--text-secondary);">support@cyberdash.uz</p>
-            <p style="color: var(--text-secondary); font-size: 12px;">24/7 javob beramiz</p>
-            <button class="btn btn-outline" style="margin-top: 10px;" onclick="window.location.href='mailto:support@cyberdash.uz'">
-                <i class="fas fa-envelope"></i> Yozish
+            <p>support@cyberdash.uz</p>
+            <button class="btn btn-outline" onclick="window.location.href='mailto:support@cyberdash.uz'">
+                Yozish
             </button>
         </div>
-        
         <div style="text-align: center;">
-            <i class="fab fa-telegram" style="font-size: 40px; color: #0088cc; margin-bottom: 10px;"></i>
+            <i class="fab fa-telegram" style="font-size: 40px; color: #0088cc;"></i>
             <h4>Telegram</h4>
-            <p style="color: var(--text-secondary);">@cyberdash_support</p>
-            <p style="color: var(--text-secondary); font-size: 12px;">Tez javob, 24/7</p>
-            <button class="btn btn-outline" style="margin-top: 10px;" onclick="window.open('https://t.me/cyberdash_support')">
-                <i class="fab fa-telegram"></i> Yozish
+            <p>@cyberdash_support</p>
+            <button class="btn btn-outline" onclick="window.open('https://t.me/cyberdash_support')">
+                Yozish
             </button>
         </div>
-        
         <div style="text-align: center;">
-            <i class="fas fa-phone" style="font-size: 40px; color: #10b981; margin-bottom: 10px;"></i>
+            <i class="fas fa-phone" style="font-size: 40px; color: #10b981;"></i>
             <h4>Telefon</h4>
-            <p style="color: var(--text-secondary);">+998 90 123 45 67</p>
-            <p style="color: var(--text-secondary); font-size: 12px;">Dushanba-Juma: 09:00 - 18:00</p>
-            <button class="btn btn-outline" style="margin-top: 10px;" onclick="window.location.href='tel:+998901234567'">
-                <i class="fas fa-phone"></i> Qo'ng'iroq
+            <p>+998 90 123 45 67</p>
+            <button class="btn btn-outline" onclick="window.location.href='tel:+998901234567'">
+                Qo'ng'iroq
             </button>
         </div>
     </div>
@@ -318,69 +185,22 @@ function toggleFaq(element) {
     }
 }
 
+function scrollToSection(sectionId) {
+    document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+}
+
 function searchHelp() {
     const searchTerm = document.getElementById('helpSearch').value.toLowerCase();
     const faqItems = document.querySelectorAll('.faq-item');
-    let found = false;
     
     faqItems.forEach(item => {
         const text = item.textContent.toLowerCase();
         if (text.includes(searchTerm) || searchTerm === '') {
             item.style.display = 'block';
-            found = true;
         } else {
             item.style.display = 'none';
         }
     });
-    
-    if (!found && searchTerm !== '') {
-        showNotification('Hech narsa topilmadi', 'info');
-    }
 }
-
-function scrollToSection(sectionId) {
-    const element = document.getElementById(sectionId);
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-    }
-}
-
-function playVideo(videoId) {
-    // Video player ochish
-    const videoUrls = {
-        'scanner': 'https://www.youtube.com/watch?v=...',
-        'apk': 'https://www.youtube.com/watch?v=...',
-        'basics': 'https://www.youtube.com/watch?v=...'
-    };
-    
-    window.open(videoUrls[videoId], '_blank');
-}
-
-function showNotification(message, type) {
-    const notification = document.createElement('div');
-    notification.className = `alert alert-${type}`;
-    notification.style.position = 'fixed';
-    notification.style.top = '20px';
-    notification.style.right = '20px';
-    notification.style.zIndex = '3000';
-    notification.style.maxWidth = '300px';
-    notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.remove();
-    }, 3000);
-}
-
-// Enter tugmasi bilan qidirish
-document.getElementById('helpSearch').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        searchHelp();
-    }
-});
 </script>
 {% endblock %}
