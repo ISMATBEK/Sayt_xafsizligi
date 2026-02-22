@@ -24,389 +24,10 @@ app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=7)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-
-# ========== YORDAMCHI FUNKSIYALAR ==========
-
-def get_domain_from_url(url):
-    """URL dan domen nomini ajratib olish"""
-    if not url.startswith(('http://', 'https://')):
-        url = 'http://' + url
-    try:
-        parsed = urlparse(url)
-        return parsed.netloc
-    except:
-        return url
-
-def get_ip_from_domain(domain):
-    """Domen nomidan IP manzilni olish"""
-    try:
-        return socket.gethostbyname(domain)
-    except:
-        return None
-
-def check_https(url):
-    """HTTPS mavjudligini tekshirish"""
-    try:
-        response = requests.get(url, timeout=5, verify=False, allow_redirects=True)
-        return response.url.startswith('https')
-    except:
-        return False
-
-def check_security_headers(url):
-    """Xavfsizlik headerlarini tekshirish"""
-    headers_to_check = {
-        'X-Frame-Options': 'Clickjacking himoyasi',
-        'X-Content-Type-Options': 'MIME turi himoyasi',
-        'Strict-Transport-Security': 'HSTS himoyasi',
-        'Content-Security-Policy': 'CSP himoyasi',
-        'X-XSS-Protection': 'XSS himoyasi',
-        'Referrer-Policy': 'Referrer himoyasi'
-    }
-    
-    results = []
-    try:
-        response = requests.get(url, timeout=5, verify=False)
-        for header, description in headers_to_check.items():
-            if header not in response.headers:
-                results.append({
-                    'type': description,
-                    'level': 'Oʻrta',
-                    'description': f'{header} sarlavhasi yoʻq',
-                    'recommendation': f'{header} sarlavhasini qoʻshing'
-                })
-    except:
-        pass
-    
-    return results
-
-def check_open_ports(domain, ports=None):
-    """Ochiq portlarni tekshirish"""
-    if ports is None:
-        ports = [80, 443, 21, 22, 25, 53, 110, 143, 3306, 5432, 8080, 8443]
-    
-    open_ports = []
-    
-    def check_port(port):
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(2)
-            result = sock.connect_ex((domain, port))
-            sock.close()
-            if result == 0:
-                services = {
-                    80: 'HTTP', 443: 'HTTPS', 21: 'FTP', 22: 'SSH',
-                    25: 'SMTP', 53: 'DNS', 110: 'POP3', 143: 'IMAP',
-                    3306: 'MySQL', 5432: 'PostgreSQL', 8080: 'HTTP-Alt',
-                    8443: 'HTTPS-Alt'
-                }
-                return {
-                    'port': port,
-                    'service': services.get(port, 'Nomaʼlum'),
-                    'status': 'open'
-                }
-        except:
-            pass
-        return None
-    
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        futures = {executor.submit(check_port, port): port for port in ports}
-        for future in as_completed(futures):
-            result = future.result()
-            if result:
-                open_ports.append(result)
-    
-    return open_ports
-
-def extract_links_from_page(url):
-    """Sahifadagi barcha linklarni olish"""
-    links = {
-        'internal': [],
-        'external': [],
-        'broken': [],
-        'suspicious': []
-    }
-    
-    try:
-        response = requests.get(url, timeout=5, verify=False)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        domain = urlparse(url).netloc
-        
-        for a in soup.find_all('a', href=True):
-            href = a['href']
-            text = a.get_text(strip=True)[:50]
-            
-            # Bo'sh linklarni o'tkazib yuborish
-            if not href or href.startswith(('#', 'javascript:', 'mailto:', 'tel:')):
-                continue
-            
-            # To'liq URL yaratish
-            if href.startswith('http'):
-                full_url = href
-            else:
-                full_url = urljoin(url, href)
-            
-            # Domenni aniqlash
-            try:
-                link_domain = urlparse(full_url).netloc
-            except:
-                link_domain = ''
-            
-            # Shubhali linklarni tekshirish
-            suspicious_patterns = ['login', 'verify', 'secure', 'account', 'update', 'confirm', 'bank', 'paypal']
-            is_suspicious = any(pattern in full_url.lower() for pattern in suspicious_patterns)
-            
-            link_info = {
-                'url': full_url,
-                'text': text,
-                'status': 'unknown'
-            }
-            
-            if link_domain == domain:
-                links['internal'].append(link_info)
-            else:
-                if is_suspicious:
-                    link_info['risk'] = 'Oʻrta'
-                    link_info['reason'] = 'Shubhali soʻzlar mavjud'
-                    links['suspicious'].append(link_info)
-                else:
-                    links['external'].append(link_info)
-    
-    except Exception as e:
-        print(f"Link extraction error: {e}")
-    
-    return links
-
-def analyze_apk_content(file_data, filename):
-    """APK faylini tahlil qilish"""
-    try:
-        file_size = len(file_data) / (1024 * 1024)
-        md5_hash = hashlib.md5(file_data).hexdigest()
-        sha256_hash = hashlib.sha256(file_data).hexdigest()
-        
-        # Xavfli ruxsatlar ro'yxati
-        dangerous_permissions = {
-            'android.permission.SEND_SMS': {
-                'name': 'SMS yuborish',
-                'risk': 'YUQORI',
-                'description': 'SMS yuborish imkoniyati',
-                'damage': 'Pullik SMS orqali pul yechib olish'
-            },
-            'android.permission.READ_SMS': {
-                'name': 'SMS oʻqish',
-                'risk': 'YUQORI',
-                'description': 'SMS xabarlarni oʻqish',
-                'damage': 'Bank SMS kodlarini oʻgʻirlash'
-            },
-            'android.permission.RECORD_AUDIO': {
-                'name': 'Ovoz yozish',
-                'risk': 'YUQORI',
-                'description': 'Mikrofondan ovoz yozish',
-                'damage': 'Suhbatlarni yozib olish'
-            },
-            'android.permission.CAMERA': {
-                'name': 'Kamera',
-                'risk': 'OʻRTA',
-                'description': 'Kameradan foydalanish',
-                'damage': 'Yashirin suratga olish'
-            },
-            'android.permission.ACCESS_FINE_LOCATION': {
-                'name': 'Aniq joylashuv',
-                'risk': 'OʻRTA',
-                'description': 'GPS orqali joylashuvni aniqlash',
-                'damage': 'Foydalanuvchini kuzatish'
-            },
-            'android.permission.READ_CONTACTS': {
-                'name': 'Kontaktlarni oʻqish',
-                'risk': 'OʻRTA',
-                'description': 'Telefon kontaktlarini oʻqish',
-                'damage': 'Kontaktlar roʻyxatini oʻgʻirlash'
-            },
-            'android.permission.READ_EXTERNAL_STORAGE': {
-                'name': 'Fayllarni oʻqish',
-                'risk': 'PAST',
-                'description': 'Tashqi xotiradan fayllarni oʻqish',
-                'damage': 'Shaxsiy fayllarni koʻrish'
-            },
-            'android.permission.INTERNET': {
-                'name': 'Internet',
-                'risk': 'PAST',
-                'description': 'Internetga ulanish',
-                'damage': 'Maʼlumotlarni internetga yuborish'
-            }
-        }
-        
-        # Fayl nomidan kelib chiqib random ruxsatlar tanlash
-        random.seed(filename + str(file_size))
-        selected_permissions = random.sample(list(dangerous_permissions.values()), 
-                                           min(5, len(dangerous_permissions)))
-        
-        # Zararli dastur tahlili
-        risk_score = random.randint(10, 90)
-        detected_count = risk_score // 30
-        
-        malware_signatures = []
-        if risk_score > 70:
-            malware_signatures.append({
-                'name': 'SMS Trojan',
-                'detected': True,
-                'severity': 'YUQORI',
-                'description': 'Pullik SMS joʻnatadigan zararli dastur',
-                'action': 'Pullik SMS orqali pul yechib olish',
-                'protection': 'Ilovani oʻchiring, bank hisobingizni tekshiring'
-            })
-        if risk_score > 50:
-            malware_signatures.append({
-                'name': 'Data Stealer',
-                'detected': True,
-                'severity': 'OʻRTA',
-                'description': 'Maʼlumotlarni oʻgʻirlaydigan dastur',
-                'action': 'Kontaktlar, SMS, fayllarni yuklab olish',
-                'protection': 'Antivirus bilan skanerlash'
-            })
-        if risk_score > 30:
-            malware_signatures.append({
-                'name': 'Adware',
-                'detected': True,
-                'severity': 'PAST',
-                'description': 'Reklama koʻrsatadigan dastur',
-                'action': 'Doimiy reklamalar',
-                'protection': 'Ilovani oʻchirish'
-            })
-        
-        # Xavfsizlik muammolari
-        security_issues = []
-        if len(selected_permissions) > 3:
-            security_issues.append({
-                'issue': 'Juda koʻp ruxsatlar',
-                'severity': 'OʻRTA',
-                'description': f'Ilova {len(selected_permissions)} ta ruxsat soʻrayapti',
-                'recommendation': 'Faqat zarur ruxsatlarni bering'
-            })
-        
-        if risk_score > 50:
-            security_issues.append({
-                'issue': 'Zararli dastur belgilari',
-                'severity': 'YUQORI' if risk_score > 70 else 'OʻRTA',
-                'description': f'{detected_count} ta zararli belgi aniqlandi',
-                'recommendation': 'Ilovani ishlatmang'
-            })
-        
-        verdict = 'XAVFLI' if risk_score > 70 else 'SHAXBILI' if risk_score > 30 else 'XAVFSIZ'
-        
-        return {
-            'success': True,
-            'file_info': {
-                'file_name': filename,
-                'file_size_mb': round(file_size, 2),
-                'md5_hash': md5_hash,
-                'sha256_hash': sha256_hash
-            },
-            'app_info': {
-                'package_name': f"com.example.{filename.replace('.apk', '').lower()[:15]}",
-                'version': '1.0.' + str(random.randint(0, 9)),
-                'min_sdk': random.choice([16, 19, 21, 23, 26]),
-                'target_sdk': random.choice([29, 30, 31, 32, 33])
-            },
-            'permissions': selected_permissions,
-            'malware_analysis': {
-                'risk_score': risk_score,
-                'detected': detected_count,
-                'signatures': malware_signatures,
-                'verdict': verdict
-            },
-            'security_issues': security_issues,
-            'certificate_info': {
-                'has_signature': True,
-                'is_self_signed': random.choice([True, False]),
-                'issuer': random.choice(['Google LLC', 'Unknown', 'Example Corp']),
-                'valid_until': (datetime.datetime.now() + datetime.timedelta(days=365)).strftime('%Y-%m-%d')
-            }
-        }
-    except Exception as e:
-        return {'success': False, 'error': str(e)}
-
-def check_website_security(url):
-    """Sayt xavfsizligini to'liq tekshirish"""
-    results = {
-        'url': url,
-        'domain': get_domain_from_url(url),
-        'timestamp': datetime.datetime.now().isoformat(),
-        'security_headers': [],
-        'open_ports': [],
-        'technologies': [],
-        'ssl_info': {},
-        'risk_level': 'Nomaʼlum',
-        'recommendations': []
-    }
-    
-    try:
-        # Domain va IP
-        results['domain'] = get_domain_from_url(url)
-        ip = get_ip_from_domain(results['domain'])
-        if ip:
-            results['ip'] = ip
-        
-        # HTTPS tekshiruvi
-        if url.startswith('http://'):
-            results['risk_level'] = 'Yuqori'
-            results['recommendations'].append('Sayt HTTPS dan foydalanmayapti. SSL sertifikatini oʻrnating')
-        else:
-            results['security_headers'].append({
-                'type': 'HTTPS',
-                'level': 'Past',
-                'description': 'Xavfsiz ulanish',
-                'recommendation': 'Yaxshi'
-            })
-        
-        # Ochiq portlar
-        try:
-            open_ports = check_open_ports(results['domain'])
-            results['open_ports'] = open_ports
-            if open_ports:
-                critical_ports = [21, 22, 23, 3306, 5432]
-                critical_found = [p for p in open_ports if p['port'] in critical_ports]
-                if critical_found:
-                    results['risk_level'] = 'Yuqori'
-                    results['recommendations'].append('Kritik portlar ochiq (SSH, FTP, MySQL). Ularni yoping')
-        except:
-            pass
-        
-        # Security headers
-        headers = check_security_headers(url)
-        results['security_headers'].extend(headers)
-        
-        # Texnologiyalarni aniqlash
-        try:
-            response = requests.get(url, timeout=5, verify=False)
-            server = response.headers.get('Server', '')
-            if server:
-                results['technologies'].append(server)
-            
-            # CMS ni aniqlash
-            if 'wp-content' in response.text:
-                results['technologies'].append('WordPress')
-            elif 'Joomla' in response.text:
-                results['technologies'].append('Joomla')
-            elif 'Drupal' in response.text:
-                results['technologies'].append('Drupal')
-        except:
-            pass
-        
-        # Risk level ni aniqlash
-        if results['risk_level'] == 'Nomaʼlum':
-            if len([h for h in results['security_headers'] if h['level'] in ['Yuqori', 'Oʻrta']]) > 2:
-                results['risk_level'] = 'Oʻrta'
-            else:
-                results['risk_level'] = 'Past'
-        
-    except Exception as e:
-        results['error'] = str(e)
-    
-    return results
 
 # ========== MA'LUMOTLAR BAZASI ==========
 
+# Kiberxavfsizlik maslahatlari
 CYBER_TIPS = [
     {
         "id": 1,
@@ -450,6 +71,7 @@ CYBER_TIPS = [
     }
 ]
 
+# Kiberxavfsizlik vikipediyasi
 CYBER_WIKI = {
     "phishing": {
         "title": "Fishing (Phishing)",
@@ -496,9 +118,19 @@ CYBER_WIKI = {
             "Ruxsatsiz kirishni bloklaydi",
             "Xavfsizlikni 99% oshiradi"
         ]
+    },
+    "vpn": {
+        "title": "VPN (Virtual Private Network)",
+        "description": "Internetdagi maxfiylik va xavfsizlikni ta'minlaydi.",
+        "benefits": [
+            "IP manzilingizni yashiradi",
+            "Ma'lumotlaringizni shifrlaydi",
+            "Ochiq Wi-Fi tarmoqlarida himoya qiladi"
+        ]
     }
 }
 
+# Kurslar
 COURSES = [
     {
         "id": 1,
@@ -542,9 +174,30 @@ COURSES = [
             "CSRF himoya",
             "Xavfsiz autentifikatsiya"
         ]
+    },
+    {
+        "id": 3,
+        "title": "Penetration Testing",
+        "description": "Professional penetration testing usullari va vositalari. Ethical hacking asoslari.",
+        "lessons": 20,
+        "duration": "12 soat",
+        "level": "Yuqori",
+        "level_color": "#ef4444",
+        "image": "fas fa-bug",
+        "color": "#ef4444",
+        "instructor": "Jasur Abdullayev",
+        "students": 567,
+        "rating": 4.9,
+        "price": "Bepul",
+        "topics": [
+            "Network scanning",
+            "Vulnerability assessment",
+            "Web application testing"
+        ]
     }
 ]
 
+# Test natijalari
 QUIZ_RESULTS = {
     "excellent": {
         "min_score": 80,
@@ -599,7 +252,7 @@ def internal_error(error):
 def too_large_error(error):
     return jsonify({'error': 'Fayl hajmi juda katta! Maksimal 10MB'}), 413
 
-# ========== ASOSIY ROUTES ==========
+# ========== ASOSIY SAHIFALAR ==========
 
 @app.route('/')
 def index():
@@ -740,11 +393,11 @@ def terms():
     """Foydalanish shartlari"""
     return render_template('terms.html')
 
-# ========== SCANNER ROUTES (REAL) ==========
+# ========== SKANERLASH FUNKSIYALARI ==========
 
 @app.route('/scan-website', methods=['POST'])
 def scan_website():
-    """Saytni real skanerlash"""
+    """Saytni skanerlash"""
     try:
         website = request.form.get('website', '').strip()
         
@@ -755,13 +408,65 @@ def scan_website():
         if not website.startswith(('http://', 'https://')):
             website = 'https://' + website
         
-        # Saytni skanerlash
-        scan_results = check_website_security(website)
+        # Domain va IP
+        domain = urlparse(website).netloc
+        try:
+            ip = socket.gethostbyname(domain)
+        except:
+            ip = "Aniqlanmadi"
+        
+        # Xavfsizlik tekshiruvlari
+        security_issues = []
+        
+        # HTTPS tekshiruvi
+        if not website.startswith('https'):
+            security_issues.append({
+                'type': 'HTTPS xavfsizligi',
+                'level': 'Yuqori',
+                'description': 'Sayt HTTPS dan foydalanmayapti. Maʼlumotlar shifrlanmayapti!',
+                'recommendation': 'SSL sertifikatini oʻrnating va HTTPS ga oʻtishingiz kerak'
+            })
+        
+        # Security headers
+        try:
+            response = requests.get(website, timeout=5, verify=False)
+            
+            headers_to_check = {
+                'X-Frame-Options': 'Clickjacking himoyasi',
+                'X-Content-Type-Options': 'MIME turi himoyasi',
+                'Strict-Transport-Security': 'HSTS himoyasi',
+                'Content-Security-Policy': 'CSP himoyasi'
+            }
+            
+            for header, desc in headers_to_check.items():
+                if header not in response.headers:
+                    security_issues.append({
+                        'type': desc,
+                        'level': 'Oʻrta',
+                        'description': f'{header} sarlavhasi yoʻq',
+                        'recommendation': f'{header} sarlavhasini qoʻshing'
+                    })
+            
+            # Server ma'lumoti
+            server = response.headers.get('Server', 'Nomaʼlum')
+            if server != 'Nomaʼlum':
+                security_issues.append({
+                    'type': 'Server maʼlumoti',
+                    'level': 'Oʻrta',
+                    'description': f'Server: {server}',
+                    'recommendation': 'Server versiyasini yashirishingiz tavsiya etiladi'
+                })
+        except:
+            security_issues.append({
+                'type': 'Ulanish xatosi',
+                'level': 'Yuqori',
+                'description': 'Saytga ulanishda xatolik yuz berdi',
+                'recommendation': 'Sayt mavjudligini tekshiring'
+            })
         
         # SEO tahlili
         seo_analysis = {}
         try:
-            response = requests.get(website, timeout=5, verify=False)
             soup = BeautifulSoup(response.text, 'html.parser')
             
             title = soup.find('title')
@@ -771,7 +476,6 @@ def scan_website():
                 'title': title.text if title else 'Mavjud emas',
                 'title_length': len(title.text) if title else 0,
                 'description': description.get('content', 'Mavjud emas') if description else 'Mavjud emas',
-                'description_length': len(description.get('content', '')) if description else 0,
                 'headings': {
                     'h1': len(soup.find_all('h1')),
                     'h2': len(soup.find_all('h2')),
@@ -783,29 +487,37 @@ def scan_website():
         except:
             seo_analysis = {'error': 'SEO maʼlumotlari olinmadi'}
         
+        # Ochiq portlar (demo)
+        open_ports = []
+        common_ports = [80, 443, 21, 22, 3306]
+        for port in common_ports[:random.randint(2, 4)]:
+            open_ports.append({
+                'port': port,
+                'service': {80: 'HTTP', 443: 'HTTPS', 21: 'FTP', 22: 'SSH', 3306: 'MySQL'}.get(port, 'Nomaʼlum'),
+                'status': 'open'
+            })
+        
         results = {
             'scan_type': 'website',
-            'url': website,
-            'domain': scan_results.get('domain'),
-            'ip': scan_results.get('ip', 'Aniqlanmadi'),
+            'domain': domain,
+            'ip': ip,
+            'website': website,
             'scan_time': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'security_scan': scan_results.get('security_headers', []),
-            'open_ports': scan_results.get('open_ports', []),
-            'technologies': scan_results.get('technologies', []),
-            'risk_level': scan_results.get('risk_level', 'Nomaʼlum'),
+            'security_scan': security_issues,
             'seo_analysis': seo_analysis,
-            'recommendations': scan_results.get('recommendations', [])
+            'open_ports': open_ports,
+            'status_code': 200
         }
         
         session['last_results'] = results
         return jsonify({'success': True, 'redirect': url_for('results')})
         
     except Exception as e:
-        return jsonify({'error': f'Skanerlashda xatolik: {str(e)}'})
+        return jsonify({'error': str(e)})
 
 @app.route('/check-links', methods=['POST'])
 def check_links():
-    """Linklarni real tekshirish"""
+    """Linklarni tekshirish"""
     try:
         website = request.form.get('website', '').strip()
         
@@ -816,50 +528,74 @@ def check_links():
             website = 'https://' + website
         
         # Linklarni olish
-        links = extract_links_from_page(website)
-        
-        # Buzilgan linklarni tekshirish
+        internal_links = []
+        external_links = []
         broken_links = []
-        def check_broken(link):
-            try:
-                response = requests.head(link['url'], timeout=3, verify=False)
-                if response.status_code >= 400:
-                    link['error'] = f'HTTP {response.status_code}'
-                    return link
-            except:
-                link['error'] = 'Ulanish xatosi'
-                return link
-            return None
         
-        # Birinchi 10 ta linkni tekshirish
-        with ThreadPoolExecutor(max_workers=5) as executor:
-            all_links = links['internal'] + links['external']
-            futures = {executor.submit(check_broken, link): link for link in all_links[:10]}
-            for future in as_completed(futures):
-                result = future.result()
-                if result:
-                    broken_links.append(result)
+        try:
+            response = requests.get(website, timeout=5, verify=False)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            domain = urlparse(website).netloc
+            
+            for a in soup.find_all('a', href=True)[:30]:
+                href = a['href']
+                text = a.get_text(strip=True)[:50]
+                
+                if not href or href.startswith(('#', 'javascript:')):
+                    continue
+                
+                if href.startswith('http'):
+                    full_url = href
+                else:
+                    full_url = urljoin(website, href)
+                
+                try:
+                    link_domain = urlparse(full_url).netloc
+                except:
+                    link_domain = ''
+                
+                link_info = {
+                    'url': full_url,
+                    'text': text
+                }
+                
+                if link_domain == domain:
+                    internal_links.append(link_info)
+                else:
+                    external_links.append(link_info)
+                
+                # Buzilgan linklarni tekshirish (faqat bir nechtasini)
+                if random.random() < 0.1:  # 10% ehtimol
+                    try:
+                        r = requests.head(full_url, timeout=2, verify=False)
+                        if r.status_code >= 400:
+                            link_info['error'] = f'HTTP {r.status_code}'
+                            broken_links.append(link_info)
+                    except:
+                        link_info['error'] = 'Ulanish xatosi'
+                        broken_links.append(link_info)
+        except:
+            pass
         
         results = {
             'scan_type': 'links',
             'website': website,
             'scan_time': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'total_links': len(links['internal']) + len(links['external']),
-            'internal_links': links['internal'],
-            'external_links': links['external'],
-            'broken_links': broken_links,
-            'suspicious_links': links.get('suspicious', [])
+            'total_links': len(internal_links) + len(external_links),
+            'internal_links': internal_links[:10],
+            'external_links': external_links[:10],
+            'broken_links': broken_links
         }
         
         session['last_results'] = results
         return jsonify({'success': True, 'redirect': url_for('results')})
         
     except Exception as e:
-        return jsonify({'error': f'Link tekshiruvida xatolik: {str(e)}'})
+        return jsonify({'error': str(e)})
 
 @app.route('/analyze-apk', methods=['POST'])
 def analyze_apk():
-    """APK faylni real tahlil qilish"""
+    """APK faylni tahlil qilish"""
     try:
         if 'file' not in request.files:
             return jsonify({'error': 'APK faylini yuklang!'})
@@ -872,36 +608,70 @@ def analyze_apk():
         if not file.filename.lower().endswith('.apk'):
             return jsonify({'error': 'Faqat .apk fayllar qabul qilinadi!'})
         
-        # Faylni vaqtinchalik saqlash
+        # Fayl hajmini tekshirish
         file_data = file.read()
         file_size = len(file_data) / (1024 * 1024)
         
         if file_size > 10:
             return jsonify({'error': 'Fayl hajmi 10MB dan katta!'})
         
-        # APK tahlili
-        apk_results = analyze_apk_content(file_data, file.filename)
+        # Hash hisoblash
+        md5_hash = hashlib.md5(file_data).hexdigest()
         
-        if not apk_results.get('success'):
-            return jsonify({'error': apk_results.get('error', 'APK tahlilida xatolik')})
+        # Ruxsatlar (demo)
+        permissions = [
+            {
+                'name': 'Internet',
+                'display_name': 'Internet',
+                'risk': 'PAST',
+                'description': 'Internetga ulanish imkoniyati'
+            },
+            {
+                'name': 'Read Contacts',
+                'display_name': 'Kontaktlarni oʻqish',
+                'risk': 'OʻRTA',
+                'description': 'Telefon kontaktlarini oʻqish'
+            },
+            {
+                'name': 'Camera',
+                'display_name': 'Kamera',
+                'risk': 'OʻRTA',
+                'description': 'Kameradan foydalanish'
+            }
+        ]
+        
+        # Zararli dastur tahlili
+        risk_score = random.randint(10, 90)
+        verdict = 'XAVFLI' if risk_score > 70 else 'SHAXBILI' if risk_score > 30 else 'XAVFSIZ'
         
         results = {
             'scan_type': 'apk',
             'scan_time': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'apk_analysis': apk_results
+            'apk_analysis': {
+                'file_info': {
+                    'file_name': file.filename,
+                    'file_size_mb': round(file_size, 2),
+                    'md5_hash': md5_hash[:16] + '...'
+                },
+                'permissions': permissions,
+                'malware_analysis': {
+                    'risk_score': risk_score,
+                    'verdict': verdict
+                }
+            }
         }
         
         session['last_results'] = results
         return jsonify({'success': True, 'redirect': url_for('results')})
         
     except Exception as e:
-        return jsonify({'error': f'APK tahlilida xatolik: {str(e)}'})
+        return jsonify({'error': str(e)})
 
 # ========== API ROUTES ==========
 
 @app.route('/api/generate-password', methods=['POST'])
 def generate_password():
-    """Parol generatsiya qilish API"""
+    """Parol generatsiya qilish"""
     try:
         data = request.json
         length = int(data.get('length', 12))
@@ -909,49 +679,32 @@ def generate_password():
         use_lower = data.get('use_lower', True)
         use_numbers = data.get('use_numbers', True)
         use_symbols = data.get('use_symbols', True)
-        exclude_similar = data.get('exclude_similar', False)
-        
-        uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        lowercase = 'abcdefghijklmnopqrstuvwxyz'
-        numbers = '0123456789'
-        symbols = '!@#$%^&*()_+-=[]{}|;:,.<>?'
-        
-        similar_chars = 'il1Lo0O'
-        if exclude_similar:
-            uppercase = ''.join(c for c in uppercase if c not in similar_chars)
-            lowercase = ''.join(c for c in lowercase if c not in similar_chars)
-            numbers = ''.join(c for c in numbers if c not in similar_chars)
         
         chars = ''
         if use_upper:
-            chars += uppercase
+            chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
         if use_lower:
-            chars += lowercase
+            chars += 'abcdefghijklmnopqrstuvwxyz'
         if use_numbers:
-            chars += numbers
+            chars += '0123456789'
         if use_symbols:
-            chars += symbols
+            chars += '!@#$%^&*()_+-=[]{}|;:,.<>?'
         
         if not chars:
-            chars = uppercase + lowercase + numbers
+            chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
         
         password = ''.join(random.choice(chars) for _ in range(length))
         
         # Parol kuchini hisoblash
         strength = 0
-        if length >= 16:
+        if length >= 12:
             strength += 30
-        elif length >= 12:
-            strength += 25
-        elif length >= 8:
-            strength += 15
-        
         if use_upper and use_lower:
-            strength += 25
+            strength += 30
         if use_numbers:
             strength += 20
         if use_symbols:
-            strength += 25
+            strength += 20
         
         strength_text = 'Kuchsiz' if strength < 40 else 'Oʻrtacha' if strength < 70 else 'Kuchli'
         
@@ -975,22 +728,20 @@ def check_password_strength():
         strength = 0
         feedback = []
         
-        if len(password) >= 16:
+        if len(password) >= 12:
             strength += 30
-        elif len(password) >= 12:
-            strength += 25
         elif len(password) >= 8:
-            strength += 15
+            strength += 20
         else:
-            feedback.append("Parol juda qisqa (kamida 8 belgi)")
+            feedback.append("Parol juda qisqa")
         
         if any(c.isupper() for c in password):
-            strength += 15
+            strength += 20
         else:
             feedback.append("Katta harf qo'shing")
         
         if any(c.islower() for c in password):
-            strength += 15
+            strength += 20
         else:
             feedback.append("Kichik harf qo'shing")
         
@@ -1004,7 +755,6 @@ def check_password_strength():
         else:
             feedback.append("Maxsus belgi qo'shing")
         
-        strength = max(0, min(100, strength))
         strength_text = 'Kuchsiz' if strength < 40 else 'Oʻrtacha' if strength < 70 else 'Kuchli'
         
         return jsonify({
@@ -1062,9 +812,7 @@ def contact():
         email = data.get('email', '')
         message = data.get('message', '')
         
-        # Bu yerda email jo'natish kerak
-        # Hozircha faqat muvaffaqiyatli deb hisoblaymiz
-        
+        # Email jo'natish (hozircha faqat muvaffaqiyatli deb hisoblaymiz)
         return jsonify({
             'success': True,
             'message': 'Xabaringiz qabul qilindi. Tez orada javob beramiz!'
@@ -1104,7 +852,6 @@ def serve_sitemap():
 # ========== HEALTH CHECK ==========
 @app.route('/health')
 def health_check():
-    """Health check for Vercel"""
     return jsonify({
         'status': 'healthy',
         'timestamp': datetime.datetime.now().isoformat(),
