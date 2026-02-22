@@ -1,1 +1,166 @@
+{% extends "base.html" %}
 
+{% block page_title %}Server xatoligi{% endblock %}
+{% block page_subtitle %}500 - Internal Server Error{% endblock %}
+
+{% block content %}
+<div class="card" style="text-align: center; padding: 60px 20px;">
+    <div style="width: 150px; height: 150px; background: linear-gradient(135deg, #f59e0b20, #f59e0b40); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px;">
+        <i class="fas fa-exclamation-circle" style="font-size: 70px; color: #f59e0b;"></i>
+    </div>
+    
+    <h1 style="font-size: 72px; font-weight: 800; background: linear-gradient(135deg, #f59e0b, #d97706); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;">500</h1>
+    
+    <h2 style="font-size: 28px; margin-bottom: 15px;">Serverda xatolik yuz berdi!</h2>
+    
+    <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 30px; font-size: 16px;">
+        Kechirasiz, serverda texnik xatolik yuz berdi. 
+        Administratorga xabar berildi. Iltimos, keyinroq qayta urinib ko'ring.
+    </p>
+    
+    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+        <a href="{{ url_for('index') }}" class="btn btn-primary" style="padding: 15px 30px;">
+            <i class="fas fa-home"></i> Bosh sahifaga qaytish
+        </a>
+        
+        <button onclick="location.reload()" class="btn btn-outline" style="padding: 15px 30px;">
+            <i class="fas fa-sync-alt"></i> Qayta urinish
+        </button>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 30px;">
+    <h3 style="margin-bottom: 20px;">Tez-tez so'raladigan savollar</h3>
+    
+    <div style="display: grid; gap: 15px;">
+        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 10px;">
+            <h4 style="margin-bottom: 10px;">Bu xatolik nima uchun yuz berdi?</h4>
+            <p style="color: var(--text-secondary);">
+                Serverda kutilmagan texnik muammo yuz berdi. Bu vaqtinchalik muammo bo'lishi mumkin.
+            </p>
+        </div>
+        
+        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 10px;">
+            <h4 style="margin-bottom: 10px;">Qanday qilib muammoni hal qilish mumkin?</h4>
+            <p style="color: var(--text-secondary);">
+                1. Sahifani qayta yuklash <br>
+                2. Bir necha daqiqadan so'ng qayta urinish <br>
+                3. Brauzer keshini tozalash <br>
+                4. Boshqa brauzerda ochish
+            </p>
+        </div>
+        
+        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 10px;">
+            <h4 style="margin-bottom: 10px;">Muammo takrorlansa?</h4>
+            <p style="color: var(--text-secondary);">
+                Agar muammo takrorlansa, iltimos, biz bilan bog'lanishingizni so'raymiz.
+            </p>
+            <a href="{{ url_for('help') }}" class="btn btn-outline" style="margin-top: 10px;">
+                <i class="fas fa-headset"></i> Yordam olish
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="text-align: center;">
+    <h3 style="margin-bottom: 15px;">Xatolik haqida xabar berish</h3>
+    <p style="color: var(--text-secondary); margin-bottom: 20px;">
+        Agar muammo takrorlansa, administratorga xabar bering.
+    </p>
+    
+    <form id="errorReportForm" onsubmit="reportError(event)">
+        <div style="display: flex; gap: 10px; max-width: 500px; margin: 0 auto;">
+            <input type="email" id="reportEmail" placeholder="Email manzilingiz" required style="flex: 1; padding: 12px; border-radius: 8px; background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary);">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-paper-plane"></i> Yuborish
+            </button>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 12px; margin-top: 10px;">
+            * Administrator siz bilan bog'lanib, muammoni hal qilishga yordam beradi
+        </p>
+    </form>
+</div>
+
+<script>
+    // Sahifa yuklanganda
+    document.addEventListener('DOMContentLoaded', function() {
+        // 500 xatoligini log'ga yozish
+        console.error('500 - Server xatoligi yuz berdi:', window.location.href);
+        
+        // Foydalanuvchiga ko'rsatish
+        showNotification('Serverda xatolik yuz berdi. Iltimos, keyinroq qayta urinib ko\'ring.', 'warning');
+    });
+    
+    // Xatolik haqida xabar berish
+    function reportError(event) {
+        event.preventDefault();
+        
+        const email = document.getElementById('reportEmail').value;
+        const errorInfo = {
+            url: window.location.href,
+            time: new Date().toISOString(),
+            userAgent: navigator.userAgent
+        };
+        
+        // API'ga so'rov yuborish
+        fetch('/api/report-error', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                error: errorInfo
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Xabaringiz qabul qilindi. Tez orada javob beramiz!', 'success');
+                document.getElementById('reportEmail').value = '';
+            } else {
+                showNotification('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.', 'danger');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Xatolik yuz berdi', 'danger');
+        });
+    }
+    
+    // Bildirishnoma ko'rsatish
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type}`;
+        notification.style.position = 'fixed';
+        notification.style.top = '20px';
+        notification.style.right = '20px';
+        notification.style.zIndex = '3000';
+        notification.style.maxWidth = '300px';
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+</script>
+
+<style>
+    /* Qo'shimcha stillar */
+    .error-details {
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        padding: 15px;
+        font-family: monospace;
+        font-size: 12px;
+        color: var(--text-secondary);
+        text-align: left;
+        overflow-x: auto;
+    }
+</style>
+{% endblock %}
