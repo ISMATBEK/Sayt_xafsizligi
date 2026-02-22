@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block page_title %}Kiberxavfsizlik Kurslari{% endblock %}
+{% block page_subtitle %}Bepul online kurslar{% endblock %}
+
+{% block content %}
+<!-- Kurslar grid -->
+<div class="grid-2">
+    {% for course in courses %}
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <div style="height: 120px; background: linear-gradient(135deg, {{ course.color }}20, {{ course.color }}40); display: flex; align-items: center; justify-content: center;">
+            <i class="{{ course.image }}" style="font-size: 50px; color: {{ course.color }};"></i>
+        </div>
+        <div style="padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3>{{ course.title }}</h3>
+                <span class="badge" style="background: {{ course.level_color }}; color: white;">{{ course.level }}</span>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">{{ course.description[:100] }}...</p>
+            
+            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                <div><i class="fas fa-book-open"></i> {{ course.lessons }} dars</div>
+                <div><i class="fas fa-clock"></i> {{ course.duration }}</div>
+                <div><i class="fas fa-users"></i> {{ course.students }} talaba</div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <i class="fas fa-star" style="color: #fbbf24;"></i>
+                    <span>{{ course.rating }} / 5.0</span>
+                </div>
+                <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-primary">
+                    <i class="fas fa-play-circle"></i> Boshlash
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Statistika -->
+<div class="grid-4" style="margin-top: 30px;">
+    <div class="card" style="text-align: center;">
+        <i class="fas fa-users" style="font-size: 30px; color: var(--accent-primary);"></i>
+        <h3 style="font-size: 24px; margin: 10px 0;">2500+</h3>
+        <p style="color: var(--text-secondary);">O'quvchilar</p>
+    </div>
+    <div class="card" style="text-align: center;">
+        <i class="fas fa-book-open" style="font-size: 30px; color: var(--success);"></i>
+        <h3 style="font-size: 24px; margin: 10px 0;">57</h3>
+        <p style="color: var(--text-secondary);">Darslar</p>
+    </div>
+    <div class="card" style="text-align: center;">
+        <i class="fas fa-clock" style="font-size: 30px; color: var(--warning);"></i>
+        <h3 style="font-size: 24px; margin: 10px 0;">31 soat</h3>
+        <p style="color: var(--text-secondary);">Video darslar</p>
+    </div>
+    <div class="card" style="text-align: center;">
+        <i class="fas fa-certificate" style="font-size: 30px; color: var(--info);"></i>
+        <h3 style="font-size: 24px; margin: 10px 0;">4</h3>
+        <p style="color: var(--text-secondary);">Sertifikatlar</p>
+    </div>
+</div>
+{% endblock %}
