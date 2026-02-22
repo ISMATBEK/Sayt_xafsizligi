@@ -524,6 +524,7 @@ def check_links():
         if not website:
             return jsonify({'error': 'Sayt manzilini kiriting!'})
         
+        # URL ni tayyorlash
         if not website.startswith(('http://', 'https://')):
             website = 'https://' + website
         
@@ -531,59 +532,100 @@ def check_links():
         internal_links = []
         external_links = []
         broken_links = []
+        suspicious_links = []
         
         try:
-            response = requests.get(website, timeout=5, verify=False)
+            # Saytni so'rash
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            response = requests.get(website, timeout=10, verify=False, headers=headers)
+            response.raise_for_status()
+            
             soup = BeautifulSoup(response.text, 'html.parser')
             domain = urlparse(website).netloc
             
-            for a in soup.find_all('a', href=True)[:30]:
-                href = a['href']
-                text = a.get_text(strip=True)[:50]
+            # Barcha linklarni yig'ish
+            for a in soup.find_all('a', href=True):
+                href = a['href'].strip()
+                text = a.get_text(strip=True)[:100]
                 
-                if not href or href.startswith(('#', 'javascript:')):
+                # Bo'sh linklarni o'tkazib yuborish
+                if not href or href.startswith(('#', 'javascript:', 'mailto:', 'tel:')):
                     continue
                 
+                # To'liq URL yaratish
                 if href.startswith('http'):
                     full_url = href
                 else:
                     full_url = urljoin(website, href)
                 
+                # URL validligini tekshirish
                 try:
-                    link_domain = urlparse(full_url).netloc
+                    parsed = urlparse(full_url)
+                    if not parsed.netloc:
+                        continue
                 except:
-                    link_domain = ''
+                    continue
                 
+                # Domenni aniqlash
+                link_domain = parsed.netloc
+                
+                # Link ma'lumotlari
                 link_info = {
                     'url': full_url,
-                    'text': text
+                    'text': text if text else 'Matn yo\'q'
                 }
                 
-                if link_domain == domain:
+                # Ichki yoki tashqi link ekanligini aniqlash
+                if link_domain == domain or link_domain.endswith('.' + domain):
                     internal_links.append(link_info)
                 else:
-                    external_links.append(link_info)
-                
-                # Buzilgan linklarni tekshirish (faqat bir nechtasini)
-                if random.random() < 0.1:  # 10% ehtimol
-                    try:
-                        r = requests.head(full_url, timeout=2, verify=False)
-                        if r.status_code >= 400:
-                            link_info['error'] = f'HTTP {r.status_code}'
-                            broken_links.append(link_info)
-                    except:
-                        link_info['error'] = 'Ulanish xatosi'
-                        broken_links.append(link_info)
-        except:
-            pass
+                    # Shubhali linklarni tekshirish
+                    suspicious_keywords = ['login', 'signin', 'account', 'verify', 'secure', 'banking', 'paypal', 'password']
+                    if any(keyword in full_url.lower() for keyword in suspicious_keywords):
+                        link_info['risk'] = 'Shubhali'
+                        link_info['reason'] = 'Maxfiy ma\'lumot so\'ralishi mumkin'
+                        suspicious_links.append(link_info)
+                    else:
+                        external_links.append(link_info)
+            
+            # Birinchi 5 ta linkni buzilganlikka tekshirish
+            all_links = internal_links + external_links
+            for link in all_links[:5]:
+                try:
+                    r = requests.head(link['url'], timeout=3, verify=False, allow_redirects=True)
+                    if r.status_code >= 400:
+                        link['error'] = f'HTTP {r.status_code}'
+                        broken_links.append(link)
+                except requests.exceptions.Timeout:
+                    link['error'] = 'Vaqt tugadi'
+                    broken_links.append(link)
+                except requests.exceptions.ConnectionError:
+                    link['error'] = 'Ulanish xatosi'
+                    broken_links.append(link)
+                except Exception as e:
+                    link['error'] = str(e)[:50]
+                    broken_links.append(link)
+            
+        except requests.exceptions.Timeout:
+            return jsonify({'error': 'Saytga ulanish vaqti tugadi'})
+        except requests.exceptions.ConnectionError:
+            return jsonify({'error': 'Saytga ulanishda xatolik'})
+        except requests.exceptions.HTTPError as e:
+            return jsonify({'error': f'Sayt {e.response.status_code} xato qaytardi'})
+        except Exception as e:
+            return jsonify({'error': f'Sahifani o\'qishda xatolik: {str(e)}'})
         
         results = {
             'scan_type': 'links',
             'website': website,
+            'domain': domain,
             'scan_time': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'total_links': len(internal_links) + len(external_links),
-            'internal_links': internal_links[:10],
-            'external_links': external_links[:10],
+            'internal_links': internal_links[:20],  # Ko'p bo'lsa 20 ta
+            'external_links': external_links[:20],  # Ko'p bo'lsa 20 ta
+            'suspicious_links': suspicious_links,
             'broken_links': broken_links
         }
         
@@ -591,8 +633,11 @@ def check_links():
         return jsonify({'success': True, 'redirect': url_for('results')})
         
     except Exception as e:
-        return jsonify({'error': str(e)})
-
+        # Xatolikni log'ga yozish
+        print(f"Link tekshirish xatoligi: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': f'Xatolik yuz berdi: {str(e)}'})
 @app.route('/analyze-apk', methods=['POST'])
 def analyze_apk():
     """APK faylni tahlil qilish"""
