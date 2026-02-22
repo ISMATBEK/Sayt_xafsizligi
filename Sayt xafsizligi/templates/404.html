@@ -1,1 +1,62 @@
+{% extends "base.html" %}
 
+{% block page_title %}Sahifa topilmadi{% endblock %}
+{% block page_subtitle %}404 - Not Found{% endblock %}
+
+{% block content %}
+<div class="card" style="text-align: center; padding: 60px 20px;">
+    <div style="width: 150px; height: 150px; background: linear-gradient(135deg, #ef444420, #ef444440); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px;">
+        <i class="fas fa-exclamation-triangle" style="font-size: 70px; color: #ef4444;"></i>
+    </div>
+    
+    <h1 style="font-size: 72px; font-weight: 800; background: linear-gradient(135deg, #ef4444, #dc2626); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;">404</h1>
+    
+    <h2 style="font-size: 28px; margin-bottom: 15px;">Sahifa topilmadi!</h2>
+    
+    <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 30px; font-size: 16px;">
+        Qidirgan sahifangiz mavjud emas yoki o'chirilgan bo'lishi mumkin. 
+        Iltimos, manzilni tekshirib qaytadan urinib ko'ring.
+    </p>
+    
+    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+        <a href="{{ url_for('index') }}" class="btn btn-primary" style="padding: 15px 30px;">
+            <i class="fas fa-home"></i> Bosh sahifaga qaytish
+        </a>
+        
+        <button onclick="history.back()" class="btn btn-outline" style="padding: 15px 30px;">
+            <i class="fas fa-arrow-left"></i> Orqaga qaytish
+        </button>
+    </div>
+</div>
+
+<div class="grid-3" style="margin-top: 30px;">
+    <div class="card" style="text-align: center;">
+        <i class="fas fa-search" style="font-size: 40px; color: var(--accent-primary); margin-bottom: 15px;"></i>
+        <h3>Website Scanner</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 15px;">Sayt xavfsizligini tekshirish</p>
+        <a href="{{ url_for('scanner') }}" class="btn btn-outline">O'tish</a>
+    </div>
+    
+    <div class="card" style="text-align: center;">
+        <i class="fas fa-link" style="font-size: 40px; color: #10b981; margin-bottom: 15px;"></i>
+        <h3>Link Tekshiruvi</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 15px;">Xavfli linklarni aniqlash</p>
+        <a href="{{ url_for('link_checker') }}" class="btn btn-outline">O'tish</a>
+    </div>
+    
+    <div class="card" style="text-align: center;">
+        <i class="fas fa-mobile-alt" style="font-size: 40px; color: #f59e0b; margin-bottom: 15px;"></i>
+        <h3>APK Analyzer</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 15px;">Android ilovalarni tahlil qilish</p>
+        <a href="{{ url_for('apk_analyzer') }}" class="btn btn-outline">O'tish</a>
+    </div>
+</div>
+
+<script>
+    // Sahifa yuklanganda
+    document.addEventListener('DOMContentLoaded', function() {
+        // 404 sahifasini log'ga yozish
+        console.log('404 - Sahifa topilmadi:', window.location.href);
+    });
+</script>
+{% endblock %}
