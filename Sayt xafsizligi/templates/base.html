@@ -811,7 +811,7 @@
         </div>
         
         <div class="menu-items">
-            <!-- Asosiy -->
+            <!-- ASOSIY -->
             <div class="menu-category">ASOSIY</div>
             
             <a href="{{ url_for('index') }}" class="menu-item {% if active_page == 'home' %}active{% endif %}">
@@ -834,7 +834,7 @@
                 <span>APK Analyzer</span>
             </a>
             
-            <!-- Kiberxavfsizlik -->
+            <!-- KIBERXAVFSIZLIK -->
             <div class="menu-divider"></div>
             <div class="menu-category">KIBERXAVFSIZLIK</div>
             
@@ -848,6 +848,7 @@
                 <span>Cyber Wiki</span>
             </a>
             
+            <!-- YANGI SAHIFALAR -->
             <a href="{{ url_for('cyber_quiz') }}" class="menu-item {% if active_page == 'cyber_quiz' %}active{% endif %}">
                 <i class="fas fa-question-circle"></i>
                 <span>Cyber Quiz</span>
@@ -863,9 +864,10 @@
             <a href="{{ url_for('courses') }}" class="menu-item {% if active_page == 'courses' %}active{% endif %}">
                 <i class="fas fa-graduation-cap"></i>
                 <span>Kurslar</span>
+                <span class="badge badge-info" style="margin-left: auto; font-size: 10px;">Yangi</span>
             </a>
             
-            <!-- Tizim -->
+            <!-- TIZIM -->
             <div class="menu-divider"></div>
             <div class="menu-category">TIZIM</div>
             
