@@ -223,65 +223,34 @@
         .top-bar-actions {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
         
-        .date-display {
-            background: rgba(102,126,234,0.1);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 13px;
-            color: var(--text-secondary);
-            border: 1px solid rgba(102,126,234,0.3);
-        }
-        
-        .notification-badge {
-            position: relative;
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
         }
         
-        .notification-badge i {
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+            background: var(--accent-primary);
+        }
+        
+        .theme-toggle i {
             font-size: 20px;
             color: var(--text-secondary);
         }
         
-        .notification-count {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--danger);
+        .theme-toggle:hover i {
             color: white;
-            font-size: 10px;
-            padding: 2px 5px;
-            border-radius: 10px;
-            min-width: 18px;
-            text-align: center;
-        }
-        
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 30px;
-            background: rgba(255,255,255,0.05);
-        }
-        
-        .user-avatar {
-            width: 35px;
-            height: 35px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-        }
-        
-        .user-name {
-            font-size: 14px;
-            font-weight: 500;
         }
         
         /* ===== MOBILE MENU ===== */
@@ -388,21 +357,6 @@
             transform: translateY(-2px);
         }
         
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-        
-        .btn-warning {
-            background: var(--warning);
-            color: white;
-        }
-        
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-        
         .input-group {
             display: flex;
             gap: 10px;
@@ -430,10 +384,6 @@
             box-shadow: 0 0 0 3px rgba(102,126,234,0.2);
         }
         
-        .input-group input::placeholder {
-            color: var(--text-secondary);
-        }
-        
         .badge {
             padding: 5px 12px;
             border-radius: 20px;
@@ -449,203 +399,6 @@
         .badge-danger { background: var(--danger); color: white; }
         .badge-info { background: var(--info); color: white; }
         .badge-primary { background: var(--accent-primary); color: white; }
-        
-        .alert {
-            padding: 15px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .alert-success {
-            background: rgba(16,185,129,0.1);
-            border: 1px solid var(--success);
-            color: var(--success);
-        }
-        
-        .alert-warning {
-            background: rgba(245,158,11,0.1);
-            border: 1px solid var(--warning);
-            color: var(--warning);
-        }
-        
-        .alert-danger {
-            background: rgba(239,68,68,0.1);
-            border: 1px solid var(--danger);
-            color: var(--danger);
-        }
-        
-        .alert-info {
-            background: rgba(59,130,246,0.1);
-            border: 1px solid var(--info);
-            color: var(--info);
-        }
-        
-        /* Grid system */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-        
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-        
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-        
-        /* Loading spinner */
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--bg-secondary);
-            border-top-color: var(--accent-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Progress bar */
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--bg-secondary);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-            transition: width 0.3s ease;
-        }
-        
-        /* Tooltip */
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .tooltip .tooltip-text {
-            visibility: hidden;
-            width: 200px;
-            background: #2d3748;
-            color: white;
-            text-align: center;
-            padding: 8px;
-            border-radius: 6px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 12px;
-            pointer-events: none;
-        }
-        
-        .tooltip:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
-        }
-        
-        /* Switch toggle */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-        
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--bg-secondary);
-            transition: .4s;
-            border-radius: 34px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: var(--accent-primary);
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: var(--bg-card);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            cursor: pointer;
-            font-size: 20px;
-            color: var(--text-secondary);
-        }
         
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1200px) {
@@ -694,7 +447,7 @@
             
             .top-bar-actions {
                 width: 100%;
-                justify-content: space-between;
+                justify-content: flex-end;
             }
             
             .grid-3, .grid-4 {
@@ -710,14 +463,6 @@
             .content-wrapper {
                 padding: 15px;
                 padding-top: 80px;
-            }
-            
-            .user-name {
-                display: none;
-            }
-            
-            .date-display {
-                display: none;
             }
             
             .btn {
@@ -749,7 +494,6 @@
             background: var(--accent-secondary);
         }
         
-        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -757,38 +501,6 @@
         
         .fade-in {
             animation: fadeIn 0.5s ease-out;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        /* Print styles */
-        @media print {
-            .side-menu, .menu-toggle, .menu-overlay, .top-bar, .btn, footer {
-                display: none !important;
-            }
-            
-            .main-content {
-                margin-left: 0 !important;
-            }
-            
-            .card {
-                break-inside: avoid;
-                border: 1px solid #ddd;
-                background: white;
-                color: black;
-            }
-            
-            body {
-                background: white;
-            }
         }
     </style>
     
@@ -848,52 +560,28 @@
                 <span>Cyber Wiki</span>
             </a>
             
-            <!-- YANGI SAHIFALAR -->
             <a href="{{ url_for('cyber_quiz') }}" class="menu-item {% if active_page == 'cyber_quiz' %}active{% endif %}">
                 <i class="fas fa-question-circle"></i>
                 <span>Cyber Quiz</span>
-                <span class="badge badge-warning" style="margin-left: auto; font-size: 10px;">Yangi</span>
             </a>
             
             <a href="{{ url_for('password_generator') }}" class="menu-item {% if active_page == 'password_generator' %}active{% endif %}">
                 <i class="fas fa-key"></i>
                 <span>Parol Generator</span>
-                <span class="badge badge-success" style="margin-left: auto; font-size: 10px;">Yangi</span>
             </a>
             
             <a href="{{ url_for('courses') }}" class="menu-item {% if active_page == 'courses' %}active{% endif %}">
                 <i class="fas fa-graduation-cap"></i>
                 <span>Kurslar</span>
-                <span class="badge badge-info" style="margin-left: auto; font-size: 10px;">Yangi</span>
             </a>
             
-            <!-- TIZIM -->
+            <!-- YORDAM -->
             <div class="menu-divider"></div>
-            <div class="menu-category">TIZIM</div>
-            
-            <a href="{{ url_for('profile') }}" class="menu-item {% if active_page == 'profile' %}active{% endif %}">
-                <i class="fas fa-user"></i>
-                <span>Shaxsiy Kabinet</span>
-            </a>
-            
-            <a href="{{ url_for('settings') }}" class="menu-item {% if active_page == 'settings' %}active{% endif %}">
-                <i class="fas fa-cog"></i>
-                <span>Sozlamalar</span>
-                <span class="badge badge-info" style="margin-left: auto; font-size: 10px;">Yangi</span>
-            </a>
+            <div class="menu-category">YORDAM</div>
             
             <a href="{{ url_for('help') }}" class="menu-item {% if active_page == 'help' %}active{% endif %}">
                 <i class="fas fa-question-circle"></i>
                 <span>Yordam</span>
-                <span class="badge badge-info" style="margin-left: auto; font-size: 10px;">Yangi</span>
-            </a>
-            
-            <div class="menu-divider"></div>
-            
-            <!-- Chiqish -->
-            <a href="#" class="menu-item" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Chiqish</span>
             </a>
         </div>
     </div>
@@ -908,22 +596,8 @@
             </div>
             
             <div class="top-bar-actions">
-                <div class="date-display">
-                    <i class="far fa-calendar-alt"></i>
-                    <span id="currentDate"></span>
-                </div>
-                
-                <div class="notification-badge" onclick="toggleNotifications()">
-                    <i class="far fa-bell"></i>
-                    <span class="notification-count">3</span>
-                </div>
-                
-                <div class="user-menu" onclick="toggleUserMenu()">
-                    <div class="user-avatar">
-                        <span>U</span>
-                    </div>
-                    <span class="user-name">Foydalanuvchi</span>
-                    <i class="fas fa-chevron-down" style="font-size: 12px;"></i>
+                <div class="theme-toggle" onclick="toggleTheme()" title="Tema almashtirish">
+                    <i class="fas fa-moon" id="themeIcon"></i>
                 </div>
             </div>
         </div>
@@ -934,76 +608,9 @@
         </div>
     </div>
     
-    <!-- Notification Modal -->
-    <div class="modal" id="notificationModal">
-        <div class="modal-content">
-            <div class="modal-close" onclick="closeModal('notificationModal')">
-                <i class="fas fa-times"></i>
-            </div>
-            <h3 style="margin-bottom: 20px;">Bildirishnomalar</h3>
-            
-            <div style="display: grid; gap: 15px;">
-                <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px; display: flex; gap: 10px;">
-                    <i class="fas fa-shield-alt" style="color: var(--warning);"></i>
-                    <div>
-                        <h4>Yangi xavf aniqlandi</h4>
-                        <p style="color: var(--text-secondary); font-size: 12px;">2 soat oldin</p>
-                    </div>
-                </div>
-                
-                <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px; display: flex; gap: 10px;">
-                    <i class="fas fa-trophy" style="color: var(--success);"></i>
-                    <div>
-                        <h4>Test natijalari tayyor</h4>
-                        <p style="color: var(--text-secondary); font-size: 12px;">5 soat oldin</p>
-                    </div>
-                </div>
-                
-                <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px; display: flex; gap: 10px;">
-                    <i class="fas fa-download" style="color: var(--info);"></i>
-                    <div>
-                        <h4>Yangi kurs qo'shildi</h4>
-                        <p style="color: var(--text-secondary); font-size: 12px;">1 kun oldin</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- User Menu Modal -->
-    <div class="modal" id="userMenuModal">
-        <div class="modal-content" style="max-width: 300px;">
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
-                    <i class="fas fa-user" style="font-size: 40px; color: white;"></i>
-                </div>
-                <h3>Foydalanuvchi</h3>
-                <p style="color: var(--text-secondary); font-size: 13px;">user@example.com</p>
-            </div>
-            
-            <div style="display: grid; gap: 10px;">
-                <a href="{{ url_for('profile') }}" class="btn btn-outline" style="width: 100%;">
-                    <i class="fas fa-user"></i> Profil
-                </a>
-                <a href="{{ url_for('settings') }}" class="btn btn-outline" style="width: 100%;">
-                    <i class="fas fa-cog"></i> Sozlamalar
-                </a>
-                <button class="btn btn-danger" style="width: 100%;" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Chiqish
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- JavaScript -->
     <script>
         // DOM yuklanganda
         document.addEventListener('DOMContentLoaded', function() {
-            // Sanani ko'rsatish
-            const now = new Date();
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('uz-UZ', options);
-            
             // Menu toggle
             const menuToggle = document.getElementById('menuToggle');
             const sideMenu = document.getElementById('sideMenu');
@@ -1047,41 +654,30 @@
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'light') {
                 document.body.classList.add('light-mode');
+                document.getElementById('themeIcon').classList.remove('fa-moon');
+                document.getElementById('themeIcon').classList.add('fa-sun');
             }
         });
         
-        // Modal functions
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-        }
-        
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-        
-        function toggleNotifications() {
-            openModal('notificationModal');
-        }
-        
-        function toggleUserMenu() {
-            openModal('userMenuModal');
-        }
-        
-        // Click outside to close modal
-        window.addEventListener('click', function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.classList.remove('active');
-            }
-        });
-        
-        // Logout function
-        function logout() {
-            if (confirm('Chiqishni xohlaysizmi?')) {
-                window.location.href = '/logout';
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            
+            if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.add('light-mode');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'light');
             }
         }
         
-        // Show notification
+        // Bildirishnoma ko'rsatish
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
             notification.className = `alert alert-${type}`;
@@ -1102,7 +698,7 @@
             }, 3000);
         }
         
-        // Copy to clipboard
+        // Nusxalash
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
                 showNotification('Nusxalandi!', 'success');
