@@ -35,31 +35,31 @@ CYBER_TIPS = [
         "content": "Har bir akkaunt uchun unikal va murakkab parol ishlating. Parollarda katta-kichik harflar, raqamlar va maxsus belgilar bo'lsin.",
         "icon": "fas fa-lock",
         "color": "#dc3545",
-        "category": "password"
+        "category": "Parol xavfsizligi"
     },
     {
         "id": 2,
         "title": "📱 Ikki Bosqichli Autentifikatsiya",
-        "content": "Google, Telegram va boshqa xizmatlarda 2FA (ikki bosqichli autentifikatsiya) ni yoqing.",
+        "content": "Google, Telegram va boshqa xizmatlarda 2FA (ikki bosqichli autentifikatsiya) ni yoqing. Bu akkauntingizni 99% himoya qiladi.",
         "icon": "fas fa-mobile-alt",
         "color": "#28a745",
-        "category": "2fa"
+        "category": "2FA"
     },
     {
         "id": 3,
         "title": "⚠️ Fishingdan Saqlaning",
-        "content": "Shubhali linklarga kirmang. Bank, ijtimoiy tarmoq xabarlariga ishonmang.",
+        "content": "Shubhali linklarga kirmang. Bank, ijtimoiy tarmoq xabarlariga ishonmang. Har doim manzilni tekshiring.",
         "icon": "fas fa-exclamation-triangle",
         "color": "#ffc107",
-        "category": "phishing"
+        "category": "Fishing"
     },
     {
         "id": 4,
         "title": "🔄 Dasturlarni Yangilang",
-        "content": "Operatsion tizim, brauzer va antivirus dasturlaringizni muntazam yangilab turing.",
+        "content": "Operatsion tizim, brauzer va antivirus dasturlaringizni muntazam yangilab turing. Bu xavfsizlik teshiklarini yopadi.",
         "icon": "fas fa-sync-alt",
         "color": "#17a2b8",
-        "category": "updates"
+        "category": "Yangilanishlar"
     },
     {
         "id": 5,
@@ -67,10 +67,129 @@ CYBER_TIPS = [
         "content": "Jamoat Wi-Fi tarmoqlarida bank, email kabi muhim ma'lumotlarni kiritmang. VPN ishlating.",
         "icon": "fas fa-wifi",
         "color": "#6610f2",
-        "category": "wifi"
+        "category": "Tarmoq xavfsizligi"
+    },
+    {
+        "id": 6,
+        "title": "💾 Zaxira Nusxa",
+        "content": "Muhim fayllaringizni muntazam zaxiralab turing. Bulut va tashqi xotiraga nusxalang. Ransomware hujumlaridan saqlaning.",
+        "icon": "fas fa-database",
+        "color": "#6f42c1",
+        "category": "Ma'lumotlar xavfsizligi"
+    },
+    {
+        "id": 7,
+        "title": "🔍 Antivirus Tekshiruvi",
+        "content": "Har hafta antivirus dasturi bilan to'liq skanerlash o'tkazing. Telefon va kompyuteringizni himoyalang.",
+        "icon": "fas fa-shield-virus",
+        "color": "#fd7e14",
+        "category": "Antivirus"
+    },
+    {
+        "id": 8,
+        "title": "📧 Spam Xabarlar",
+        "content": "Noma'lum manzillardan kelgan xabarlarni ochmang. Ulardagi link va fayllar xavfli bo'lishi mumkin.",
+        "icon": "fas fa-envelope",
+        "color": "#20c997",
+        "category": "Email xavfsizligi"
+    },
+    {
+        "id": 9,
+        "title": "🔒 Shaxsiy Ma'lumotlar",
+        "content": "Ijtimoiy tarmoqlarda manzil, telefon, tug'ilgan sana kabi ma'lumotlarni yashiring. Hackerlar bu ma'lumotlardan foydalanishi mumkin.",
+        "icon": "fas fa-user-secret",
+        "color": "#e83e8c",
+        "category": "Maxfiylik"
+    },
+    {
+        "id": 10,
+        "title": "🛡️ VPN dan Foydalaning",
+        "content": "Ochiq Wi-Fi tarmoqlarida VPN ishlating. Bu ma'lumotlaringizni himoya qiladi va IP manzilingizni yashiradi.",
+        "icon": "fas fa-globe",
+        "color": "#0dcaf0",
+        "category": "VPN"
+    },
+    {
+        "id": 11,
+        "title": "📱 Ilova Ruxsatlari",
+        "content": "Ilovalarga berilgan ruxsatlarni tekshiring. Keraksiz ruxsatlarni olib tashlang (masalan, chiroqqa internet ruxsati kerakmas).",
+        "icon": "fas fa-permission",
+        "color": "#d63384",
+        "category": "Mobil xavfsizlik"
+    },
+    {
+        "id": 12,
+        "title": "🔑 Parol Menejeri",
+        "content": "Barcha parollaringizni eslab qolish qiyin. Bitwarden, LastPass kabi parol menejerlaridan foydalaning.",
+        "icon": "fas fa-key",
+        "color": "#6c757d",
+        "category": "Parol xavfsizligi"
+    },
+    {
+        "id": 13,
+        "title": "🕵️ Kuzatuvdan Saqlaning",
+        "content": "Brauzeringizda 'Do Not Track' sozlamasini yoqing. Maxfiy rejimda internetdan foydalaning.",
+        "icon": "fas fa-eye-slash",
+        "color": "#343a40",
+        "category": "Maxfiylik"
+    },
+    {
+        "id": 14,
+        "title": "💳 Online To'lovlar",
+        "content": "Online to'lovlarda faqat ishonchli saytlardan foydalaning. Karta ma'lumotlarini saqlamang.",
+        "icon": "fas fa-credit-card",
+        "color": "#198754",
+        "category": "Moliyaviy xavfsizlik"
+    },
+    {
+        "id": 15,
+        "title": "👨‍👩‍👧‍👦 Bolalar Xavfsizligi",
+        "content": "Bolalaringiz internetda nima qilayotganini nazorat qiling. Parental control dasturlaridan foydalaning.",
+        "icon": "fas fa-child",
+        "color": "#0d6efd",
+        "category": "Oilaviy xavfsizlik"
+    },
+    {
+        "id": 16,
+        "title": "📸 Ijtimoiy Tarmoqlar",
+        "content": "Ijtimoiy tarmoqlarda joylashgan rasmlaringiz geolokatsiyasini o'chiring. Uy manzilingizni ko'rsatmang.",
+        "icon": "fas fa-camera",
+        "color": "#dc3545",
+        "category": "Maxfiylik"
+    },
+    {
+        "id": 17,
+        "title": "🎮 Gaming Xavfsizligi",
+        "content": "O'yin akkauntlaringiz uchun ham kuchli parollar ishlating. Ikkilamchi autentifikatsiyani yoqing.",
+        "icon": "fas fa-gamepad",
+        "color": "#ffc107",
+        "category": "Gaming"
+    },
+    {
+        "id": 18,
+        "title": "📞 Telefon Firibgarligi",
+        "content": "Bank nomidan qo'ng'iroq qilib, parol so'rasa - bu firibgarlik. Hech kimga parolingizni aytmang.",
+        "icon": "fas fa-phone-alt",
+        "color": "#28a745",
+        "category": "Firibgarlik"
+    },
+    {
+        "id": 19,
+        "title": "💼 Biznes Xavfsizligi",
+        "content": "Kichik biznesingiz bo'lsa, xodimlaringizga xavfsizlik bo'yicha trening o'tkazing. Ma'lumotlaringizni himoyalang.",
+        "icon": "fas fa-briefcase",
+        "color": "#17a2b8",
+        "category": "Biznes"
+    },
+    {
+        "id": 20,
+        "title": "🔐 Blokcheyn Xavfsizligi",
+        "content": "Kriptovalyuta hamyonlaringizni himoyalang. Secret phrase hech kimga aytmang.",
+        "icon": "fas fa-link",
+        "color": "#6610f2",
+        "category": "Kripto"
     }
 ]
-
 # Kiberxavfsizlik vikipediyasi
 CYBER_WIKI = {
     "phishing": {
