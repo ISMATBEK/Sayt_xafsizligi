@@ -390,71 +390,231 @@ CYBER_WIKI = {
     }
 }
 
-# Kurslar
+# Kurslar (tashqi manbalar bilan)
 COURSES = [
     {
         "id": 1,
-        "title": "Kiberxavfsizlik asoslari",
+        "title": "🔐 Kiberxavfsizlik asoslari",
         "description": "Boshlang'ich daraja uchun kiberxavfsizlik asoslari. Bu kursda siz xavfsiz internet, parollar, fishing va boshqa asosiy tushunchalarni o'rganasiz.",
-        "lessons": 10,
-        "duration": "5 soat",
+        "short_description": "Kiberxavfsizlikka kirish kursi",
+        "lessons": 12,
+        "duration": "6 soat",
         "level": "Boshlang'ich",
         "level_color": "#10b981",
         "image": "fas fa-shield-alt",
         "color": "#667eea",
         "instructor": "Aziz Karimov",
-        "students": 1234,
+        "instructor_bio": "10+ yillik kiberxavfsizlik mutaxassisi, CISSP sertifikatli",
+        "students": 15420,
         "rating": 4.8,
         "price": "Bepul",
+        "language": "O'zbek",
+        "last_updated": "2025-02-15",
         "topics": [
             "Xavfsiz internet",
             "Kuchli parollar",
             "Fishingdan himoya",
             "Antivirus dasturlari",
-            "2FA sozlamalari"
+            "2FA sozlamalari",
+            "Shaxsiy ma'lumotlarni himoyalash",
+            "VPN dan foydalanish",
+            "Brauzer xavfsizligi"
+        ],
+        "external_links": [
+            {"title": "📺 YouTube: Kiberxavfsizlik asoslari (Playlist)", "url": "https://www.youtube.com/playlist?list=PL98qAXI9PwQpVjQqQqQqQqQ", "type": "video", "icon": "fab fa-youtube", "color": "#ff0000"},
+            {"title": "📄 Microsoft Security Basics", "url": "https://www.microsoft.com/en-us/security/business/security-101/what-is-cybersecurity", "type": "article", "icon": "fas fa-file-alt", "color": "#00a4ef"},
+            {"title": "🎓 Cisco Introduction to Cybersecurity", "url": "https://www.netacad.com/courses/cybersecurity/introduction-cybersecurity", "type": "course", "icon": "fas fa-graduation-cap", "color": "#1ba0d7"},
+            {"title": "📚 Google Cybersecurity Certificate", "url": "https://grow.google/cybersecurity/", "type": "certificate", "icon": "fas fa-certificate", "color": "#4285f4"},
+            {"title": "🇺🇿 CyberAqademy - O'zbek tilida", "url": "https://cyberaqademy.uz", "type": "local", "icon": "fas fa-globe", "color": "#2ca5e0"}
         ]
     },
     {
         "id": 2,
-        "title": "Xavfsiz dasturlash",
-        "description": "Xavfsiz kod yozish amaliyotlari. SQL injection, XSS va boshqa xavflardan himoyalanish.",
-        "lessons": 15,
-        "duration": "8 soat",
+        "title": "💻 Xavfsiz dasturlash",
+        "description": "Xavfsiz kod yozish amaliyotlari. SQL injection, XSS, CSRF va boshqa xavflardan himoyalanish usullari.",
+        "short_description": "Dasturchilar uchun xavfsiz kod yozish",
+        "lessons": 18,
+        "duration": "10 soat",
         "level": "O'rta",
         "level_color": "#f59e0b",
         "image": "fas fa-code",
         "color": "#f59e0b",
         "instructor": "Dilmurod Tursunov",
-        "students": 856,
+        "instructor_bio": "Full-stack developer, xavfsiz dasturlash bo'yicha treninglar o'tkazadi",
+        "students": 8560,
         "rating": 4.6,
         "price": "Bepul",
+        "language": "O'zbek/Rus",
+        "last_updated": "2025-02-10",
         "topics": [
             "SQL injection",
             "XSS hujumlari",
             "CSRF himoya",
-            "Xavfsiz autentifikatsiya"
+            "Xavfsiz autentifikatsiya",
+            "Ma'lumotlar shifrlash",
+            "API xavfsizligi",
+            "Input validation",
+            "Session boshqaruvi"
+        ],
+        "external_links": [
+            {"title": "📺 Secure Coding (YouTube)", "url": "https://www.youtube.com/watch?v=WmR9IMUD_CY", "type": "video", "icon": "fab fa-youtube", "color": "#ff0000"},
+            {"title": "📄 OWASP Top 10", "url": "https://owasp.org/www-project-top-ten/", "type": "documentation", "icon": "fas fa-book", "color": "#000000"},
+            {"title": "🎓 PortSwigger Web Security", "url": "https://portswigger.net/web-security", "type": "course", "icon": "fas fa-bug", "color": "#ff6600"},
+            {"title": "🔧 Snyk Learn", "url": "https://learn.snyk.io/", "type": "interactive", "icon": "fas fa-laptop-code", "color": "#4c4a73"},
+            {"title": "📚 OWASP Cheat Sheets", "url": "https://cheatsheetseries.owasp.org/", "type": "reference", "icon": "fas fa-file-pdf", "color": "#e34f26"}
         ]
     },
     {
         "id": 3,
-        "title": "Penetration Testing",
-        "description": "Professional penetration testing usullari va vositalari. Ethical hacking asoslari.",
-        "lessons": 20,
-        "duration": "12 soat",
+        "title": "🕵️ Penetration Testing",
+        "description": "Professional penetration testing usullari va vositalari. Ethical hacking asoslari, zaifliklarni aniqlash va ekspluatatsiya qilish.",
+        "short_description": "Professional penetration testing kursi",
+        "lessons": 24,
+        "duration": "15 soat",
         "level": "Yuqori",
         "level_color": "#ef4444",
         "image": "fas fa-bug",
         "color": "#ef4444",
         "instructor": "Jasur Abdullayev",
-        "students": 567,
+        "instructor_bio": "Bug bounty hunter, OSCP sertifikatli, 100+ zaiflik aniqlagan",
+        "students": 5670,
         "rating": 4.9,
         "price": "Bepul",
+        "language": "O'zbek/Ingliz",
+        "last_updated": "2025-02-20",
         "topics": [
             "Network scanning",
             "Vulnerability assessment",
-            "Web application testing"
+            "Web application testing",
+            "Wireless security",
+            "Social engineering",
+            "Password cracking",
+            "Metasploit framework",
+            "Report writing"
+        ],
+        "external_links": [
+            {"title": "📺 HackerSploit (YouTube)", "url": "https://www.youtube.com/c/HackerSploit", "type": "video", "icon": "fab fa-youtube", "color": "#ff0000"},
+            {"title": "🎓 TryHackMe", "url": "https://tryhackme.com/", "type": "interactive", "icon": "fas fa-terminal", "color": "#e31b23"},
+            {"title": "🎓 HackTheBox", "url": "https://www.hackthebox.com/", "type": "interactive", "icon": "fas fa-cube", "color": "#9fef00"},
+            {"title": "📄 OWASP WebGoat", "url": "https://owasp.org/www-project-webgoat/", "type": "practice", "icon": "fas fa-goat", "color": "#000000"},
+            {"title": "📚 Penetration Testing Execution Standard", "url": "http://www.pentest-standard.org/", "type": "standard", "icon": "fas fa-file-alt", "color": "#2c3e50"}
+        ]
+    },
+    {
+        "id": 4,
+        "title": "📱 Mobil xavfsizlik",
+        "description": "Android va iOS ilovalar xavfsizligi. Mobil malware, ilova ruxsatlari, ma'lumotlar himoyasi va mobil penetration testing.",
+        "short_description": "Mobil qurilmalar va ilovalar xavfsizligi",
+        "lessons": 15,
+        "duration": "8 soat",
+        "level": "O'rta",
+        "level_color": "#3b82f6",
+        "image": "fas fa-mobile-alt",
+        "color": "#3b82f6",
+        "instructor": "Gulnora Rahimova",
+        "instructor_bio": "Mobil xavfsizlik bo'yicha tadqiqotchi, Android Security MVP",
+        "students": 4320,
+        "rating": 4.7,
+        "price": "Bepul",
+        "language": "O'zbek",
+        "last_updated": "2025-02-18",
+        "topics": [
+            "Android xavfsizlik",
+            "iOS xavfsizlik",
+            "Mobil malware tahlili",
+            "Ilova ruxsatlari",
+            "Ma'lumotlar himoyasi",
+            "Mobil penetration testing",
+            "SSL pinning",
+            "Root/jailbreak detection"
+        ],
+        "external_links": [
+            {"title": "📺 Mobile Hacking (YouTube)", "url": "https://www.youtube.com/watch?v=abc123", "type": "video", "icon": "fab fa-youtube", "color": "#ff0000"},
+            {"title": "📄 OWASP Mobile Top 10", "url": "https://owasp.org/www-project-mobile-top-10/", "type": "documentation", "icon": "fas fa-book", "color": "#000000"},
+            {"title": "🔧 MobSF - Mobile Security Framework", "url": "https://mobsf.github.io/Mobile-Security-Framework-MobSF/", "type": "tool", "icon": "fas fa-tools", "color": "#4caf50"},
+            {"title": "🎓 Android Security & Privacy", "url": "https://developer.android.com/training/articles/security-tips", "type": "course", "icon": "fab fa-android", "color": "#3ddc84"},
+            {"title": "🎓 iOS Security Guide", "url": "https://developer.apple.com/security/", "type": "course", "icon": "fab fa-apple", "color": "#999999"}
+        ]
+    },
+    {
+        "id": 5,
+        "title": "🌐 Tarmoq xavfsizligi",
+        "description": "Tarmoq infratuzilmasini himoyalash, firewall, IDS/IPS, VPN, tarmoq monitoringi va xavflarni aniqlash.",
+        "short_description": "Network security asoslari",
+        "lessons": 20,
+        "duration": "12 soat",
+        "level": "O'rta",
+        "level_color": "#8b5cf6",
+        "image": "fas fa-network-wired",
+        "color": "#8b5cf6",
+        "instructor": "Rustam Xaydarov",
+        "instructor_bio": "CCNP Security sertifikatli, 8 yillik tarmoq muhandisi",
+        "students": 3890,
+        "rating": 4.8,
+        "price": "Bepul",
+        "language": "O'zbek/Rus",
+        "last_updated": "2025-02-12",
+        "topics": [
+            "TCP/IP xavfsizligi",
+            "Firewall sozlamalari",
+            "IDS/IPS tizimlari",
+            "VPN texnologiyalari",
+            "Tarmoq monitoringi",
+            "DDoS himoyasi",
+            "VLAN xavfsizligi",
+            "Wireless security"
+        ],
+        "external_links": [
+            {"title": "📺 Network Security (YouTube)", "url": "https://www.youtube.com/watch?v=xyz789", "type": "video", "icon": "fab fa-youtube", "color": "#ff0000"},
+            {"title": "🎓 Cisco Networking Academy", "url": "https://www.netacad.com/courses/cybersecurity/network-security", "type": "course", "icon": "fas fa-graduation-cap", "color": "#1ba0d7"},
+            {"title": "📄 NIST Cybersecurity Framework", "url": "https://www.nist.gov/cyberframework", "type": "framework", "icon": "fas fa-file-alt", "color": "#0076a8"},
+            {"title": "🔧 Wireshark Tutorial", "url": "https://www.wireshark.org/docs/wsug_html_chunked/", "type": "tool", "icon": "fas fa-chart-line", "color": "#1679a7"},
+            {"title": "📚 COMPTIA Security+", "url": "https://www.comptia.org/certifications/security", "type": "certification", "icon": "fas fa-certificate", "color": "#c00a0a"}
+        ]
+    },
+    {
+        "id": 6,
+        "title": "🛡️ Kiber gigiyena",
+        "description": "Oddiy foydalanuvchilar uchun kiberxavfsizlik asoslari. Xavfsiz internet, parol gigiyenasi, shaxsiy ma'lumotlarni himoyalash.",
+        "short_description": "Har bir foydalanuvchi uchun xavfsizlik qoidalari",
+        "lessons": 8,
+        "duration": "4 soat",
+        "level": "Boshlang'ich",
+        "level_color": "#06b6d4",
+        "image": "fas fa-hand-sparkles",
+        "color": "#06b6d4",
+        "instructor": "Madina Azizova",
+        "instructor_bio": "Kiberxavfsizlik bo'yicha o'qituvchi, IT yozuvchi",
+        "students": 12450,
+        "rating": 4.9,
+        "price": "Bepul",
+        "language": "O'zbek",
+        "last_updated": "2025-02-22",
+        "topics": [
+            "Xavfsiz parol yaratish",
+            "2FA sozlash",
+            "Fishing emailni aniqlash",
+            "Ijtimoiy tarmoq xavfsizligi",
+            "Bolalar uchun internet xavfsizligi",
+            "Online banking xavfsizligi",
+            "VPN dan foydalanish",
+            "Zaxira nusxa olish"
+        ],
+        "external_links": [
+            {"title": "📺 Kiber gigiyena (YouTube)", "url": "https://www.youtube.com/watch?v=cygiene123", "type": "video", "icon": "fab fa-youtube", "color": "#ff0000"},
+            {"title": "📄 StaySafeOnline", "url": "https://staysafeonline.org/", "type": "resource", "icon": "fas fa-shield-alt", "color": "#2c3e50"},
+            {"title": "🎓 Google Safety Center", "url": "https://safety.google/", "type": "course", "icon": "fab fa-google", "color": "#4285f4"},
+            {"title": "🇺🇿 O'zbekiston Kiberxavfsizlik Markazi", "url": "https://csc.uz/", "type": "local", "icon": "fas fa-globe", "color": "#0095b6"},
+            {"title": "📱 CyberAware mobile app", "url": "https://play.google.com/store/apps/details?id=com.cyberaware", "type": "app", "icon": "fas fa-mobile-alt", "color": "#689f38"}
         ]
     }
+]
+
+# Kategoriyalar
+COURSE_CATEGORIES = [
+    {"id": "boshlangich", "name": "Boshlang'ich", "color": "#10b981"},
+    {"id": "orta", "name": "O'rta", "color": "#f59e0b"},
+    {"id": "yuqori", "name": "Yuqori", "color": "#ef4444"}
 ]
 
 # Test natijalari
@@ -595,11 +755,20 @@ def course_detail(course_id):
     if not course:
         return redirect(url_for('courses'))
     
-    similar_courses = [c for c in COURSES if c['id'] != course_id][:3]
+    # O'xshash kurslar (bir xil level)
+    similar_courses = [c for c in COURSES if c['id'] != course_id and c['level'] == course['level']][:3]
+    
+    # Kurs statistikasi
+    stats = {
+        'completion_rate': random.randint(65, 95),
+        'avg_time': random.randint(4, 12),
+        'certificates_issued': random.randint(100, 5000)
+    }
     
     return render_template('course_detail.html',
                          course=course,
                          similar_courses=similar_courses,
+                         stats=stats,
                          active_page='courses')
 
 @app.route('/profile')
@@ -1118,6 +1287,43 @@ def analyze_apk():
         return jsonify({'error': f'APK tahlilida xatolik: {str(e)}'})
 
 # ========== API ROUTES ==========
+@app.route('/api/courses/filter')
+def filter_courses():
+    """Kurslarni filtrlash"""
+    try:
+        level = request.args.get('level', 'all')
+        search = request.args.get('search', '').lower()
+        
+        filtered = COURSES.copy()
+        
+        if level != 'all':
+            filtered = [c for c in filtered if c['level'].lower() == level.lower()]
+        
+        if search:
+            filtered = [c for c in filtered if search in c['title'].lower() or search in c['description'].lower()]
+        
+        return jsonify({
+            'success': True,
+            'courses': filtered,
+            'count': len(filtered)
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/course/<int:course_id>/resources')
+def course_resources(course_id):
+    """Kurs resurslarini olish"""
+    try:
+        course = next((c for c in COURSES if c['id'] == course_id), None)
+        if not course:
+            return jsonify({'success': False, 'error': 'Kurs topilmadi'})
+        
+        return jsonify({
+            'success': True,
+            'resources': course.get('external_links', [])
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
 
 @app.route('/api/generate-password', methods=['POST'])
 def generate_password():
