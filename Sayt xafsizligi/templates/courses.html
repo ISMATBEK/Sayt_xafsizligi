@@ -1,64 +1,201 @@
 {% extends "base.html" %}
 
 {% block page_title %}Kiberxavfsizlik Kurslari{% endblock %}
-{% block page_subtitle %}Bepul online kurslar{% endblock %}
+{% block page_subtitle %}Bepul online kurslar va resurslar{% endblock %}
 
 {% block content %}
-<!-- Kurslar grid -->
-<div class="grid-2">
-    {% for course in courses %}
-    <div class="card" style="padding: 0; overflow: hidden;">
-        <div style="height: 120px; background: linear-gradient(135deg, {{ course.color }}20, {{ course.color }}40); display: flex; align-items: center; justify-content: center;">
-            <i class="{{ course.image }}" style="font-size: 50px; color: {{ course.color }};"></i>
+<!-- Filter va qidiruv -->
+<div class="card">
+    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <div style="flex: 2; min-width: 250px;">
+            <input type="text" id="searchInput" placeholder="Kurs nomi yoki mavzu bo'yicha qidirish..." style="width: 100%; padding: 12px; border-radius: 8px; background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary);">
         </div>
-        <div style="padding: 20px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h3>{{ course.title }}</h3>
-                <span class="badge" style="background: {{ course.level_color }}; color: white;">{{ course.level }}</span>
-            </div>
-            <p style="color: var(--text-secondary); margin-bottom: 15px;">{{ course.description[:100] }}...</p>
-            
-            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                <div><i class="fas fa-book-open"></i> {{ course.lessons }} dars</div>
-                <div><i class="fas fa-clock"></i> {{ course.duration }}</div>
-                <div><i class="fas fa-users"></i> {{ course.students }} talaba</div>
-            </div>
-            
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <i class="fas fa-star" style="color: #fbbf24;"></i>
-                    <span>{{ course.rating }} / 5.0</span>
-                </div>
-                <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-primary">
-                    <i class="fas fa-play-circle"></i> Boshlash
-                </a>
-            </div>
+        <div style="flex: 1; min-width: 200px;">
+            <select id="levelFilter" style="width: 100%; padding: 12px; border-radius: 8px; background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary);">
+                <option value="all">Barcha kurslar</option>
+                <option value="boshlang'ich">Boshlang'ich</option>
+                <option value="o'rta">O'rta</option>
+                <option value="yuqori">Yuqori</option>
+            </select>
         </div>
+        <div style="flex: 0 0 auto;">
+            <button class="btn btn-primary" onclick="filterCourses()">
+                <i class="fas fa-search"></i> Qidirish
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Kategoriya kartochkalari -->
+<div class="grid-3" style="margin-bottom: 30px;">
+    {% for cat in [
+        {'name': 'Boshlang\'ich', 'icon': 'fas fa-seedling', 'color': '#10b981', 'count': courses|selectattr('level', 'equalto', 'Boshlang\'ich')|list|length},
+        {'name': 'O\'rta', 'icon': 'fas fa-tree', 'color': '#f59e0b', 'count': courses|selectattr('level', 'equalto', 'O\'rta')|list|length},
+        {'name': 'Yuqori', 'icon': 'fas fa-crown', 'color': '#ef4444', 'count': courses|selectattr('level', 'equalto', 'Yuqori')|list|length}
+    ] %}
+    <div class="card" style="text-align: center; cursor: pointer;" onclick="filterByLevel('{{ cat.name.lower() }}')">
+        <i class="{{ cat.icon }}" style="font-size: 40px; color: {{ cat.color }}; margin-bottom: 10px;"></i>
+        <h3>{{ cat.name }}</h3>
+        <p style="color: var(--text-secondary);">{{ cat.count }} ta kurs</p>
     </div>
     {% endfor %}
 </div>
 
+<!-- Kurslar grid -->
+<div id="coursesContainer">
+    <div class="grid-2">
+        {% for course in courses %}
+        <div class="card course-card" data-level="{{ course.level.lower() }}" data-title="{{ course.title.lower() }}" style="padding: 0; overflow: hidden;">
+            <div style="height: 120px; background: linear-gradient(135deg, {{ course.color }}20, {{ course.color }}40); display: flex; align-items: center; justify-content: center; position: relative;">
+                <i class="{{ course.image }}" style="font-size: 50px; color: {{ course.color }};"></i>
+                <span class="badge" style="position: absolute; top: 10px; right: 10px; background: {{ course.level_color }};">{{ course.level }}</span>
+            </div>
+            
+            <div style="padding: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h3>{{ course.title }}</h3>
+                    <div style="display: flex; gap: 5px;">
+                        <span class="badge badge-info"><i class="fas fa-language"></i> {{ course.language }}</span>
+                    </div>
+                </div>
+                
+                <p style="color: var(--text-secondary); margin-bottom: 15px;">{{ course.short_description }}</p>
+                
+                <div style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+                    <div><i class="fas fa-book-open" style="color: var(--accent-primary);"></i> {{ course.lessons }} dars</div>
+                    <div><i class="fas fa-clock" style="color: var(--warning);"></i> {{ course.duration }}</div>
+                    <div><i class="fas fa-users" style="color: var(--success);"></i> {{ "{:,}".format(course.students) }} talaba</div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <i class="fas fa-star" style="color: #fbbf24;"></i>
+                        <span>{{ course.rating }} / 5.0</span>
+                        <span style="color: var(--text-secondary); font-size: 12px;">({{ course.students // 100 }} ta baho)</span>
+                    </div>
+                    <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-primary">
+                        <i class="fas fa-play-circle"></i> Kursni boshlash
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 <!-- Statistika -->
-<div class="grid-4" style="margin-top: 30px;">
+<div class="grid-4" style="margin-top: 40px;">
     <div class="card" style="text-align: center;">
-        <i class="fas fa-users" style="font-size: 30px; color: var(--accent-primary);"></i>
-        <h3 style="font-size: 24px; margin: 10px 0;">2500+</h3>
+        <i class="fas fa-users" style="font-size: 40px; color: var(--accent-primary);"></i>
+        <h3 style="font-size: 28px;">{{ "{:,}".format(courses|sum(attribute='students')) }}</h3>
         <p style="color: var(--text-secondary);">O'quvchilar</p>
     </div>
     <div class="card" style="text-align: center;">
-        <i class="fas fa-book-open" style="font-size: 30px; color: var(--success);"></i>
-        <h3 style="font-size: 24px; margin: 10px 0;">57</h3>
+        <i class="fas fa-book-open" style="font-size: 40px; color: var(--success);"></i>
+        <h3 style="font-size: 28px;">{{ courses|sum(attribute='lessons') }}</h3>
         <p style="color: var(--text-secondary);">Darslar</p>
     </div>
     <div class="card" style="text-align: center;">
-        <i class="fas fa-clock" style="font-size: 30px; color: var(--warning);"></i>
-        <h3 style="font-size: 24px; margin: 10px 0;">31 soat</h3>
+        <i class="fas fa-clock" style="font-size: 40px; color: var(--warning);"></i>
+        <h3 style="font-size: 28px;">{{ courses|sum(attribute='duration')|replace('soat', '')|replace(' ', '')|int }} soat</h3>
         <p style="color: var(--text-secondary);">Video darslar</p>
     </div>
     <div class="card" style="text-align: center;">
-        <i class="fas fa-certificate" style="font-size: 30px; color: var(--info);"></i>
-        <h3 style="font-size: 24px; margin: 10px 0;">4</h3>
-        <p style="color: var(--text-secondary);">Sertifikatlar</p>
+        <i class="fas fa-certificate" style="font-size: 40px; color: var(--info);"></i>
+        <h3 style="font-size: 28px;">{{ courses|length }}</h3>
+        <p style="color: var(--text-secondary);">Bepul kurslar</p>
     </div>
 </div>
+
+<!-- Tavsiya etilgan kurslar -->
+<div class="card">
+    <h2 style="margin-bottom: 20px;">🌟 Tavsiya etilgan kurslar</h2>
+    <div class="grid-3">
+        {% for course in courses[:3] %}
+        <div style="text-align: center;">
+            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, {{ course.color }}20, {{ course.color }}40); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
+                <i class="{{ course.image }}" style="font-size: 40px; color: {{ course.color }};"></i>
+            </div>
+            <h4>{{ course.title }}</h4>
+            <p style="color: var(--text-secondary); font-size: 12px;">{{ course.lessons }} dars • {{ course.duration }}</p>
+            <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-outline" style="margin-top: 10px;">Ko'rish</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function filterCourses() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const level = document.getElementById('levelFilter').value.toLowerCase();
+    
+    fetch(`/api/courses/filter?level=${level}&search=${encodeURIComponent(searchTerm)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateCourses(data.courses);
+            }
+        });
+}
+
+function filterByLevel(level) {
+    document.getElementById('levelFilter').value = level;
+    filterCourses();
+}
+
+function updateCourses(courses) {
+    const container = document.getElementById('coursesContainer');
+    
+    if (courses.length === 0) {
+        container.innerHTML = `
+            <div class="card" style="text-align: center; padding: 50px;">
+                <i class="fas fa-search" style="font-size: 50px; color: var(--text-secondary); margin-bottom: 20px;"></i>
+                <h3>Hech narsa topilmadi</h3>
+                <p style="color: var(--text-secondary);">Boshqa so'z bilan qidirib ko'ring</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '<div class="grid-2">';
+    
+    courses.forEach(course => {
+        html += `
+            <div class="card course-card" style="padding: 0; overflow: hidden;">
+                <div style="height: 120px; background: linear-gradient(135deg, ${course.color}20, ${course.color}40); display: flex; align-items: center; justify-content: center; position: relative;">
+                    <i class="${course.image}" style="font-size: 50px; color: ${course.color};"></i>
+                    <span class="badge" style="position: absolute; top: 10px; right: 10px; background: ${course.level_color};">${course.level}</span>
+                </div>
+                
+                <div style="padding: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h3>${course.title}</h3>
+                        <span class="badge badge-info"><i class="fas fa-language"></i> ${course.language}</span>
+                    </div>
+                    
+                    <p style="color: var(--text-secondary); margin-bottom: 15px;">${course.short_description}</p>
+                    
+                    <div style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+                        <div><i class="fas fa-book-open" style="color: var(--accent-primary);"></i> ${course.lessons} dars</div>
+                        <div><i class="fas fa-clock" style="color: var(--warning);"></i> ${course.duration}</div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <i class="fas fa-star" style="color: #fbbf24;"></i>
+                            <span>${course.rating} / 5.0</span>
+                        </div>
+                        <a href="/course/${course.id}" class="btn btn-primary">
+                            <i class="fas fa-play-circle"></i> Kursni boshlash
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+</script>
 {% endblock %}
