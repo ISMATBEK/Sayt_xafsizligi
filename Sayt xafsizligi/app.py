@@ -771,29 +771,6 @@ def course_detail(course_id):
                          stats=stats,
                          active_page='courses')
 
-@app.route('/profile')
-def profile():
-    """Shaxsiy kabinet"""
-    if 'user' not in session:
-        session['user'] = {
-            'username': 'Guest User',
-            'email': 'guest@example.com',
-            'joined': datetime.datetime.now().strftime('%Y-%m-%d'),
-            'avatar_color': random.choice(['#667eea', '#f59e0b', '#10b981', '#ef4444'])
-        }
-    
-    stats = {
-        'scans': random.randint(10, 50),
-        'quizzes': random.randint(1, 20),
-        'average_score': random.randint(40, 95),
-        'days_active': random.randint(1, 30)
-    }
-    
-    return render_template('profile.html', 
-                         user=session['user'],
-                         stats=stats,
-                         active_page='profile')
-
 @app.route('/settings')
 def settings():
     """Sozlamalar"""
@@ -1473,16 +1450,6 @@ def contact():
             'message': 'Xabaringiz qabul qilindi. Tez orada javob beramiz!'
         })
         
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
-
-@app.route('/api/save-settings', methods=['POST'])
-def save_settings():
-    """Sozlamalarni saqlash"""
-    try:
-        settings = request.json
-        session['user_settings'] = settings
-        return jsonify({'success': True})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
 
