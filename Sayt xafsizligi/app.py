@@ -706,25 +706,7 @@ def link_checker():
 def apk_analyzer():
     """APK analyzer sahifasi"""
     return render_template('apk_analyzer.html', active_page='apk_analyzer')
-    
-    @app.route('/debug')
-def debug_info():
-    """Debug ma'lumotlari"""
-    import os
-    templates_dir = 'templates'
-    templates = []
-    if os.path.exists(templates_dir):
-        templates = os.listdir(templates_dir)
-    
-    routes = []
-    for rule in app.url_map.iter_rules():
-        routes.append(str(rule))
-    
-    return jsonify({
-        'templates': templates,
-        'routes': sorted(routes),
-        'courses_count': len(COURSES)
-    })
+
 
 @app.route('/cyber-tips')
 def cyber_tips():
