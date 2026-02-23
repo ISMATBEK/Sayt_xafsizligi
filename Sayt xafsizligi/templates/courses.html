@@ -28,15 +28,17 @@
 
 <!-- Kategoriya kartochkalari -->
 <div class="grid-3" style="margin-bottom: 30px;">
-    {% for cat in [
-        {'name': 'Boshlang\'ich', 'icon': 'fas fa-seedling', 'color': '#10b981', 'count': courses|selectattr('level', 'equalto', 'Boshlang\'ich')|list|length},
-        {'name': 'O\'rta', 'icon': 'fas fa-tree', 'color': '#f59e0b', 'count': courses|selectattr('level', 'equalto', 'O\'rta')|list|length},
-        {'name': 'Yuqori', 'icon': 'fas fa-crown', 'color': '#ef4444', 'count': courses|selectattr('level', 'equalto', 'Yuqori')|list|length}
-    ] %}
-    <div class="card" style="text-align: center; cursor: pointer;" onclick="filterByLevel('{{ cat.name.lower() }}')">
-        <i class="{{ cat.icon }}" style="font-size: 40px; color: {{ cat.color }}; margin-bottom: 10px;"></i>
-        <h3>{{ cat.name }}</h3>
-        <p style="color: var(--text-secondary);">{{ cat.count }} ta kurs</p>
+    {% set levels = {
+        'Boshlang\'ich': {'icon': 'fas fa-seedling', 'color': '#10b981'},
+        'O\'rta': {'icon': 'fas fa-tree', 'color': '#f59e0b'},
+        'Yuqori': {'icon': 'fas fa-crown', 'color': '#ef4444'}
+    } %}
+    
+    {% for level_name, level_data in levels.items() %}
+    <div class="card" style="text-align: center; cursor: pointer;" onclick="filterByLevel('{{ level_name.lower() }}')">
+        <i class="{{ level_data.icon }}" style="font-size: 40px; color: {{ level_data.color }}; margin-bottom: 10px;"></i>
+        <h3>{{ level_name }}</h3>
+        <p style="color: var(--text-secondary);">{{ courses|selectattr('level', 'equalto', level_name)|list|length }} ta kurs</p>
     </div>
     {% endfor %}
 </div>
@@ -71,7 +73,7 @@
                     <div>
                         <i class="fas fa-star" style="color: #fbbf24;"></i>
                         <span>{{ course.rating }} / 5.0</span>
-                        <span style="color: var(--text-secondary); font-size: 12px;">({{ course.students // 100 }} ta baho)</span>
+                        <span style="color: var(--text-secondary); font-size: 12px;">({{ (course.students // 100) }} ta baho)</span>
                     </div>
                     <a href="{{ url_for('course_detail', course_id=course.id) }}" class="btn btn-primary">
                         <i class="fas fa-play-circle"></i> Kursni boshlash
@@ -84,20 +86,28 @@
 </div>
 
 <!-- Statistika -->
+{% set total_students = courses|sum(attribute='students') %}
+{% set total_lessons = courses|sum(attribute='lessons') %}
+{% set total_hours = 0 %}
+{% for course in courses %}
+    {% set hours = course.duration|replace('soat', '')|replace(' ', '')|int %}
+    {% set total_hours = total_hours + hours %}
+{% endfor %}
+
 <div class="grid-4" style="margin-top: 40px;">
     <div class="card" style="text-align: center;">
         <i class="fas fa-users" style="font-size: 40px; color: var(--accent-primary);"></i>
-        <h3 style="font-size: 28px;">{{ "{:,}".format(courses|sum(attribute='students')) }}</h3>
+        <h3 style="font-size: 28px;">{{ "{:,}".format(total_students) }}</h3>
         <p style="color: var(--text-secondary);">O'quvchilar</p>
     </div>
     <div class="card" style="text-align: center;">
         <i class="fas fa-book-open" style="font-size: 40px; color: var(--success);"></i>
-        <h3 style="font-size: 28px;">{{ courses|sum(attribute='lessons') }}</h3>
+        <h3 style="font-size: 28px;">{{ total_lessons }}</h3>
         <p style="color: var(--text-secondary);">Darslar</p>
     </div>
     <div class="card" style="text-align: center;">
         <i class="fas fa-clock" style="font-size: 40px; color: var(--warning);"></i>
-        <h3 style="font-size: 28px;">{{ courses|sum(attribute='duration')|replace('soat', '')|replace(' ', '')|int }} soat</h3>
+        <h3 style="font-size: 28px;">{{ total_hours }} soat</h3>
         <p style="color: var(--text-secondary);">Video darslar</p>
     </div>
     <div class="card" style="text-align: center;">
