@@ -8,88 +8,90 @@
     <!-- Asosiy ma'lumot -->
     <div>
         <div class="card">
-            <div style="height: 200px; background: linear-gradient(135deg, {{ course.color }}20, {{ course.color }}40); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <div style="height: 200px; background: linear-gradient(135deg, {{ course.color }}20, {{ course.color }}40); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
                 <i class="{{ course.image }}" style="font-size: 80px; color: {{ course.color }};"></i>
             </div>
             
-            <h2 style="margin-bottom: 15px;">{{ course.title }}</h2>
+            <h2 style="margin-bottom: 10px;">{{ course.title }}</h2>
             <p style="color: var(--text-secondary); margin-bottom: 20px;">{{ course.description }}</p>
+            
+            <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+                <span class="badge" style="background: {{ course.level_color }};">{{ course.level }}</span>
+                <span class="badge badge-info"><i class="fas fa-language"></i> {{ course.language }}</span>
+                <span class="badge badge-success"><i class="fas fa-users"></i> {{ course.students }} talaba</span>
+            </div>
             
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
                 <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
                     <i class="fas fa-book-open" style="color: var(--accent-primary);"></i>
-                    <div style="font-size: 20px; font-weight: 600; margin: 5px 0;">{{ course.lessons }}</div>
+                    <div style="font-size: 20px; font-weight: 600;">{{ course.lessons }}</div>
                     <div style="color: var(--text-secondary);">Darslar</div>
                 </div>
                 <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
-                    <i class="fas fa-clock" style="color: var(--success);"></i>
-                    <div style="font-size: 20px; font-weight: 600; margin: 5px 0;">{{ course.duration }}</div>
+                    <i class="fas fa-clock" style="color: var(--warning);"></i>
+                    <div style="font-size: 20px; font-weight: 600;">{{ course.duration }}</div>
                     <div style="color: var(--text-secondary);">Davomiylik</div>
                 </div>
                 <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
-                    <i class="fas fa-users" style="color: var(--warning);"></i>
-                    <div style="font-size: 20px; font-weight: 600; margin: 5px 0;">{{ course.students }}</div>
-                    <div style="color: var(--text-secondary);">Talabalar</div>
+                    <i class="fas fa-star" style="color: #fbbf24;"></i>
+                    <div style="font-size: 20px; font-weight: 600;">{{ course.rating }}</div>
+                    <div style="color: var(--text-secondary);">Reyting</div>
                 </div>
                 <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
-                    <i class="fas fa-star" style="color: #fbbf24;"></i>
-                    <div style="font-size: 20px; font-weight: 600; margin: 5px 0;">{{ course.rating }}</div>
-                    <div style="color: var(--text-secondary);">Reyting</div>
+                    <i class="fas fa-calendar" style="color: var(--info);"></i>
+                    <div style="font-size: 20px; font-weight: 600;">{{ course.last_updated }}</div>
+                    <div style="color: var(--text-secondary);">So'nggi yangilanish</div>
                 </div>
             </div>
             
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-primary" style="flex: 1;" onclick="startCourse()">
-                    <i class="fas fa-play-circle"></i> Kursni boshlash
-                </button>
-                <button class="btn btn-outline" onclick="saveCourse()">
-                    <i class="far fa-bookmark"></i>
-                </button>
-            </div>
-        </div>
-        
-        <!-- O'qituvchi -->
-        <div class="card">
-            <h3 style="margin-bottom: 15px;">O'qituvchi</h3>
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, {{ course.color }}, {{ course.color }}dd); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                    <span style="font-size: 24px; color: white; font-weight: 600;">{{ course.instructor[0] }}</span>
+            <div style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 10px;">Kurs mazmuni</h3>
+                <div style="display: grid; gap: 8px;">
+                    {% for topic in course.topics %}
+                    <div style="display: flex; align-items: center; gap: 10px; padding: 8px; background: var(--bg-secondary); border-radius: 8px;">
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                        <span>{{ topic }}</span>
+                    </div>
+                    {% endfor %}
                 </div>
-                <div>
-                    <h4>{{ course.instructor }}</h4>
-                    <p style="color: var(--text-secondary);">Kiberxavfsizlik mutaxassisi</p>
+            </div>
+            
+            <div>
+                <h3 style="margin-bottom: 10px;">O'qituvchi</h3>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, {{ course.color }}, {{ course.color }}dd); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 24px; color: white;">{{ course.instructor[0] }}</span>
+                    </div>
+                    <div>
+                        <h4>{{ course.instructor }}</h4>
+                        <p style="color: var(--text-secondary); font-size: 14px;">{{ course.instructor_bio }}</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Darslar ro'yxati -->
+    <!-- Tashqi resurslar -->
     <div>
         <div class="card">
-            <h3 style="margin-bottom: 20px;">Kurs mazmuni</h3>
+            <h3 style="margin-bottom: 20px;">📚 Kurs resurslari</h3>
             
-            <div style="margin-bottom: 20px;">
-                {% for topic in course.topics %}
-                <div style="display: flex; align-items: center; gap: 10px; padding: 12px; background: var(--bg-secondary); border-radius: 8px; margin-bottom: 8px;">
-                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
-                    <span>{{ topic }}</span>
-                </div>
+            <div style="display: grid; gap: 15px;">
+                {% for link in course.external_links %}
+                <a href="{{ link.url }}" target="_blank" style="text-decoration: none;">
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: var(--bg-secondary); border-radius: 12px; transition: transform 0.3s; hover:transform: translateX(5px);">
+                        <div style="width: 40px; height: 40px; background: {{ link.color }}20; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                            <i class="{{ link.icon }}" style="color: {{ link.color }}; font-size: 20px;"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <h4 style="color: var(--text-primary);">{{ link.title }}</h4>
+                            <p style="color: var(--text-secondary); font-size: 12px;">{{ link.type }}</p>
+                        </div>
+                        <i class="fas fa-external-link-alt" style="color: var(--text-secondary);"></i>
+                    </div>
+                </a>
                 {% endfor %}
             </div>
-            
-            <h3 style="margin: 20px 0 15px;">Darslar ro'yxati</h3>
-            {% for i in range(1, course.lessons + 1) %}
-            <div style="display: flex; align-items: center; gap: 15px; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;" onclick="playLesson({{ i }})">
-                <div style="width: 30px; height: 30px; background: var(--accent-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                    <span style="color: white; font-size: 14px;">{{ i }}</span>
-                </div>
-                <div style="flex: 1;">
-                    <h4>{{ i }}-dars: {{ course.title }} - Asosiy tushunchalar</h4>
-                    <p style="color: var(--text-secondary); font-size: 12px;">15 daqiqa</p>
-                </div>
-                <i class="fas fa-play-circle" style="color: var(--accent-primary); font-size: 20px;"></i>
-            </div>
-            {% endfor %}
         </div>
         
         <!-- O'xshash kurslar -->
@@ -97,14 +99,14 @@
         <div class="card">
             <h3 style="margin-bottom: 15px;">O'xshash kurslar</h3>
             {% for sim in similar_courses %}
-            <a href="{{ url_for('course_detail', course_id=sim.id) }}" style="text-decoration: none; color: inherit;">
-                <div style="display: flex; align-items: center; gap: 15px; padding: 10px; background: var(--bg-secondary); border-radius: 8px; margin-bottom: 10px;">
+            <a href="{{ url_for('course_detail', course_id=sim.id) }}" style="text-decoration: none;">
+                <div style="display: flex; align-items: center; gap: 15px; padding: 12px; background: var(--bg-secondary); border-radius: 10px; margin-bottom: 10px;">
                     <div style="width: 40px; height: 40px; background: linear-gradient(135deg, {{ sim.color }}20, {{ sim.color }}40); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
                         <i class="{{ sim.image }}" style="color: {{ sim.color }};"></i>
                     </div>
                     <div style="flex: 1;">
                         <h4>{{ sim.title }}</h4>
-                        <p style="color: var(--text-secondary); font-size: 12px;">{{ sim.lessons }} dars</p>
+                        <p style="color: var(--text-secondary); font-size: 12px;">{{ sim.lessons }} dars • {{ sim.duration }}</p>
                     </div>
                     <span class="badge" style="background: {{ sim.level_color }};">{{ sim.level }}</span>
                 </div>
@@ -112,22 +114,16 @@
             {% endfor %}
         </div>
         {% endif %}
+        
+        <!-- Sertifikat -->
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, #667eea20, #764ba220);">
+            <i class="fas fa-certificate" style="font-size: 40px; color: var(--accent-primary); margin-bottom: 10px;"></i>
+            <h3>Kursni tugatib sertifikat oling</h3>
+            <p style="color: var(--text-secondary); margin: 15px 0;">Kursni to'liq o'zlashtirib, sertifikatga ega bo'ling</p>
+            <button class="btn btn-primary" onclick="alert('Kursni boshlang va sertifikat oling!')">
+                <i class="fas fa-download"></i> Sertifikat olish
+            </button>
+        </div>
     </div>
 </div>
-
-<script>
-function startCourse() {
-    alert('Kurs boshlandi! Birinchi darsga o\'tilmoqda...');
-    // 1-darsga o'tish
-}
-
-function saveCourse() {
-    alert('Kurs saqlandi! Profil bo\'limida ko\'rishingiz mumkin.');
-}
-
-function playLesson(lessonNumber) {
-    alert(lessonNumber + '-dars ochilmoqda...');
-    // Darsni ochish
-}
-</script>
 {% endblock %}
