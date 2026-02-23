@@ -4,90 +4,262 @@
 {% block page_subtitle %}Professional xavfsizlik skanerlash vositalari{% endblock %}
 
 {% block content %}
-<div class="card">
-    <div class="card-title">
-        <i class="fas fa-star"></i>
-        <h2>Kunlik Maslahat</h2>
-    </div>
-    <div style="background: linear-gradient(135deg, #667eea20, #764ba220); padding: 20px; border-radius: 10px;">
-        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-            <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                <i class="{{ daily_tip.icon }}" style="color: white; font-size: 24px;"></i>
+<!-- Hero Section -->
+<div class="hero-section" style="background: linear-gradient(135deg, #667eea20, #764ba220); border-radius: 30px; padding: 50px 40px; margin-bottom: 40px; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; right: 0; width: 300px; height: 300px; background: radial-gradient(circle, #667eea20 0%, transparent 70%); border-radius: 50%; transform: translate(100px, -100px);"></div>
+    <div style="position: absolute; bottom: 0; left: 0; width: 200px; height: 200px; background: radial-gradient(circle, #764ba220 0%, transparent 70%); border-radius: 50%; transform: translate(-50px, 50px);"></div>
+    
+    <div style="display: flex; align-items: center; gap: 50px; flex-wrap: wrap; position: relative; z-index: 1;">
+        <div style="flex: 1; min-width: 300px;">
+            <h1 style="font-size: clamp(32px, 5vw, 48px); font-weight: 800; margin-bottom: 20px; line-height: 1.2;">
+                <span style="background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Kiberxavfsizlik</span><br>
+                Sizning xavfsizlik kuchingiz
+            </h1>
+            <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 30px; max-width: 500px;">
+                Saytlar, linklar va APK fayllarni xavfsizlikka tekshiring. Kiberhujumlardan himoyalaning.
+            </p>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <a href="#scanner" class="btn btn-primary" style="padding: 15px 30px; font-size: 16px;">
+                    <i class="fas fa-play"></i> Tekshirishni boshlash
+                </a>
+                <a href="{{ url_for('cyber_tips') }}" class="btn btn-outline" style="padding: 15px 30px; font-size: 16px;">
+                    <i class="fas fa-lightbulb"></i> Maslahatlar
+                </a>
             </div>
-            <div style="flex: 1;">
-                <h3 style="margin-bottom: 5px;">{{ daily_tip.title }}</h3>
-                <p style="color: var(--text-secondary);">{{ daily_tip.content }}</p>
+        </div>
+        
+        <div style="flex: 1; min-width: 300px; text-align: center;">
+            <img src="https://img.freepik.com/free-vector/cyber-security-concept_23-2148532223.jpg" alt="Cyber Security" style="max-width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+        </div>
+    </div>
+</div>
+
+<!-- Statistika -->
+<div class="grid-4" style="margin-bottom: 40px;">
+    <div class="card" style="text-align: center; padding: 25px 15px; background: linear-gradient(135deg, #667eea10, #764ba210);">
+        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-globe" style="font-size: 30px; color: white;"></i>
+        </div>
+        <h3 style="font-size: 32px; font-weight: 700; margin-bottom: 5px;">{{ stats.total_scans }}</h3>
+        <p style="color: var(--text-secondary);">Skanerlangan saytlar</p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 25px 15px; background: linear-gradient(135deg, #10b98110, #05966910);">
+        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-shield-virus" style="font-size: 30px; color: white;"></i>
+        </div>
+        <h3 style="font-size: 32px; font-weight: 700; margin-bottom: 5px;">{{ stats.threats_detected }}</h3>
+        <p style="color: var(--text-secondary);">Aniqlangan xavflar</p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 25px 15px; background: linear-gradient(135deg, #f59e0b10, #d9770610);">
+        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-users" style="font-size: 30px; color: white;"></i>
+        </div>
+        <h3 style="font-size: 32px; font-weight: 700; margin-bottom: 5px;">{{ stats.users }}</h3>
+        <p style="color: var(--text-secondary);">Faol foydalanuvchilar</p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 25px 15px; background: linear-gradient(135deg, #3b82f610, #2563eb10);">
+        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #3b82f6, #2563eb); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-mobile-alt" style="font-size: 30px; color: white;"></i>
+        </div>
+        <h3 style="font-size: 32px; font-weight: 700; margin-bottom: 5px;">{{ stats.quizzes_taken }}</h3>
+        <p style="color: var(--text-secondary);">Test topshirganlar</p>
+    </div>
+</div>
+
+<!-- Kunlik Maslahat -->
+<div class="card" style="margin-bottom: 40px; background: linear-gradient(135deg, #667eea20, #764ba220); border: none;">
+    <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, {{ daily_tip.color }}, {{ daily_tip.color }}dd); border-radius: 20px; display: flex; align-items: center; justify-content: center;">
+            <i class="{{ daily_tip.icon }}" style="font-size: 40px; color: white;"></i>
+        </div>
+        <div style="flex: 1;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                <h3 style="font-size: 20px;">{{ daily_tip.title }}</h3>
+                <span class="badge" style="background: {{ daily_tip.color }};">{{ daily_tip.category }}</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 16px;">{{ daily_tip.content }}</p>
+        </div>
+        <button class="btn btn-outline" onclick="refreshDailyTip()">
+            <i class="fas fa-sync-alt"></i> Yangilash
+        </button>
+    </div>
+</div>
+
+<!-- Xizmatlar -->
+<h2 style="font-size: 28px; margin-bottom: 25px; text-align: center;">Xizmatlarimiz</h2>
+
+<div class="grid-3" style="margin-bottom: 40px;" id="scanner">
+    <!-- Website Scanner -->
+    <div class="card" style="text-align: center; padding: 30px 20px;">
+        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+            <i class="fas fa-search" style="font-size: 40px; color: white;"></i>
+        </div>
+        <h3 style="font-size: 22px; margin-bottom: 10px;">Website Scanner</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 20px;">Sayt xavfsizligini tekshiring. SSL, headerlar, ochiq portlar va xavfli sozlamalarni aniqlang.</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <a href="{{ url_for('scanner') }}" class="btn btn-primary">
+                <i class="fas fa-arrow-right"></i> Tekshirish
+            </a>
+        </div>
+    </div>
+    
+    <!-- Link Checker -->
+    <div class="card" style="text-align: center; padding: 30px 20px;">
+        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+            <i class="fas fa-link" style="font-size: 40px; color: white;"></i>
+        </div>
+        <h3 style="font-size: 22px; margin-bottom: 10px;">Link Tekshiruvi</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 20px;">Xavfli, buzilgan va shubhali linklarni aniqlang. Fishing saytlaridan himoyalaning.</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <a href="{{ url_for('link_checker') }}" class="btn btn-primary">
+                <i class="fas fa-arrow-right"></i> Tekshirish
+            </a>
+        </div>
+    </div>
+    
+    <!-- APK Analyzer -->
+    <div class="card" style="text-align: center; padding: 30px 20px;">
+        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+            <i class="fas fa-mobile-alt" style="font-size: 40px; color: white;"></i>
+        </div>
+        <h3 style="font-size: 22px; margin-bottom: 10px;">APK Analyzer</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 20px;">Android ilovalaridagi xavfli ruxsatlar va zararli kodlarni aniqlang.</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <a href="{{ url_for('apk_analyzer') }}" class="btn btn-primary">
+                <i class="fas fa-arrow-right"></i> Tahlil qilish
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Qo'shimcha xizmatlar -->
+<h2 style="font-size: 28px; margin-bottom: 25px; text-align: center;">Qo'shimcha imkoniyatlar</h2>
+
+<div class="grid-4" style="margin-bottom: 40px;">
+    <!-- Cyber Tips -->
+    <a href="{{ url_for('cyber_tips') }}" style="text-decoration: none; color: inherit;">
+        <div class="card" style="text-align: center; padding: 20px;">
+            <i class="fas fa-lightbulb" style="font-size: 40px; color: #f59e0b; margin-bottom: 10px;"></i>
+            <h4>Cyber Maslahatlar</h4>
+            <p style="color: var(--text-secondary); font-size: 13px;">Kiberxavfsizlik bo'yicha foydali maslahatlar</p>
+        </div>
+    </a>
+    
+    <!-- Cyber Wiki -->
+    <a href="{{ url_for('cyber_wiki') }}" style="text-decoration: none; color: inherit;">
+        <div class="card" style="text-align: center; padding: 20px;">
+            <i class="fas fa-book" style="font-size: 40px; color: #3b82f6; margin-bottom: 10px;"></i>
+            <h4>Cyber Wiki</h4>
+            <p style="color: var(--text-secondary); font-size: 13px;">Kiberxavfsizlik ensiklopediyasi</p>
+        </div>
+    </a>
+    
+    <!-- Cyber Quiz -->
+    <a href="{{ url_for('cyber_quiz') }}" style="text-decoration: none; color: inherit;">
+        <div class="card" style="text-align: center; padding: 20px;">
+            <i class="fas fa-question-circle" style="font-size: 40px; color: #10b981; margin-bottom: 10px;"></i>
+            <h4>Cyber Quiz</h4>
+            <p style="color: var(--text-secondary); font-size: 13px;">Bilimingizni sinab ko'ring</p>
+        </div>
+    </a>
+    
+    <!-- Parol Generator -->
+    <a href="{{ url_for('password_generator') }}" style="text-decoration: none; color: inherit;">
+        <div class="card" style="text-align: center; padding: 20px;">
+            <i class="fas fa-key" style="font-size: 40px; color: #ef4444; margin-bottom: 10px;"></i>
+            <h4>Parol Generator</h4>
+            <p style="color: var(--text-secondary); font-size: 13px;">Kuchli parollar yaratish</p>
+        </div>
+    </a>
+</div>
+
+<!-- Nima uchun biz? -->
+<div class="card" style="margin-bottom: 40px;">
+    <h2 style="text-align: center; margin-bottom: 30px;">Nima uchun CyberDash?</h2>
+    
+    <div class="grid-2">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="width: 50px; height: 50px; background: #667eea20; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-bolt" style="color: #667eea; font-size: 24px;"></i>
+            </div>
+            <div>
+                <h4>Tezkor skanerlash</h4>
+                <p style="color: var(--text-secondary);">Bir necha soniya ichida natija</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="width: 50px; height: 50px; background: #10b98120; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-shield-alt" style="color: #10b981; font-size: 24px;"></i>
+            </div>
+            <div>
+                <h4>Bepul xizmat</h4>
+                <p style="color: var(--text-secondary);">Hech qanday to'lov talab qilinmaydi</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="width: 50px; height: 50px; background: #f59e0b20; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-database" style="color: #f59e0b; font-size: 24px;"></i>
+            </div>
+            <div>
+                <h4>Katta ma'lumotlar bazasi</h4>
+                <p style="color: var(--text-secondary);">1000+ xavfli belgilar</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="width: 50px; height: 50px; background: #3b82f620; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-mobile-alt" style="color: #3b82f6; font-size: 24px;"></i>
+            </div>
+            <div>
+                <h4>Mobil qurilmalar uchun</h4>
+                <p style="color: var(--text-secondary);">Har qanday qurilmada ishlaydi</p>
             </div>
         </div>
     </div>
 </div>
 
-<div class="card">
-    <div class="card-title">
-        <i class="fas fa-bolt"></i>
-        <h2>Tezkor Skanerlash</h2>
-    </div>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-        <!-- Website Scanner -->
-        <div style="background: var(--bg-secondary); border-radius: 10px; padding: 20px; text-align: center;">
-            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
-                <i class="fas fa-globe" style="color: white; font-size: 24px;"></i>
-            </div>
-            <h3 style="margin-bottom: 10px;">Website Scanner</h3>
-            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 15px;">Sayt xavfsizligini tekshiring</p>
-            <a href="{{ url_for('scanner') }}" class="btn btn-primary" style="width: 100%;">
-                <i class="fas fa-arrow-right"></i> Boshlash
-            </a>
-        </div>
-        
-        <!-- Link Checker -->
-        <div style="background: var(--bg-secondary); border-radius: 10px; padding: 20px; text-align: center;">
-            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
-                <i class="fas fa-link" style="color: white; font-size: 24px;"></i>
-            </div>
-            <h3 style="margin-bottom: 10px;">Link Tekshiruvi</h3>
-            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 15px;">Xavfli linklarni aniqlang</p>
-            <a href="{{ url_for('link_checker') }}" class="btn btn-primary" style="width: 100%; background: linear-gradient(135deg, #10b981, #059669);">
-                <i class="fas fa-arrow-right"></i> Boshlash
-            </a>
-        </div>
-        
-        <!-- APK Analyzer -->
-        <div style="background: var(--bg-secondary); border-radius: 10px; padding: 20px; text-align: center;">
-            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
-                <i class="fas fa-mobile-alt" style="color: white; font-size: 24px;"></i>
-            </div>
-            <h3 style="margin-bottom: 10px;">APK Analyzer</h3>
-            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 15px;">Android ilovalarni tahlil qiling</p>
-            <a href="{{ url_for('apk_analyzer') }}" class="btn btn-primary" style="width: 100%; background: linear-gradient(135deg, #f59e0b, #d97706);">
-                <i class="fas fa-arrow-right"></i> Boshlash
-            </a>
-        </div>
-    </div>
+<!-- Call to Action -->
+<div class="card" style="text-align: center; padding: 50px 20px; background: linear-gradient(135deg, #667eea, #764ba2); border: none;">
+    <h2 style="color: white; font-size: 32px; margin-bottom: 15px;">Kiberxavfsizlikni tekshirishni boshlang</h2>
+    <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
+        Saytingiz, linklaringiz va ilovalaringizni xavfsizlikka tekshiring. Bu bepul va bir necha soniya vaqt oladi.
+    </p>
+    <a href="#scanner" class="btn btn-primary" style="background: white; color: #667eea; padding: 15px 40px; font-size: 18px;">
+        <i class="fas fa-play"></i> Hozir tekshirish
+    </a>
 </div>
 
-<div class="card">
-    <div class="card-title">
-        <i class="fas fa-shield-alt"></i>
-        <h2>Statistika</h2>
-    </div>
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
-        <div style="text-align: center;">
-            <h3 style="font-size: 28px; color: var(--accent-primary);">10K+</h3>
-            <p style="color: var(--text-secondary); font-size: 13px;">Skanerlangan saytlar</p>
-        </div>
-        <div style="text-align: center;">
-            <h3 style="font-size: 28px; color: var(--success);">5K+</h3>
-            <p style="color: var(--text-secondary); font-size: 13px;">Aniqlangan xavflar</p>
-        </div>
-        <div style="text-align: center;">
-            <h3 style="font-size: 28px; color: var(--warning);">2K+</h3>
-            <p style="color: var(--text-secondary); font-size: 13px;">APK tahlil</p>
-        </div>
-        <div style="text-align: center;">
-            <h3 style="font-size: 28px; color: var(--info);">100%</h3>
-            <p style="color: var(--text-secondary); font-size: 13px;">Xavfsizlik</p>
-        </div>
-    </div>
-</div>
+<script>
+function refreshDailyTip() {
+    fetch('/api/cyber-tip')
+        .then(response => response.json())
+        .then(data => {
+            const tipDiv = document.querySelector('.daily-tip');
+            if (tipDiv) {
+                tipDiv.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, ${data.color}, ${data.color}dd); border-radius: 20px; display: flex; align-items: center; justify-content: center;">
+                            <i class="${data.icon}" style="font-size: 40px; color: white;"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                                <h3 style="font-size: 20px;">${data.title}</h3>
+                                <span class="badge" style="background: ${data.color};">${data.category}</span>
+                            </div>
+                            <p style="color: var(--text-secondary); font-size: 16px;">${data.content}</p>
+                        </div>
+                        <button class="btn btn-outline" onclick="refreshDailyTip()">
+                            <i class="fas fa-sync-alt"></i> Yangilash
+                        </button>
+                    </div>
+                `;
+            }
+        });
+}
+</script>
 {% endblock %}
