@@ -4,27 +4,71 @@
 {% block page_subtitle %}Kiberxavfsizlik ensiklopediyasi{% endblock %}
 
 {% block content %}
+<!-- Qidiruv -->
 <div class="card">
-    <div class="card-title">
-        <i class="fas fa-search"></i>
-        <h2>Wiki qidiruv</h2>
-    </div>
-    
     <div class="input-group">
-        <input type="text" id="wikiSearch" placeholder="Mavzu nomini kiriting... (masalan: phishing, malware)">
+        <input type="text" id="wikiSearch" placeholder="Mavzu nomini kiriting... (masalan: phishing, malware, vpn)">
         <button class="btn btn-primary" onclick="searchWiki()">
             <i class="fas fa-search"></i> Qidirish
         </button>
     </div>
 </div>
 
+<!-- Kategoriyalar -->
+<div class="grid-3" style="margin-bottom: 25px;">
+    <div class="card" style="text-align: center; cursor: pointer;" onclick="filterCategory('phishing')">
+        <i class="fas fa-fish" style="font-size: 30px; color: #ffc107;"></i>
+        <h4>Fishing</h4>
+    </div>
+    <div class="card" style="text-align: center; cursor: pointer;" onclick="filterCategory('malware')">
+        <i class="fas fa-virus" style="font-size: 30px; color: #dc3545;"></i>
+        <h4>Malware</h4>
+    </div>
+    <div class="card" style="text-align: center; cursor: pointer;" onclick="filterCategory('2fa')">
+        <i class="fas fa-mobile-alt" style="font-size: 30px; color: #28a745;"></i>
+        <h4>2FA</h4>
+    </div>
+    <div class="card" style="text-align: center; cursor: pointer;" onclick="filterCategory('vpn')">
+        <i class="fas fa-globe" style="font-size: 30px; color: #17a2b8;"></i>
+        <h4>VPN</h4>
+    </div>
+    <div class="card" style="text-align: center; cursor: pointer;" onclick="filterCategory('ransomware')">
+        <i class="fas fa-skull" style="font-size: 30px; color: #dc3545;"></i>
+        <h4>Ransomware</h4>
+    </div>
+    <div class="card" style="text-align: center; cursor: pointer;" onclick="filterCategory('password')">
+        <i class="fas fa-key" style="font-size: 30px; color: #f59e0b;"></i>
+        <h4>Parollar</h4>
+    </div>
+</div>
+
+<!-- Wiki kontent -->
 <div id="wikiContent">
     {% for key, wiki in cyber_wiki.items() %}
-    <div class="card wiki-card" data-topic="{{ key }}" onclick="toggleWiki('{{ key }}')">
-        <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+    <div class="card wiki-card" data-topic="{{ key }}" id="wiki-{{ key }}">
+        <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleWiki('{{ key }}')">
             <div style="display: flex; align-items: center; gap: 15px;">
-                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea20, #764ba220); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-{% if key == 'phishing' %}fish{% elif key == 'malware' %}virus{% else %}book{% endif %}" style="color: var(--accent-primary); font-size: 20px;"></i>
+                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, 
+                    {% if key == 'phishing' %}#ffc10720
+                    {% elif key == 'malware' %}#dc354520
+                    {% elif key == '2fa' %}#28a74520
+                    {% elif key == 'vpn' %}#17a2b820
+                    {% elif key == 'ransomware' %}#dc354520
+                    {% elif key == 'social_engineering' %}#6f42c120
+                    {% elif key == 'password' %}#f59e0b20
+                    {% elif key == 'firewall' %}#3b82f620
+                    {% else %}#667eea20{% endif %}, transparent); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-{% if key == 'phishing' %}fish{% elif key == 'malware' %}virus{% elif key == '2fa' %}mobile-alt{% elif key == 'vpn' %}globe{% elif key == 'ransomware' %}skull{% elif key == 'social_engineering' %}users{% elif key == 'password' %}key{% elif key == 'firewall' %}shield-alt{% else %}book{% endif %}" 
+                       style="font-size: 24px; color: 
+                       {% if key == 'phishing' %}#ffc107
+                       {% elif key == 'malware' %}#dc3545
+                       {% elif key == '2fa' %}#28a745
+                       {% elif key == 'vpn' %}#17a2b8
+                       {% elif key == 'ransomware' %}#dc3545
+                       {% elif key == 'social_engineering' %}#6f42c1
+                       {% elif key == 'password' %}#f59e0b
+                       {% elif key == 'firewall' %}#3b82f6
+                       {% else %}#667eea{% endif %};"></i>
                 </div>
                 <div>
                     <h3>{{ wiki.title }}</h3>
@@ -34,94 +78,132 @@
             <i class="fas fa-chevron-down" id="chevron-{{ key }}" style="transition: transform 0.3s;"></i>
         </div>
         
-        <div id="details-{{ key }}" style="display: none; margin-top: 20px;">
-            <div style="background: var(--bg-secondary); border-radius: 10px; padding: 20px;">
-                <p style="margin-bottom: 20px;">{{ wiki.description }}</p>
+        <div id="details-{{ key }}" style="display: none; margin-top: 25px;">
+            <div style="background: var(--bg-secondary); border-radius: 15px; padding: 25px;">
+                <p style="margin-bottom: 20px; line-height: 1.6;">{{ wiki.description }}</p>
                 
-                {% if wiki.signs %}
-                <div style="margin-bottom: 20px;">
-                    <h4 style="margin-bottom: 10px; color: var(--accent-primary);">
-                        <i class="fas fa-exclamation-triangle"></i> Belgilari:
-                    </h4>
-                    <ul style="list-style: none;">
-                        {% for sign in wiki.signs %}
-                        <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
-                            <i class="fas fa-times-circle" style="color: #ef4444; font-size: 12px;"></i>
-                            {{ sign }}
-                        </li>
-                        {% endfor %}
-                    </ul>
+                <div class="grid-2" style="margin-bottom: 20px;">
+                    {% if wiki.signs %}
+                    <div>
+                        <h4 style="margin-bottom: 15px; color: var(--warning);">
+                            <i class="fas fa-exclamation-triangle"></i> Belgilari:
+                        </h4>
+                        <ul style="list-style: none;">
+                            {% for sign in wiki.signs %}
+                            <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-times-circle" style="color: var(--danger); font-size: 14px;"></i>
+                                {{ sign }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    
+                    {% if wiki.protection %}
+                    <div>
+                        <h4 style="margin-bottom: 15px; color: var(--success);">
+                            <i class="fas fa-shield-alt"></i> Himoya usullari:
+                        </h4>
+                        <ul style="list-style: none;">
+                            {% for prot in wiki.protection %}
+                            <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-check-circle" style="color: var(--success); font-size: 14px;"></i>
+                                {{ prot }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    
+                    {% if wiki.types %}
+                    <div>
+                        <h4 style="margin-bottom: 15px; color: var(--info);">
+                            <i class="fas fa-tags"></i> Turlari:
+                        </h4>
+                        <ul style="list-style: none;">
+                            {% for type in wiki.types %}
+                            <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-tag" style="color: var(--info); font-size: 14px;"></i>
+                                {{ type }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    
+                    {% if wiki.methods %}
+                    <div>
+                        <h4 style="margin-bottom: 15px; color: var(--warning);">
+                            <i class="fas fa-cog"></i> Usullari:
+                        </h4>
+                        <ul style="list-style: none;">
+                            {% for method in wiki.methods %}
+                            <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-arrow-right" style="color: var(--warning); font-size: 14px;"></i>
+                                {{ method }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    
+                    {% if wiki.benefits %}
+                    <div>
+                        <h4 style="margin-bottom: 15px; color: var(--success);">
+                            <i class="fas fa-plus-circle"></i> Afzalliklari:
+                        </h4>
+                        <ul style="list-style: none;">
+                            {% for benefit in wiki.benefits %}
+                            <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-check" style="color: var(--success); font-size: 14px;"></i>
+                                {{ benefit }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    
+                    {% if wiki.risks %}
+                    <div>
+                        <h4 style="margin-bottom: 15px; color: var(--danger);">
+                            <i class="fas fa-exclamation-circle"></i> Xavflari:
+                        </h4>
+                        <ul style="list-style: none;">
+                            {% for risk in wiki.risks %}
+                            <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-times" style="color: var(--danger); font-size: 14px;"></i>
+                                {{ risk }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
                 
-                {% if wiki.protection %}
-                <div style="margin-bottom: 20px;">
-                    <h4 style="margin-bottom: 10px; color: #10b981;">
-                        <i class="fas fa-shield-alt"></i> Himoya usullari:
+                <!-- Tashqi havolalar -->
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                    <h4 style="margin-bottom: 15px;">
+                        <i class="fas fa-external-link-alt"></i> Qo'shimcha ma'lumotlar:
                     </h4>
-                    <ul style="list-style: none;">
-                        {% for prot in wiki.protection %}
-                        <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
-                            <i class="fas fa-check-circle" style="color: #10b981; font-size: 12px;"></i>
-                            {{ prot }}
-                        </li>
+                    
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        {% if wiki.wiki_link %}
+                        <a href="{{ wiki.wiki_link }}" target="_blank" class="btn btn-outline" style="padding: 10px 20px;">
+                            <i class="fab fa-wikipedia-w"></i> Vikipediya (O'zbek)
+                        </a>
+                        {% endif %}
+                        
+                        {% for link in wiki.external_links %}
+                        <a href="{{ link.url }}" target="_blank" class="btn btn-outline" style="padding: 10px 20px;">
+                            <i class="fas fa-external-link-alt"></i> {{ link.title }}
+                        </a>
                         {% endfor %}
-                    </ul>
+                    </div>
                 </div>
-                {% endif %}
-                
-                {% if wiki.types %}
-                <div>
-                    <h4 style="margin-bottom: 10px; color: #f59e0b;">
-                        <i class="fas fa-tags"></i> Turlari:
-                    </h4>
-                    <ul style="list-style: none;">
-                        {% for type in wiki.types %}
-                        <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
-                            <i class="fas fa-tag" style="color: #f59e0b; font-size: 12px;"></i>
-                            {{ type }}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
     {% endfor %}
-</div>
-
-<div class="card">
-    <div class="card-title">
-        <i class="fas fa-question-circle"></i>
-        <h2>Ko'p so'raladigan savollar</h2>
-    </div>
-    
-    <div style="display: grid; gap: 15px;">
-        <div style="background: var(--bg-secondary); border-radius: 10px; padding: 20px;">
-            <h4 style="margin-bottom: 10px;">❓ Fishing nima?</h4>
-            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 10px;">
-                Fishing - bu firibgarlarning soxta veb-saytlar yoki xabarlar orqali shaxsiy ma'lumotlarni o'g'irlash usuli.
-            </p>
-            <a href="#" onclick="toggleWiki('phishing'); return false;" style="color: var(--accent-primary);">Batafsil →</a>
-        </div>
-        
-        <div style="background: var(--bg-secondary); border-radius: 10px; padding: 20px;">
-            <h4 style="margin-bottom: 10px;">❓ Virus va Trojan farqi?</h4>
-            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 10px;">
-                Virus - o'zini nusxalab boshqa fayllarga tarqaladi. Trojan - foydali dastur ko'rinishida keladi.
-            </p>
-            <a href="#" onclick="toggleWiki('malware'); return false;" style="color: var(--accent-primary);">Batafsil →</a>
-        </div>
-        
-        <div style="background: var(--bg-secondary); border-radius: 10px; padding: 20px;">
-            <h4 style="margin-bottom: 10px;">❓ 2FA nima uchun kerak?</h4>
-            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 10px;">
-                Ikki bosqichli autentifikatsiya - akkauntingizga ikkinchi himoya qatlami. Parol bilinsa ham, kod kerak bo'ladi.
-            </p>
-            <a href="#" style="color: var(--accent-primary);">Batafsil →</a>
-        </div>
-    </div>
 </div>
 
 <script>
@@ -141,18 +223,51 @@ function toggleWiki(topic) {
 function searchWiki() {
     const searchTerm = document.getElementById('wikiSearch').value.toLowerCase();
     const cards = document.querySelectorAll('.wiki-card');
+    let found = false;
     
     cards.forEach(card => {
-        const topic = card.dataset.topic;
-        if (topic.includes(searchTerm) || searchTerm === '') {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(searchTerm) || searchTerm === '') {
             card.style.display = 'block';
+            found = true;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    
+    if (!found && searchTerm !== '') {
+        alert('Hech narsa topilmadi. Boshqa so\'z bilan qidirib ko\'ring.');
+    }
+}
+
+function filterCategory(category) {
+    // Kategoriya bo'yicha filtr
+    const cards = document.querySelectorAll('.wiki-card');
+    cards.forEach(card => {
+        if (card.id === 'wiki-' + category) {
+            card.style.display = 'block';
+            // Avtomatik ochish
+            const details = document.getElementById('details-' + category);
+            const chevron = document.getElementById('chevron-' + category);
+            if (details.style.display === 'none') {
+                details.style.display = 'block';
+                chevron.style.transform = 'rotate(180deg)';
+            }
         } else {
             card.style.display = 'none';
         }
     });
 }
 
-// Enter tugmasini bosganda qidirish
+// Reset filter
+function resetFilter() {
+    const cards = document.querySelectorAll('.wiki-card');
+    cards.forEach(card => {
+        card.style.display = 'block';
+    });
+}
+
+// Enter tugmasi bilan qidirish
 document.getElementById('wikiSearch').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         searchWiki();
