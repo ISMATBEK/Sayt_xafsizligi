@@ -190,7 +190,7 @@ CYBER_TIPS = [
         "category": "Kripto"
     }
 ]
-# Kiberxavfsizlik vikipediyasi
+# Kiberxavfsizlik vikipediyasi (tashqi manbalar bilan)
 CYBER_WIKI = {
     "phishing": {
         "title": "Fishing (Phishing)",
@@ -207,6 +207,12 @@ CYBER_WIKI = {
             "Ishonchli manbalardan foydalaning",
             "2FA ni yoqing",
             "URL manzilini diqqat bilan o'qing"
+        ],
+        "wiki_link": "https://uz.wikipedia.org/wiki/Fishing",
+        "external_links": [
+            {"title": "Wikipedia (English)", "url": "https://en.wikipedia.org/wiki/Phishing"},
+            {"title": "Kaspersky - Fishing", "url": "https://www.kaspersky.com/resource-center/definitions/phishing"},
+            {"title": "Google Safety Center", "url": "https://safety.google/privacy/phishing/"}
         ]
     },
     "malware": {
@@ -216,35 +222,170 @@ CYBER_WIKI = {
             "Virus - fayllarni buzadi va tarqaladi",
             "Trojan - foydali dastur ko'rinishida keladi",
             "Ransomware - fayllarni qulflab, pul talab qiladi",
-            "Spyware - kuzatuv dasturi"
+            "Spyware - kuzatuv dasturi",
+            "Adware - reklama ko'rsatadi",
+            "Rootkit - tizimga yashirincha kirish"
         ],
         "protection": [
             "Antivirus o'rnating",
             "Noma'lum manbalardan dastur o'rnatmang",
-            "Muntazam yangilab turing"
+            "Muntazam yangilab turing",
+            "Xavfli saytlarga kirmang"
+        ],
+        "wiki_link": "https://uz.wikipedia.org/wiki/Zararli_dastur",
+        "external_links": [
+            {"title": "Wikipedia (English)", "url": "https://en.wikipedia.org/wiki/Malware"},
+            {"title": "Malwarebytes", "url": "https://www.malwarebytes.com/malware"},
+            {"title": "Kaspersky Threat Map", "url": "https://cybermap.kaspersky.com/"}
         ]
     },
     "2fa": {
         "title": "Ikki Bosqichli Autentifikatsiya (2FA)",
-        "description": "Hisobingizga qo'shimcha himoya qatlami qo'shish usuli.",
+        "description": "Hisobingizga qo'shimcha himoya qatlami qo'shish usuli. Parol bilinsa ham, ikkinchi bosqich himoya qiladi.",
         "methods": [
-            "SMS kodlari (xavfsiz emas)",
-            "Authenticator ilovalari (Google Authenticator)",
-            "Hardware tokenlar (YubiKey)"
+            "SMS kodlari (xavfsiz emas - SIM swap hujumi mumkin)",
+            "Authenticator ilovalari (Google Authenticator, Microsoft Authenticator)",
+            "Hardware tokenlar (YubiKey, RSA token)",
+            "Biometrik (barmoq izi, yuz tanish)"
         ],
         "benefits": [
             "Parol bilinsa ham himoya",
             "Ruxsatsiz kirishni bloklaydi",
-            "Xavfsizlikni 99% oshiradi"
+            "Xavfsizlikni 99% oshiradi",
+            "Ko'p xizmatlarda bepul"
+        ],
+        "wiki_link": "https://uz.wikipedia.org/wiki/Ko‘p_faktorli_autentifikatsiya",
+        "external_links": [
+            {"title": "Wikipedia (English)", "url": "https://en.wikipedia.org/wiki/Multi-factor_authentication"},
+            {"title": "Google 2FA", "url": "https://www.google.com/landing/2step/"},
+            {"title": "Authy", "url": "https://authy.com/"}
         ]
     },
     "vpn": {
         "title": "VPN (Virtual Private Network)",
-        "description": "Internetdagi maxfiylik va xavfsizlikni ta'minlaydi.",
+        "description": "Internetdagi maxfiylik va xavfsizlikni ta'minlaydi. Ma'lumotlaringizni shifrlaydi va IP manzilingizni yashiradi.",
         "benefits": [
             "IP manzilingizni yashiradi",
             "Ma'lumotlaringizni shifrlaydi",
-            "Ochiq Wi-Fi tarmoqlarida himoya qiladi"
+            "Ochiq Wi-Fi tarmoqlarida himoya qiladi",
+            "Geobloklarni chetlab o'tadi",
+            "Internet provayderingiz kuzatuvidan himoya"
+        ],
+        "risks": [
+            "Bepul VPN lar xavfli bo'lishi mumkin (ma'lumotlaringizni sotishi mumkin)",
+            "Ba'zi VPN lar log saqlaydi",
+            "Tezlikni pasaytirishi mumkin",
+            "Ba'zi xizmatlar VPN bilan ishlamasligi mumkin"
+        ],
+        "wiki_link": "https://uz.wikipedia.org/wiki/VPN",
+        "external_links": [
+            {"title": "Wikipedia (English)", "url": "https://en.wikipedia.org/wiki/VPN"},
+            {"title": "NordVPN", "url": "https://nordvpn.com/what-is-a-vpn/"},
+            {"title": "ExpressVPN", "url": "https://www.expressvpn.com/what-is-vpn"}
+        ]
+    },
+    "ransomware": {
+        "title": "Ransomware (Fayl qulflash)",
+        "description": "Ransomware - fayllaringizni shifrlab, ularni ochish uchun pul talab qiluvchi zararli dastur.",
+        "types": [
+            "Crypto ransomware - fayllarni shifrlaydi",
+            "Locker ransomware - tizimga kirishni bloklaydi",
+            "Doxware - ma'lumotlarni oshkor qilish bilan qo'rqitadi"
+        ],
+        "protection": [
+            "Muntazam zaxira nusxa oling",
+            "Antivirus dasturini yangilab turing",
+            "Shubhali email ilovalarini ochmang",
+            "Dasturlarni faqat rasmiy manbalardan yuklab oling"
+        ],
+        "wiki_link": "https://uz.wikipedia.org/wiki/Ransomware",
+        "external_links": [
+            {"title": "Wikipedia (English)", "url": "https://en.wikipedia.org/wiki/Ransomware"},
+            {"title": "No More Ransom", "url": "https://www.nomoreransom.org/"},
+            {"title": "FBI Ransomware", "url": "https://www.fbi.gov/how-we-can-help-you/scams-and-safety/common-scams-and-crimes/ransomware"}
+        ]
+    },
+    "social_engineering": {
+        "title": "Social Engineering (Ijtimoiy injiniring)",
+        "description": "Odamlarni aldab, maxfiy ma'lumotlarni olish usuli. Texnik emas, balki psixologik hujum.",
+        "methods": [
+            "Pretexting - soxta vaziyat yaratish",
+            "Baiting - qiziqarli narsa taklif qilish",
+            "Tailgating - ruxsatsiz kirish",
+            "Quid pro quo - yordam evaziga ma'lumot olish"
+        ],
+        "protection": [
+            "Noma'lum odamlarga ishonmang",
+            "Shaxsiy ma'lumotlarni bermang",
+            "Tasdiqlanmagan so'rovlarga javob bermang",
+            "Kompaniya xodimlarini o'qiting"
+        ],
+        "wiki_link": "https://uz.wikipedia.org/wiki/Social_engineering",
+        "external_links": [
+            {"title": "Wikipedia (English)", "url": "https://en.wikipedia.org/wiki/Social_engineering_(security)"},
+            {"title": "Kaspersky", "url": "https://www.kaspersky.com/resource-center/definitions/social-engineering"}
+        ]
+    },
+    "password": {
+        "title": "Xavfsiz Parollar",
+        "description": "Kuchli parollar akkauntlaringizni himoya qiladi. Bir xil parolni har joyda ishlatmang.",
+        "rules": [
+            "Kamida 12 belgi",
+            "Katta va kichik harflar",
+            "Raqamlar va maxsus belgilar",
+            "Har bir sayt uchun unikal parol",
+            "Shaxsiy ma'lumotlardan foydalanmang (ism, tug'ilgan sana)"
+        ],
+        "tools": [
+            "Parol menejerlari (Bitwarden, LastPass, 1Password)",
+            "Parol generatorlar",
+            "2FA"
+        ],
+        "wiki_link": "https://uz.wikipedia.org/wiki/Parol",
+        "external_links": [
+            {"title": "How Secure Is My Password", "url": "https://howsecureismypassword.net/"},
+            {"title": "Bitwarden", "url": "https://bitwarden.com/"},
+            {"title": "Have I Been Pwned", "url": "https://haveibeenpwned.com/"}
+        ]
+    },
+    "firewall": {
+        "title": "Firewall (Xavfsizlik devori)",
+        "description": "Tarmoq trafigini nazorat qiluvchi va ruxsatsiz kirishni bloklovchi himoya tizimi.",
+        "types": [
+            "Hardware firewall - routerlarda o'rnatilgan",
+            "Software firewall - kompyuterda o'rnatiladi",
+            "Cloud firewall - bulutli xizmatlar"
+        ],
+        "benefits": [
+            "Ruxsatsiz kirishni bloklaydi",
+            "Zararli trafikni filtrlaydi",
+            "Hujumlarni oldini oladi",
+            "Tarmoq faoliyatini kuzatadi"
+        ],
+        "wiki_link": "https://uz.wikipedia.org/wiki/Firewall",
+        "external_links": [
+            {"title": "Wikipedia (English)", "url": "https://en.wikipedia.org/wiki/Firewall"},
+            {"title": "Cisco Firewall", "url": "https://www.cisco.com/c/en/us/products/security/firewalls/what-is-a-firewall.html"}
+        ]
+    },
+    "encryption": {
+        "title": "Shifrlash (Encryption)",
+        "description": "Ma'lumotlarni maxsus kodga aylantirib, ruxsatsiz o'qishni oldini olish usuli.",
+        "types": [
+            "Symmetric encryption - bir kalit",
+            "Asymmetric encryption - ochiq va yopiq kalit",
+            "End-to-end encryption - faqat jo'natuvchi va qabul qiluvchi o'qiy oladi"
+        ],
+        "uses": [
+            "WhatsApp, Telegram xabarlari",
+            "Bank operatsiyalari",
+            "VPN ulanishlari",
+            "Ma'lumotlar saqlash"
+        ],
+        "wiki_link": "https://uz.wikipedia.org/wiki/Shifrlash",
+        "external_links": [
+            {"title": "Wikipedia (English)", "url": "https://en.wikipedia.org/wiki/Encryption"},
+            {"title": "Cloudflare Encryption", "url": "https://www.cloudflare.com/learning/ssl/what-is-encryption/"}
         ]
     }
 }
