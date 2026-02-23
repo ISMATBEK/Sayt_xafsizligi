@@ -7,6 +7,8 @@
         Link Tekshiruvi Natijalari
     {% elif results.scan_type == 'apk' %}
         APK Tahlili Natijalari
+    {% else %}
+        Skanerlash Natijalari
     {% endif %}
 {% endblock %}
 
@@ -38,30 +40,30 @@
         {% elif results.scan_type == 'links' %}
         <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
             <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 5px;">🔗 Jami linklar</div>
-            <div style="font-size: 18px; font-weight: 600;">{{ results.link_check.total_links }}</div>
+            <div style="font-size: 18px; font-weight: 600;">{{ results.total_links if results.total_links else 0 }}</div>
         </div>
         <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
             <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 5px;">🏠 Ichki linklar</div>
-            <div style="font-size: 18px; font-weight: 600;">{{ results.link_check.internal_links|length }}</div>
+            <div style="font-size: 18px; font-weight: 600;">{{ results.internal_links|length if results.internal_links else 0 }}</div>
         </div>
         <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
             <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 5px;">🌍 Tashqi linklar</div>
-            <div style="font-size: 18px; font-weight: 600;">{{ results.link_check.external_links|length }}</div>
+            <div style="font-size: 18px; font-weight: 600;">{{ results.external_links|length if results.external_links else 0 }}</div>
         </div>
         
         {% elif results.scan_type == 'apk' %}
         <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
             <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 5px;">📁 Fayl nomi</div>
-            <div style="font-size: 16px; font-weight: 600; word-break: break-all;">{{ results.apk_analysis.file_info.file_name }}</div>
+            <div style="font-size: 16px; font-weight: 600; word-break: break-all;">{{ results.apk_analysis.file_info.file_name if results.apk_analysis and results.apk_analysis.file_info else 'Noma\'lum' }}</div>
         </div>
         <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
             <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 5px;">📦 Hajmi</div>
-            <div style="font-size: 18px; font-weight: 600;">{{ results.apk_analysis.file_info.file_size_mb }} MB</div>
+            <div style="font-size: 18px; font-weight: 600;">{{ results.apk_analysis.file_info.file_size_mb if results.apk_analysis and results.apk_analysis.file_info else 0 }} MB</div>
         </div>
         <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
             <div style="color: var(--text-secondary); font-size: 13px; margin-bottom: 5px;">⚡ Xavf darajasi</div>
-            <div style="font-size: 18px; font-weight: 600; color: {% if results.apk_analysis.malware_analysis.risk_score > 70 %}#ef4444{% elif results.apk_analysis.malware_analysis.risk_score > 30 %}#f59e0b{% else %}#10b981{% endif %};">
-                {{ results.apk_analysis.malware_analysis.risk_score }}%
+            <div style="font-size: 18px; font-weight: 600; color: {% if results.apk_analysis and results.apk_analysis.risk_analysis %}{% if results.apk_analysis.risk_analysis.risk_score > 70 %}#ef4444{% elif results.apk_analysis.risk_analysis.risk_score > 30 %}#f59e0b{% else %}#10b981{% endif %}{% endif %};">
+                {{ results.apk_analysis.risk_analysis.risk_score if results.apk_analysis and results.apk_analysis.risk_analysis else 0 }}%
             </div>
         </div>
         {% endif %}
@@ -78,13 +80,13 @@
     
     <div style="display: grid; gap: 15px;">
         {% for vuln in results.security_scan %}
-        <div style="background: {% if vuln.level == 'Yuqori' %}rgba(239,68,68,0.1){% elif vuln.level == 'O\'rta' %}rgba(245,158,11,0.1){% else %}rgba(16,185,129,0.1){% endif %}; border-left: 4px solid {% if vuln.level == 'Yuqori' %}#ef4444{% elif vuln.level == 'O\'rta' %}#f59e0b{% else %}#10b981{% endif %}; padding: 20px; border-radius: 10px;">
+        <div style="background: {% if vuln.level == 'Yuqori' %}rgba(239,68,68,0.1){% elif vuln.level == 'Oʻrta' or vuln.level == "O'rta" %}rgba(245,158,11,0.1){% else %}rgba(16,185,129,0.1){% endif %}; border-left: 4px solid {% if vuln.level == 'Yuqori' %}#ef4444{% elif vuln.level == 'Oʻrta' or vuln.level == "O'rta" %}#f59e0b{% else %}#10b981{% endif %}; padding: 20px; border-radius: 10px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-{% if vuln.level == 'Yuqori' %}exclamation-triangle{% elif vuln.level == 'O\'rta' %}exclamation-circle{% else %}info-circle{% endif %}" style="color: {% if vuln.level == 'Yuqori' %}#ef4444{% elif vuln.level == 'O\'rta' %}#f59e0b{% else %}#10b981{% endif %};"></i>
+                    <i class="fas fa-{% if vuln.level == 'Yuqori' %}exclamation-triangle{% elif vuln.level == 'Oʻrta' or vuln.level == "O'rta" %}exclamation-circle{% else %}info-circle{% endif %}" style="color: {% if vuln.level == 'Yuqori' %}#ef4444{% elif vuln.level == 'Oʻrta' or vuln.level == "O'rta" %}#f59e0b{% else %}#10b981{% endif %};"></i>
                     <h3 style="margin: 0; font-size: 16px;">{{ vuln.type }}</h3>
                 </div>
-                <span class="badge {% if vuln.level == 'Yuqori' %}badge-danger{% elif vuln.level == 'O\'rta' %}badge-warning{% else %}badge-success{% endif %}">
+                <span class="badge {% if vuln.level == 'Yuqori' %}badge-danger{% elif vuln.level == 'Oʻrta' or vuln.level == "O'rta" %}badge-warning{% else %}badge-success{% endif %}">
                     {{ vuln.level }}
                 </span>
             </div>
@@ -107,13 +109,13 @@
         <h2>Link tahlili</h2>
     </div>
     
-    {% if results.link_check.internal_links %}
+    {% if results.internal_links %}
     <div style="margin-bottom: 25px;">
         <h3 style="margin-bottom: 15px; color: var(--text-secondary);">
-            <i class="fas fa-home"></i> Ichki linklar ({{ results.link_check.internal_links|length }})
+            <i class="fas fa-home"></i> Ichki linklar ({{ results.internal_links|length }})
         </h3>
         <div style="display: grid; gap: 10px;">
-            {% for link in results.link_check.internal_links %}
+            {% for link in results.internal_links %}
             <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px; display: flex; align-items: center; gap: 10px;">
                 <i class="fas fa-link" style="color: #10b981;"></i>
                 <div style="flex: 1;">
@@ -127,13 +129,13 @@
     </div>
     {% endif %}
     
-    {% if results.link_check.external_links %}
-    <div>
+    {% if results.external_links %}
+    <div style="margin-bottom: 25px;">
         <h3 style="margin-bottom: 15px; color: var(--text-secondary);">
-            <i class="fas fa-external-link-alt"></i> Tashqi linklar ({{ results.link_check.external_links|length }})
+            <i class="fas fa-external-link-alt"></i> Tashqi linklar ({{ results.external_links|length }})
         </h3>
         <div style="display: grid; gap: 10px;">
-            {% for link in results.link_check.external_links %}
+            {% for link in results.external_links %}
             <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px; display: flex; align-items: center; gap: 10px;">
                 <i class="fas fa-external-link-alt" style="color: #f59e0b;"></i>
                 <div style="flex: 1;">
@@ -141,6 +143,44 @@
                     <div style="color: var(--text-secondary); font-size: 12px;">{{ link.url }}</div>
                 </div>
                 <span class="badge badge-warning">TASHQI</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if results.broken_links %}
+    <div style="margin-bottom: 25px;">
+        <h3 style="margin-bottom: 15px; color: var(--danger);">
+            <i class="fas fa-chain-broken"></i> Buzilgan linklar ({{ results.broken_links|length }})
+        </h3>
+        <div style="display: grid; gap: 10px;">
+            {% for link in results.broken_links %}
+            <div style="background: rgba(239,68,68,0.1); padding: 15px; border-radius: 10px;">
+                <div style="font-weight: 500;">{{ link.text }}</div>
+                <div style="color: var(--text-secondary); font-size: 12px;">{{ link.url }}</div>
+                <div style="color: #ef4444; font-size: 13px; margin-top: 5px;">
+                    <i class="fas fa-exclamation-circle"></i> {{ link.error }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if results.suspicious_links %}
+    <div>
+        <h3 style="margin-bottom: 15px; color: var(--warning);">
+            <i class="fas fa-exclamation-triangle"></i> Shubhali linklar ({{ results.suspicious_links|length }})
+        </h3>
+        <div style="display: grid; gap: 10px;">
+            {% for link in results.suspicious_links %}
+            <div style="background: rgba(245,158,11,0.1); padding: 15px; border-radius: 10px;">
+                <div style="font-weight: 500;">{{ link.text }}</div>
+                <div style="color: var(--text-secondary); font-size: 12px;">{{ link.url }}</div>
+                <div style="color: #f59e0b; font-size: 13px; margin-top: 5px;">
+                    <i class="fas fa-exclamation-triangle"></i> {{ link.reason if link.reason else 'Shubhali link' }}
+                </div>
             </div>
             {% endfor %}
         </div>
@@ -158,46 +198,27 @@
         <h2>Zararli dastur tahlili</h2>
     </div>
     
+    {% if results.apk_analysis and results.apk_analysis.risk_analysis %}
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
-        <div style="background: {% if results.apk_analysis.malware_analysis.risk_score > 70 %}rgba(239,68,68,0.2){% elif results.apk_analysis.malware_analysis.risk_score > 30 %}rgba(245,158,11,0.2){% else %}rgba(16,185,129,0.2){% endif %}; padding: 20px; border-radius: 10px; text-align: center;">
-            <div style="font-size: 28px; font-weight: 700; color: {% if results.apk_analysis.malware_analysis.risk_score > 70 %}#ef4444{% elif results.apk_analysis.malware_analysis.risk_score > 30 %}#f59e0b{% else %}#10b981{% endif %};">{{ results.apk_analysis.malware_analysis.risk_score }}%</div>
+        <div style="background: {% if results.apk_analysis.risk_analysis.risk_score > 70 %}rgba(239,68,68,0.2){% elif results.apk_analysis.risk_analysis.risk_score > 30 %}rgba(245,158,11,0.2){% else %}rgba(16,185,129,0.2){% endif %}; padding: 20px; border-radius: 10px; text-align: center;">
+            <div style="font-size: 28px; font-weight: 700; color: {% if results.apk_analysis.risk_analysis.risk_score > 70 %}#ef4444{% elif results.apk_analysis.risk_analysis.risk_score > 30 %}#f59e0b{% else %}#10b981{% endif %};">{{ results.apk_analysis.risk_analysis.risk_score }}%</div>
             <div style="color: var(--text-secondary); font-size: 13px;">Xavf darajasi</div>
         </div>
         <div style="background: var(--bg-secondary); padding: 20px; border-radius: 10px; text-align: center;">
-            <div style="font-size: 28px; font-weight: 700;">{{ results.apk_analysis.malware_analysis.detected }}</div>
-            <div style="color: var(--text-secondary); font-size: 13px;">Aniqlangan zararli belgilar</div>
+            <div style="font-size: 28px; font-weight: 700;">{{ results.apk_analysis.risk_analysis.high_risk_count }}</div>
+            <div style="color: var(--text-secondary); font-size: 13px;">Yuqori xavfli ruxsatlar</div>
         </div>
         <div style="background: var(--bg-secondary); padding: 20px; border-radius: 10px; text-align: center;">
-            <div style="font-size: 24px; font-weight: 700; color: {% if results.apk_analysis.malware_analysis.verdict == 'XAVFLI' %}#ef4444{% elif results.apk_analysis.malware_analysis.verdict == 'SHAXBILI' %}#f59e0b{% else %}#10b981{% endif %};">
-                {{ results.apk_analysis.malware_analysis.verdict }}
+            <div style="font-size: 24px; font-weight: 700; color: {% if results.apk_analysis.risk_analysis.verdict == 'XAVFLI' %}#ef4444{% elif results.apk_analysis.risk_analysis.verdict == 'SHAXBILI' %}#f59e0b{% else %}#10b981{% endif %};">
+                {{ results.apk_analysis.risk_analysis.verdict }}
             </div>
             <div style="color: var(--text-secondary); font-size: 13px;">Yakuniy baho</div>
         </div>
     </div>
-    
-    {% if results.apk_analysis.malware_analysis.signatures %}
-    <h3 style="margin-bottom: 15px;">Aniqlangan zararli belgilar:</h3>
-    <div style="display: grid; gap: 15px;">
-        {% for sig in results.apk_analysis.malware_analysis.signatures %}
-        {% if sig.detected %}
-        <div style="background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; padding: 20px; border-radius: 10px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <h4 style="margin: 0;">{{ sig.name }}</h4>
-                <span class="badge badge-danger">{{ sig.severity }}</span>
-            </div>
-            <p style="color: var(--text-secondary); margin-bottom: 8px;">{{ sig.description }}</p>
-            <p style="font-size: 14px;"><strong>Ta'siri:</strong> {{ sig.action }}</p>
-            <p style="font-size: 14px; color: #10b981;"><strong>Himoya:</strong> {{ sig.protection }}</p>
-        </div>
-        {% endif %}
-        {% endfor %}
-    </div>
     {% endif %}
-</div>
-
-<!-- Permissions -->
-{% if results.apk_analysis.permissions %}
-<div class="card">
+    
+    <!-- Permissions -->
+    {% if results.apk_analysis and results.apk_analysis.permissions %}
     <div class="card-title">
         <i class="fas fa-shield-alt"></i>
         <h2>Ruxsatlar tahlili</h2>
@@ -205,10 +226,10 @@
     
     <div style="display: grid; gap: 15px;">
         {% for perm in results.apk_analysis.permissions %}
-        <div style="background: {% if perm.risk == 'YUQORI' %}rgba(239,68,68,0.1){% elif perm.risk == 'O\'RTA' %}rgba(245,158,11,0.1){% else %}rgba(16,185,129,0.1){% endif %}; padding: 15px; border-radius: 10px;">
+        <div style="background: {% if perm.risk == 'YUQORI' %}rgba(239,68,68,0.1){% elif perm.risk == 'OʻRTA' or perm.risk == "O'RTA" %}rgba(245,158,11,0.1){% else %}rgba(16,185,129,0.1){% endif %}; padding: 15px; border-radius: 10px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <h4 style="margin: 0;">{{ perm.display_name }}</h4>
-                <span class="badge {% if perm.risk == 'YUQORI' %}badge-danger{% elif perm.risk == 'O\'RTA' %}badge-warning{% else %}badge-success{% endif %}">
+                <h4 style="margin: 0;">{{ perm.name }}</h4>
+                <span class="badge {% if perm.risk == 'YUQORI' %}badge-danger{% elif perm.risk == 'OʻRTA' or perm.risk == "O'RTA" %}badge-warning{% else %}badge-success{% endif %}">
                     {{ perm.risk }}
                 </span>
             </div>
@@ -221,111 +242,40 @@
         </div>
         {% endfor %}
     </div>
+    {% endif %}
+    
+    <!-- Recommendations -->
+    {% if results.apk_analysis and results.apk_analysis.recommendations %}
+    <div class="card-title" style="margin-top: 20px;">
+        <i class="fas fa-lightbulb"></i>
+        <h2>Tavsiyalar</h2>
+    </div>
+    
+    <div style="display: grid; gap: 10px;">
+        {% for rec in results.apk_analysis.recommendations %}
+        <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px;">
+            {{ rec }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 </div>
-{% endif %}
 {% endif %}
 
 <!-- Xulosa -->
 <div class="card">
     <div class="card-title">
         <i class="fas fa-clipboard-check"></i>
-        <h2>Xulosa va tavsiyalar</h2>
+        <h2>Xulosa</h2>
     </div>
     
-    <div style="background: {% if results.scan_type == 'website' %}
-        {% if results.security_scan|length > 2 %}rgba(239,68,68,0.1){% elif results.security_scan|length > 0 %}rgba(245,158,11,0.1){% else %}rgba(16,185,129,0.1){% endif %}
-    {% elif results.scan_type == 'apk' %}
-        {% if results.apk_analysis.malware_analysis.risk_score > 70 %}rgba(239,68,68,0.1){% elif results.apk_analysis.malware_analysis.risk_score > 30 %}rgba(245,158,11,0.1){% else %}rgba(16,185,129,0.1){% endif %}
-    {% else %}
-        rgba(16,185,129,0.1)
-    {% endif %}; padding: 25px; border-radius: 15px;">
-        
-        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-            <i class="fas fa-{% if results.scan_type == 'website' %}
-                {% if results.security_scan|length > 2 %}exclamation-triangle{% elif results.security_scan|length > 0 %}exclamation-circle{% else %}check-circle{% endif %}
-            {% elif results.scan_type == 'apk' %}
-                {% if results.apk_analysis.malware_analysis.risk_score > 70 %}exclamation-triangle{% elif results.apk_analysis.malware_analysis.risk_score > 30 %}exclamation-circle{% else %}check-circle{% endif %}
-            {% else %}
-                check-circle
-            {% endif %}" style="font-size: 30px; color: {% if results.scan_type == 'website' %}
-                {% if results.security_scan|length > 2 %}#ef4444{% elif results.security_scan|length > 0 %}#f59e0b{% else %}#10b981{% endif %}
-            {% elif results.scan_type == 'apk' %}
-                {% if results.apk_analysis.malware_analysis.risk_score > 70 %}#ef4444{% elif results.apk_analysis.malware_analysis.risk_score > 30 %}#f59e0b{% else %}#10b981{% endif %}
-            {% else %}
-                #10b981
-            {% endif %};"></i>
-            
-            <h3 style="margin: 0; font-size: 20px;">
-                {% if results.scan_type == 'website' %}
-                    {% if results.security_scan|length > 2 %}
-                        Xavfli - darhol chora ko'ring!
-                    {% elif results.security_scan|length > 0 %}
-                        Qoniqarli - ba'zi muammolar bor
-                    {% else %}
-                        Ajoyib! Hech qanday muammo topilmadi
-                    {% endif %}
-                {% elif results.scan_type == 'apk' %}
-                    {% if results.apk_analysis.malware_analysis.risk_score > 70 %}
-                        Xavfli - bu ilovani ishlatmang!
-                    {% elif results.apk_analysis.malware_analysis.risk_score > 30 %}
-                        Shubhali - ehtiyot bo'ling
-                    {% else %}
-                        Xavfsiz - ilovadan foydalanishingiz mumkin
-                    {% endif %}
-                {% else %}
-                    Barcha linklar xavfsiz
-                {% endif %}
-            </h3>
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-            <h4 style="margin-bottom: 10px;">📋 Asosiy tavsiyalar:</h4>
-            <ul style="list-style: none;">
-                <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
-                    Antivirus dasturini yangilab turing
-                </li>
-                <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
-                    Shubhali linklarga kirmang
-                </li>
-                <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
-                    Muntazam xavfsizlik tekshiruvlarini o'tkazing
-                </li>
-                <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
-                    Ikki bosqichli autentifikatsiyadan foydalaning
-                </li>
-            </ul>
-        </div>
-        
-        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-            <button class="btn btn-primary" onclick="window.print()">
-                <i class="fas fa-print"></i> Hisobotni chop etish
-            </button>
-            <button class="btn btn-outline" onclick="shareResults()">
-                <i class="fas fa-share-alt"></i> Ulashish
-            </button>
-            <a href="{{ url_for('index') }}" class="btn btn-outline">
-                <i class="fas fa-home"></i> Bosh sahifa
-            </a>
-        </div>
+    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+        <button class="btn btn-primary" onclick="window.print()">
+            <i class="fas fa-print"></i> Hisobotni chop etish
+        </button>
+        <a href="{{ url_for('index') }}" class="btn btn-outline">
+            <i class="fas fa-home"></i> Bosh sahifa
+        </a>
     </div>
 </div>
-
-<script>
-function shareResults() {
-    if (navigator.share) {
-        navigator.share({
-            title: 'Kiberxavfsizlik skanerlash natijalari',
-            text: 'Men saytimni xavfsizlikka tekshirdim. Siz ham tekshirib ko\'ring!',
-            url: window.location.href
-        })
-        .catch(console.error);
-    } else {
-        alert('Ulashish uchun linkni nusxalang: ' + window.location.href);
-    }
-}
-</script>
 {% endblock %}
