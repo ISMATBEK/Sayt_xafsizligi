@@ -934,20 +934,21 @@ def check_links():
         if not website.startswith(('http://', 'https://')):
             website = 'https://' + website
         
+        print(f"Tekshirilayotgan sayt: {website}")
+        
         # User-Agent (ba'zi saytlar bloklamasligi uchun)
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'Accept-Encoding': 'gzip, deflate',
+            'Accept-Language': 'uz-UZ,uz;q=0.9,ru;q=0.8,en;q=0.7',
             'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1',
         }
         
         # Saytni so'rash
         try:
             response = requests.get(website, timeout=15, verify=False, headers=headers)
             response.raise_for_status()
+            print(f"Status code: {response.status_code}")
         except requests.exceptions.SSLError:
             # SSL xatosi bo'lsa, http bilan urinib ko'rish
             website = website.replace('https://', 'http://')
@@ -964,6 +965,7 @@ def check_links():
         # HTML tahlil qilish
         soup = BeautifulSoup(response.text, 'html.parser')
         domain = urlparse(website).netloc
+        print(f"Domain: {domain}")
         
         # Linklarni yig'ish
         internal_links = []
@@ -977,11 +979,14 @@ def check_links():
             'paypal', 'password', 'credit-card', 'payment', 'update',
             'confirm', 'identity', 'verification', 'wallet', 'bitcoin',
             'free-money', 'prize', 'winner', 'lottery', 'casino',
-            'invest', 'bonus', 'withdraw', 'deposit', 'win'
+            'invest', 'bonus', 'withdraw', 'deposit', 'win', 'gambling'
         ]
         
         # Barcha linklarni topish
-        for a in soup.find_all('a', href=True):
+        all_links = soup.find_all('a', href=True)
+        print(f"Jami linklar soni: {len(all_links)}")
+        
+        for a in all_links:
             href = a['href'].strip()
             text = a.get_text(strip=True)[:100]
             
@@ -1032,11 +1037,11 @@ def check_links():
                 else:
                     external_links.append(link_info)
         
-        # Linklar sonini cheklash
-        internal_links = internal_links[:30]
-        external_links = external_links[:30]
+        print(f"Ichki linklar: {len(internal_links)}")
+        print(f"Tashqi linklar: {len(external_links)}")
+        print(f"Shubhali linklar: {len(suspicious_links)}")
         
-        # Buzilgan linklarni tekshirish (eng muhimlarini)
+        # Buzilgan linklarni tekshirish
         all_links_to_check = internal_links[:10] + external_links[:5]
         
         with ThreadPoolExecutor(max_workers=5) as executor:
@@ -1067,6 +1072,8 @@ def check_links():
                 if result:
                     broken_links.append(result)
         
+        print(f"Buzilgan linklar: {len(broken_links)}")
+        
         # Natijalar
         results = {
             'scan_type': 'links',
@@ -1074,8 +1081,8 @@ def check_links():
             'domain': domain,
             'scan_time': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'total_links': len(internal_links) + len(external_links) + len(suspicious_links),
-            'internal_links': internal_links,
-            'external_links': external_links,
+            'internal_links': internal_links[:30],
+            'external_links': external_links[:30],
             'suspicious_links': suspicious_links,
             'broken_links': broken_links
         }
