@@ -13,6 +13,7 @@ import time
 import re
 import ssl
 import urllib3
+import traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # SSL warninglarini o'chirish
@@ -190,6 +191,7 @@ CYBER_TIPS = [
         "category": "Kripto"
     }
 ]
+
 # Kiberxavfsizlik vikipediyasi (tashqi manbalar bilan)
 CYBER_WIKI = {
     "phishing": {
@@ -707,7 +709,6 @@ def apk_analyzer():
     """APK analyzer sahifasi"""
     return render_template('apk_analyzer.html', active_page='apk_analyzer')
 
-
 @app.route('/cyber-tips')
 def cyber_tips():
     """Kiberxavfsizlik maslahatlari"""
@@ -756,10 +757,8 @@ def course_detail(course_id):
     if not course:
         return redirect(url_for('courses'))
     
-    # O'xshash kurslar (bir xil level)
     similar_courses = [c for c in COURSES if c['id'] != course_id and c['level'] == course['level']][:3]
     
-    # Kurs statistikasi
     stats = {
         'completion_rate': random.randint(65, 95),
         'avg_time': random.randint(4, 12),
@@ -800,6 +799,136 @@ def terms():
     """Foydalanish shartlari"""
     return render_template('terms.html')
 
+# ========== URL TEKSHIRISH (YANGI XIZMAT) ==========
+@app.route('/url-checker')
+def url_checker():
+    """Yagona URL tekshirish sahifasi"""
+    return render_template('url_checker.html', active_page='url_checker')
+
+@app.route('/check-url', methods=['POST'])
+def check_url():
+    """URL ni tahlil qilish"""
+    try:
+        url = request.form.get('url', '').strip()
+        
+        if not url:
+            return jsonify({'error': 'URL manzilini kiriting!'})
+        
+        # URL ni tayyorlash
+        if not url.startswith(('http://', 'https://')):
+            url = 'https://' + url
+        
+        # Domenni ajratish
+        try:
+            parsed = urlparse(url)
+            domain = parsed.netloc
+        except:
+            domain = url
+        
+        # Shubhali domenlar ro'yxati
+        suspicious_domains = [
+            'bit.ly', 'tinyurl.com', 'goo.gl', 'short.link', 
+            'free-money.xyz', 'win-prize.net', 'login-verify.com',
+            'account-update.net', 'secure-bank.xyz', 'paypal-verify.com'
+        ]
+        
+        # Shubhali kalit so'zlar
+        suspicious_keywords = [
+            'login', 'signin', 'account', 'verify', 'secure', 'bank', 
+            'paypal', 'password', 'credit', 'payment', 'update',
+            'confirm', 'identity', 'verification', 'wallet', 'bitcoin',
+            'free', 'prize', 'winner', 'lottery', 'casino', 'bonus'
+        ]
+        
+        warnings = []
+        risk_score = 0
+        
+        # 1. Domenni tekshirish
+        if any(sus in domain for sus in suspicious_domains):
+            warnings.append("Domen qisqartiruvchi yoki xavfli ro'yxatda bor")
+            risk_score += 40
+        
+        # 2. Kalit so'zlarni tekshirish
+        url_lower = url.lower()
+        for kw in suspicious_keywords:
+            if kw in url_lower:
+                warnings.append(f"Shubhali so'z topildi: '{kw}'")
+                risk_score += 10
+                break
+        
+        # 3. URL tuzilishini tekshirish (IP manzil?)
+        if re.match(r'https?://\d+\.\d+\.\d+\.\d+', url):
+            warnings.append("URL to'g'ridan-to'g'ri IP manzilga yo'naltirilgan")
+            risk_score += 30
+        
+        # 4. HTTPS mavjudligi
+        if not url.startswith('https'):
+            warnings.append("HTTP dan foydalanilgan (shifrlanmagan)")
+            risk_score += 20
+        
+        # 5. URL ga so'rov yuborish (mavjudligini tekshirish)
+        try:
+            response = requests.head(url, timeout=5, verify=False, allow_redirects=True)
+            status_code = response.status_code
+            reachable = 200 <= status_code < 400
+        except Exception:
+            status_code = None
+            reachable = False
+            warnings.append("Saytga ulanishda xatolik")
+            risk_score += 15
+        
+        # Risk darajasi
+        if risk_score >= 70:
+            risk_level = "YUQORI"
+            risk_color = "#ef4444"
+            verdict = "XAVFLI"
+        elif risk_score >= 40:
+            risk_level = "OʻRTA"
+            risk_color = "#f59e0b"
+            verdict = "SHAXBILI"
+        else:
+            risk_level = "PAST"
+            risk_color = "#10b981"
+            verdict = "XAVFSIZ"
+        
+        # Tavsiyalar
+        recommendations = []
+        if risk_score >= 40:
+            recommendations.append("Bu URL ni ochmaslik tavsiya etiladi")
+        if not url.startswith('https'):
+            recommendations.append("Faqat HTTPS ulanishdan foydalaning")
+        if not reachable:
+            recommendations.append("Sayt mavjud emas yoki vaqtincha ishlamayapti")
+        
+        recommendations.append("Noma'lum havolalarni ochishdan oldin tekshirib oling")
+        recommendations.append("Agar shubha bo'lsa, administratorga xabar bering")
+        
+        results = {
+            'scan_type': 'url',
+            'url': url,
+            'domain': domain,
+            'scan_time': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'url_analysis': {
+                'url': url,
+                'domain': domain,
+                'reachable': reachable,
+                'status_code': status_code,
+                'risk_score': risk_score,
+                'risk_level': risk_level,
+                'risk_color': risk_color,
+                'verdict': verdict,
+                'warnings': warnings,
+                'recommendations': recommendations
+            }
+        }
+        
+        session['last_results'] = results
+        return jsonify({'success': True, 'redirect': url_for('results')})
+        
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': f'Xatolik yuz berdi: {str(e)}'}), 500
+
 # ========== SKANERLASH FUNKSIYALARI ==========
 
 @app.route('/scan-website', methods=['POST'])
@@ -810,18 +939,17 @@ def scan_website():
         
         if not website:
             return jsonify({'error': 'Sayt manzilini kiriting!'})
+        
         # URL ni tayyorlash
         if not website.startswith(('http://', 'https://')):
             website = 'https://' + website
         
-        # Domain va IP
         domain = urlparse(website).netloc
         try:
             ip = socket.gethostbyname(domain)
         except:
             ip = "Aniqlanmadi"
         
-        # Xavfsizlik tekshiruvlari
         security_issues = []
         
         # HTTPS tekshiruvi
@@ -853,7 +981,6 @@ def scan_website():
                         'recommendation': f'{header} sarlavhasini qoʻshing'
                     })
             
-            # Server ma'lumoti
             server = response.headers.get('Server', 'Nomaʼlum')
             if server != 'Nomaʼlum':
                 security_issues.append({
@@ -874,7 +1001,6 @@ def scan_website():
         seo_analysis = {}
         try:
             soup = BeautifulSoup(response.text, 'html.parser')
-            
             title = soup.find('title')
             description = soup.find('meta', attrs={'name': 'description'})
             
@@ -920,7 +1046,8 @@ def scan_website():
         
     except Exception as e:
         return jsonify({'error': str(e)})
-        @app.route('/check-links', methods=['POST'])
+
+@app.route('/check-links', methods=['POST'])
 def check_links():
     """Linklarni tekshirish"""
     try:
@@ -929,13 +1056,9 @@ def check_links():
         if not website:
             return jsonify({'error': 'Sayt manzilini kiriting!'})
         
-        # URL ni tayyorlash
         if not website.startswith(('http://', 'https://')):
             website = 'https://' + website
         
-        print(f"Tekshirilayotgan sayt: {website}")
-        
-        # User-Agent (ba'zi saytlar bloklamasligi uchun)
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -943,13 +1066,10 @@ def check_links():
             'Connection': 'keep-alive',
         }
         
-        # Saytni so'rash
         try:
             response = requests.get(website, timeout=15, verify=False, headers=headers)
             response.raise_for_status()
-            print(f"Status code: {response.status_code}")
         except requests.exceptions.SSLError:
-            # SSL xatosi bo'lsa, http bilan urinib ko'rish
             website = website.replace('https://', 'http://')
             response = requests.get(website, timeout=15, headers=headers)
         except requests.exceptions.Timeout:
@@ -961,18 +1081,14 @@ def check_links():
         except Exception as e:
             return jsonify({'error': f'Ulanish xatoligi: {str(e)}'})
         
-        # HTML tahlil qilish
         soup = BeautifulSoup(response.text, 'html.parser')
         domain = urlparse(website).netloc
-        print(f"Domain: {domain}")
         
-        # Linklarni yig'ish
         internal_links = []
         external_links = []
-        broken_links = []
         suspicious_links = []
+        broken_links = []
         
-        # Shubhali kalit so'zlar
         suspicious_keywords = [
             'login', 'signin', 'account', 'verify', 'secure', 'bank', 
             'paypal', 'password', 'credit-card', 'payment', 'update',
@@ -981,19 +1097,13 @@ def check_links():
             'invest', 'bonus', 'withdraw', 'deposit', 'win', 'gambling'
         ]
         
-        # Barcha linklarni topish
-        all_links = soup.find_all('a', href=True)
-        print(f"Jami linklar soni: {len(all_links)}")
-        
-        for a in all_links:
+        for a in soup.find_all('a', href=True):
             href = a['href'].strip()
             text = a.get_text(strip=True)[:100]
             
-            # Keraksiz linklarni filtrlash
             if not href or href.startswith(('#', 'javascript:', 'mailto:', 'tel:', 'whatsapp:', 'skype:', 'viber:')):
                 continue
             
-            # To'liq URL yaratish
             if href.startswith('http'):
                 full_url = href
             elif href.startswith('/'):
@@ -1003,7 +1113,6 @@ def check_links():
             else:
                 full_url = urljoin(website, '/' + href)
             
-            # URL validligini tekshirish
             try:
                 parsed = urlparse(full_url)
                 if not parsed.netloc or not parsed.scheme:
@@ -1012,23 +1121,19 @@ def check_links():
             except:
                 continue
             
-            # Link ma'lumotlari
             link_info = {
                 'url': full_url,
                 'text': text if text else 'Matn yo\'q'
             }
             
-            # Ichki yoki tashqi link
             if link_domain == domain or link_domain.endswith('.' + domain) or domain.endswith('.' + link_domain):
                 internal_links.append(link_info)
             else:
-                # Shubhali linklarni tekshirish
                 is_suspicious = False
-                for keyword in suspicious_keywords:
-                    if keyword in full_url.lower() or (text and keyword in text.lower()):
+                for kw in suspicious_keywords:
+                    if kw in full_url.lower() or (text and kw in text.lower()):
                         is_suspicious = True
                         break
-                
                 if is_suspicious:
                     link_info['risk'] = 'Shubhali'
                     link_info['reason'] = 'Xavfli kontent bo\'lishi mumkin'
@@ -1036,13 +1141,8 @@ def check_links():
                 else:
                     external_links.append(link_info)
         
-        print(f"Ichki linklar: {len(internal_links)}")
-        print(f"Tashqi linklar: {len(external_links)}")
-        print(f"Shubhali linklar: {len(suspicious_links)}")
-        
-        # Buzilgan linklarni tekshirish
+        # Buzilgan linklarni tekshirish (faqat bir nechtasini)
         all_links_to_check = internal_links[:10] + external_links[:5]
-        
         with ThreadPoolExecutor(max_workers=5) as executor:
             def check_link(link):
                 try:
@@ -1052,7 +1152,6 @@ def check_links():
                         return link
                 except requests.exceptions.Timeout:
                     try:
-                        # GET bilan urinib ko'rish
                         r = requests.get(link['url'], timeout=3, verify=False, headers=headers)
                         if r.status_code >= 400:
                             link['error'] = f'HTTP {r.status_code}'
@@ -1071,9 +1170,6 @@ def check_links():
                 if result:
                     broken_links.append(result)
         
-        print(f"Buzilgan linklar: {len(broken_links)}")
-        
-        # Natijalar
         results = {
             'scan_type': 'links',
             'website': website,
@@ -1088,12 +1184,12 @@ def check_links():
         
         session['last_results'] = results
         return jsonify({'success': True, 'redirect': url_for('results')})
+        
     except Exception as e:
-        import traceback
         traceback.print_exc()
         return jsonify({'error': f'Xatolik yuz berdi: {str(e)}'})
-        
-        @app.route('/analyze-apk', methods=['POST'])
+
+@app.route('/analyze-apk', methods=['POST'])
 def analyze_apk():
     """APK faylni tahlil qilish"""
     try:
@@ -1108,25 +1204,19 @@ def analyze_apk():
         if not file.filename.lower().endswith('.apk'):
             return jsonify({'error': 'Faqat .apk fayllar qabul qilinadi!'})
         
-        # Faylni xotiraga o'qish (Vercel'da diskka yozmaymiz)
+        # Faylni xotiraga o'qish
         file_data = file.read()
         file_size = len(file_data) / (1024 * 1024)  # MB
         
-        if file_size > 50:  # 50MB gacha ruxsat
+        if file_size > 50:
             return jsonify({'error': 'Fayl hajmi 50MB dan katta!'})
         
-        # Fayl nomi va hash
         filename = file.filename
-        file_ext = os.path.splitext(filename)[1].lower()
-        
-        # Hash hisoblash
         md5_hash = hashlib.md5(file_data).hexdigest()
         sha256_hash = hashlib.sha256(file_data).hexdigest()
         
-        # Fayl nomidan ilova nomini olish
         app_name = filename.replace('.apk', '').replace('_', ' ').replace('-', ' ').title()
         
-        # Xavfli ruxsatlar ro'yxati
         dangerous_permissions = [
             {'name': 'SMS yuborish', 'risk': 'YUQORI', 'description': 'Pullik SMS yuborish', 'damage': 'Pul yechib olish'},
             {'name': 'SMS o\'qish', 'risk': 'YUQORI', 'description': 'SMS xabarlarni o\'qish', 'damage': 'Bank kodlarini o\'g\'irlash'},
@@ -1140,19 +1230,15 @@ def analyze_apk():
             {'name': 'Wi-Fi', 'risk': 'PAST', 'description': 'Wi-Fi holati', 'damage': 'Tarmoq ma\'lumotlari'}
         ]
         
-        # Fayl nomi va hajmi asosida ruxsatlarni tanlash
         random.seed(filename + str(file_size))
         
-        # Har doim Internet ruxsati bo'lsin
         selected_permissions = [dangerous_permissions[8]]  # Internet
         
-        # Qo'shimcha ruxsatlar
-        other_permissions = dangerous_permissions[:-2]  # Internet va Wi-Fi dan tashqari
+        other_permissions = dangerous_permissions[:-2]
         num_permissions = random.randint(2, 5)
         additional = random.sample(other_permissions, num_permissions)
         selected_permissions.extend(additional)
         
-        # Xavf darajasini hisoblash
         high_risk_count = sum(1 for p in selected_permissions if p['risk'] == 'YUQORI')
         medium_risk_count = sum(1 for p in selected_permissions if p['risk'] == 'OʻRTA')
         
@@ -1172,7 +1258,6 @@ def analyze_apk():
             risk_level = 'PAST XAVF'
             risk_color = '#10b981'
         
-        # Xavfsizlik tavsiyalari
         recommendations = []
         if high_risk_count > 0:
             recommendations.append('❌ Yuqori xavfli ruxsatlar: ' + ', '.join([p['name'] for p in selected_permissions if p['risk'] == 'YUQORI']))
@@ -1185,7 +1270,6 @@ def analyze_apk():
         recommendations.append('🔄 Muntazam yangilab turing')
         recommendations.append('🔍 Ruxsatlarni tekshirib turing')
         
-        # APK ma'lumotlari
         apk_info = {
             'file_name': filename,
             'file_size_mb': round(file_size, 2),
@@ -1219,7 +1303,6 @@ def analyze_apk():
         return jsonify({'success': True, 'redirect': url_for('results')})
         
     except Exception as e:
-        import traceback
         traceback.print_exc()
         return jsonify({'error': f'APK tahlilida xatolik: {str(e)}'})
 
@@ -1288,7 +1371,6 @@ def generate_password():
         
         password = ''.join(random.choice(chars) for _ in range(length))
         
-        # Parol kuchini hisoblash
         strength = 0
         if length >= 12:
             strength += 30
@@ -1414,7 +1496,6 @@ def contact():
         return jsonify({'success': False, 'error': str(e)})
 
 # ========== STATIC FILES ==========
-
 @app.route('/ads.txt')
 def serve_ads_txt():
     return send_from_directory('static', 'ads.txt')
