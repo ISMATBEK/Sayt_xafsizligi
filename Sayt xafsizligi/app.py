@@ -810,7 +810,6 @@ def scan_website():
         
         if not website:
             return jsonify({'error': 'Sayt manzilini kiriting!'})
-        
         # URL ni tayyorlash
         if not website.startswith(('http://', 'https://')):
             website = 'https://' + website
@@ -1093,6 +1092,7 @@ def check_links():
         import traceback
         traceback.print_exc()
         return jsonify({'error': f'Xatolik yuz berdi: {str(e)}'})
+        
         @app.route('/analyze-apk', methods=['POST'])
 def analyze_apk():
     """APK faylni tahlil qilish"""
