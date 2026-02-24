@@ -1094,10 +1094,7 @@ def check_links():
         import traceback
         traceback.print_exc()
         return jsonify({'error': f'Xatolik yuz berdi: {str(e)}'})
-        @app.route('/url-checker')
-def url_checker():
-    """Yagona URL tekshirish sahifasi"""
-    return render_template('url_checker.html', active_page='url_checker')
+        
 @app.route('/analyze-apk', methods=['POST'])
 def analyze_apk():
     """APK faylni tahlil qilish"""
