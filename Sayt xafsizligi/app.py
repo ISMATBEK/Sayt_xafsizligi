@@ -921,7 +921,7 @@ def scan_website():
         
     except Exception as e:
         return jsonify({'error': str(e)})
-@app.route('/check-links', methods=['POST'])
+        @app.route('/check-links', methods=['POST'])
 def check_links():
     """Linklarni tekshirish"""
     try:
@@ -1094,8 +1094,7 @@ def check_links():
         import traceback
         traceback.print_exc()
         return jsonify({'error': f'Xatolik yuz berdi: {str(e)}'})
-        
-@app.route('/analyze-apk', methods=['POST'])
+        @app.route('/analyze-apk', methods=['POST'])
 def analyze_apk():
     """APK faylni tahlil qilish"""
     try:
