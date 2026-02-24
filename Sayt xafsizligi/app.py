@@ -1089,7 +1089,6 @@ def check_links():
         
         session['last_results'] = results
         return jsonify({'success': True, 'redirect': url_for('results')})
-        
     except Exception as e:
         import traceback
         traceback.print_exc()
