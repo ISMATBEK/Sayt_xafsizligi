@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block page_title %}URL Tekshirish{% endblock %}
+{% block page_subtitle %}Begona havolalarni xavfsizlikka tekshirish{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-link"></i>
+        <h2>URL manzilini tekshirish</h2>
+    </div>
+    
+    <div style="text-align: center; margin-bottom: 20px;">
+        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea20, #764ba220); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <i class="fas fa-shield-alt" style="font-size: 40px; color: #667eea;"></i>
+        </div>
+        <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
+            Noma'lum manbalardan kelgan havolalarni xavfsizlikka tekshiring. 
+            Fishing, malware va shubhali domenlarni aniqlaymiz.
+        </p>
+    </div>
+    
+    <!-- Xatolik xabari -->
+    <div id="errorMessage" style="display: none; background: rgba(239,68,68,0.1); border: 1px solid #ef4444; color: #ef4444; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+        <i class="fas fa-exclamation-circle"></i> <span id="errorText"></span>
+    </div>
+    
+    <form id="urlForm" action="{{ url_for('check_url') }}" method="POST">
+        <div class="input-group" style="margin-bottom: 15px;">
+            <input type="url" name="url" id="urlInput" placeholder="https://example.com" required>
+            <button type="submit" class="btn btn-primary" id="checkBtn">
+                <i class="fas fa-search"></i> Tekshirish
+            </button>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 13px;">
+            <i class="fas fa-info-circle"></i> To'liq URL manzilini kiriting (masalan: https://example.com yoki bit.ly/xyz)
+        </p>
+    </form>
+    
+    <div id="loading" style="display: none; text-align: center; padding: 30px;">
+        <div class="spinner" style="width: 50px; height: 50px; border: 3px solid var(--bg-secondary); border-top-color: #667eea; border-radius: 50%; margin: 0 auto 15px; animation: spin 1s linear infinite;"></div>
+        <p>URL tekshirilmoqda...</p>
+        <p style="color: var(--text-secondary); font-size: 13px;">Bu bir necha soniya davom etishi mumkin</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h2>Qanday tekshiramiz?</h2>
+    </div>
+    
+    <div style="display: grid; gap: 20px;">
+        <div style="display: flex; gap: 15px;">
+            <div style="width: 40px; height: 40px; background: rgba(239,68,68,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-ban" style="color: #ef4444;"></i>
+            </div>
+            <div>
+                <h4>Shubhali domenlar</h4>
+                <p style="color: var(--text-secondary);">Qisqa havolalar (bit.ly) va fishing domenlarini aniqlaymiz</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px;">
+            <div style="width: 40px; height: 40px; background: rgba(245,158,11,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-key" style="color: #f59e0b;"></i>
+            </div>
+            <div>
+                <h4>Shubhali kalit so'zlar</h4>
+                <p style="color: var(--text-secondary);">login, verify, bank, paypal kabi so'zlar mavjudligi</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px;">
+            <div style="width: 40px; height: 40px; background: rgba(16,185,129,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-lock" style="color: #10b981;"></i>
+            </div>
+            <div>
+                <h4>HTTPS mavjudligi</h4>
+                <p style="color: var(--text-secondary);">Xavfsiz ulanishdan foydalanilganmi?</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px;">
+            <div style="width: 40px; height: 40px; background: rgba(59,130,246,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-globe" style="color: #3b82f6;"></i>
+            </div>
+            <div>
+                <h4>Sayt mavjudligi</h4>
+                <p style="color: var(--text-secondary);">URL ochiladimi yoki xato qaytaradimi?</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.input-group input[type="url"] {
+    flex: 1;
+    padding: 15px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 16px;
+}
+
+.input-group input[type="url"]:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.2);
+}
+</style>
+
+<script>
+document.getElementById('urlForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const form = this;
+    const formData = new FormData(form);
+    const checkBtn = document.getElementById('checkBtn');
+    const loading = document.getElementById('loading');
+    const errorDiv = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
+    const urlInput = document.getElementById('urlInput');
+    
+    if (!urlInput.value.trim()) {
+        errorText.textContent = 'Iltimos, URL manzilini kiriting!';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    errorDiv.style.display = 'none';
+    checkBtn.disabled = true;
+    checkBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Tekshirilmoqda...';
+    loading.style.display = 'block';
+    
+    try {
+        const response = await fetch('/check-url', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            window.location.href = data.redirect;
+        } else {
+            errorText.textContent = data.error || 'Noma\'lum xatolik';
+            errorDiv.style.display = 'block';
+            checkBtn.disabled = false;
+            checkBtn.innerHTML = '<i class="fas fa-search"></i> Tekshirish';
+            loading.style.display = 'none';
+        }
+    } catch (error) {
+        errorText.textContent = 'Xatolik: ' + error.message;
+        errorDiv.style.display = 'block';
+        checkBtn.disabled = false;
+        checkBtn.innerHTML = '<i class="fas fa-search"></i> Tekshirish';
+        loading.style.display = 'none';
+    }
+});
+
+// Enter tugmasi
+document.getElementById('urlInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        document.getElementById('urlForm').dispatchEvent(new Event('submit'));
+    }
+});
+
+// Input o'zgarganda xatolikni yashirish
+document.getElementById('urlInput').addEventListener('input', function() {
+    document.getElementById('errorMessage').style.display = 'none';
+});
+</script>
+{% endblock %}
