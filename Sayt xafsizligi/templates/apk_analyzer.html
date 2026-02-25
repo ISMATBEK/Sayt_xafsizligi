@@ -51,15 +51,85 @@
     </div>
 </div>
 
-<!-- qolgan statik qismlar (xavfli ruxsatlar, tavsiyalar) siznikidek qoladi -->
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h2>Xavfli Ruxsatlar</h2>
+    </div>
+    
+    <div style="display: grid; gap: 15px;">
+        <div style="background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; padding: 15px; border-radius: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <i class="fas fa-envelope" style="color: #ef4444;"></i>
+                <h4 style="margin: 0;">SMS yuborish</h4>
+                <span class="badge badge-danger">YUQORI XAVF</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13px;">Pullik SMS yuborish orqali pul yechib olish mumkin</p>
+        </div>
+        
+        <div style="background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; padding: 15px; border-radius: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <i class="fas fa-map-marker-alt" style="color: #ef4444;"></i>
+                <h4 style="margin: 0;">Joylashuv</h4>
+                <span class="badge badge-warning">O'RTA XAVF</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13px;">Foydalanuvchi joylashuvini kuzatish imkoniyati</p>
+        </div>
+        
+        <div style="background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; padding: 15px; border-radius: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <i class="fas fa-address-book" style="color: #ef4444;"></i>
+                <h4 style="margin: 0;">Kontaktlarni o'qish</h4>
+                <span class="badge badge-warning">O'RTA XAVF</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13px;">Barcha kontaktlarni o'g'irlash imkoniyati</p>
+        </div>
+        
+        <div style="background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; padding: 15px; border-radius: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <i class="fas fa-camera" style="color: #ef4444;"></i>
+                <h4 style="margin: 0;">Kamera</h4>
+                <span class="badge badge-warning">O'RTA XAVF</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13px;">Yashirincha suratga olish va video yozish</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-shield-alt"></i>
+        <h2>Xavfsizlik bo'yicha tavsiyalar</h2>
+    </div>
+    
+    <div style="display: grid; gap: 15px;">
+        <div style="display: flex; gap: 15px;">
+            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+            <div>
+                <h4 style="margin-bottom: 5px;">Rasmiy manbalardan yuklab oling</h4>
+                <p style="color: var(--text-secondary); font-size: 13px;">Google Play Store, Samsung Galaxy Store kabi rasmiy do'konlardan foydalaning</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px;">
+            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+            <div>
+                <h4 style="margin-bottom: 5px;">Ruxsatlarni tekshiring</h4>
+                <p style="color: var(--text-secondary); font-size: 13px;">Ilovaga keraksiz ruxsatlar bermang (masalan, chiroq ilovasiga kontakt kerak emas)</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px;">
+            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+            <div>
+                <h4 style="margin-bottom: 5px;">Antivirus ishlating</h4>
+                <p style="color: var(--text-secondary); font-size: 13px;">Telefoningizda antivirus dasturi bo'lsin va muntazam tekshirib turing</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
-function resetForm() {
-    document.getElementById('analyzeBtn').disabled = false;
-    document.getElementById('analyzeBtn').innerHTML = '<i class="fas fa-search"></i> Tahlil qilish';
-    document.getElementById('loading').style.display = 'none';
-}
-
 document.getElementById('apkFile').addEventListener('change', function(e) {
     const file = e.target.files[0];
     const selectedFileDiv = document.getElementById('selectedFile');
@@ -68,10 +138,12 @@ document.getElementById('apkFile').addEventListener('change', function(e) {
     const analyzeBtn = document.getElementById('analyzeBtn');
     
     if (file) {
+        // Fayl nomi va hajmi
         fileNameSpan.textContent = file.name;
         const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
         fileSizeSpan.textContent = fileSizeMB;
         
+        // Hajm tekshiruvi (10MB)
         if (fileSizeMB > 10) {
             alert('Fayl hajmi 10MB dan katta! Kichikroq fayl tanlang.');
             this.value = '';
@@ -80,6 +152,7 @@ document.getElementById('apkFile').addEventListener('change', function(e) {
             return;
         }
         
+        // Kengaytma tekshiruvi
         if (!file.name.toLowerCase().endsWith('.apk')) {
             alert('Faqat .apk fayllar qabul qilinadi!');
             this.value = '';
@@ -112,24 +185,22 @@ document.getElementById('apkForm').addEventListener('submit', function(e) {
         method: 'POST',
         body: formData
     })
-    .then(async response => {
-        if (!response.ok) {
-            const text = await response.text();
-            throw new Error(`HTTP ${response.status}: ${text}`);
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
         if (data.success) {
             window.location.href = data.redirect;
         } else {
-            alert('Xatolik: ' + (data.error || 'Noma\'lum xato'));
-            resetForm();
+            alert('Xatolik: ' + data.error);
+            analyzeBtn.disabled = false;
+            analyzeBtn.innerHTML = '<i class="fas fa-search"></i> Tahlil qilish';
+            loading.style.display = 'none';
         }
     })
     .catch(error => {
-        alert('Xatolik: ' + error.message);
-        resetForm();
+        alert('Xatolik yuz berdi: ' + error);
+        analyzeBtn.disabled = false;
+        analyzeBtn.innerHTML = '<i class="fas fa-search"></i> Tahlil qilish';
+        loading.style.display = 'none';
     });
 });
 </script>
