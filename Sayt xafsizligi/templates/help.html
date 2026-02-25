@@ -14,8 +14,8 @@
     </div>
 </div>
 
-<!-- Kategoriyalar -->
-<div class="grid-3" style="margin-bottom: 25px;">
+<!-- Kategoriyalar (4 ta xizmat) -->
+<div class="grid-4" style="margin-bottom: 25px;">
     <div class="card" style="text-align: center; cursor: pointer;" onclick="scrollToSection('scanner')">
         <i class="fas fa-search" style="font-size: 30px; color: var(--accent-primary);"></i>
         <h4>Website Scanner</h4>
@@ -28,13 +28,17 @@
         <i class="fas fa-question-circle" style="font-size: 30px; color: #10b981;"></i>
         <h4>Cyber Quiz</h4>
     </div>
+    <div class="card" style="text-align: center; cursor: pointer;" onclick="scrollToSection('url')">
+        <i class="fas fa-link" style="font-size: 30px; color: #8b5cf6;"></i>
+        <h4>URL Tekshirish</h4>
+    </div>
 </div>
 
 <!-- FAQ -->
 <div class="card" id="faq">
-    <h2 style="margin-bottom: 20px;">Ko'p so'raladigan savollar</h2>
+    <h2 style="margin-bottom: 20px;">📌 Ko'p so'raladigan savollar</h2>
     
-    <!-- Website Scanner FAQ -->
+    <!-- Website Scanner -->
     <div style="margin-bottom: 30px;" id="scanner">
         <h3 style="color: var(--accent-primary); margin-bottom: 15px;">🌐 Website Scanner</h3>
         
@@ -69,7 +73,7 @@
         </div>
     </div>
     
-    <!-- APK Analyzer FAQ -->
+    <!-- APK Analyzer -->
     <div style="margin-bottom: 30px;" id="apk">
         <h3 style="color: #f59e0b; margin-bottom: 15px;">📱 APK Analyzer</h3>
         
@@ -80,14 +84,25 @@
                     <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="faq-answer" style="display: none; margin-top: 15px;">
-                    <p>APK Analyzer bo'limiga o'ting, "Fayl tanlash" tugmasini bosing, APK faylingizni yuklang va "Tahlil qilish" tugmasini bosing.</p>
-                    <p class="alert alert-warning" style="margin-top: 10px;">Maksimal fayl hajmi: 10MB</p>
+                    <p>APK Analyzer bo'limiga o'ting, "Fayl tanlash" tugmasini bosing, APK faylingizni yuklang va "Tahlil qilish" tugmasini bosing. Maksimal fayl hajmi 10 MB.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="faq-item" style="margin-bottom: 10px;">
+            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; cursor: pointer;" onclick="toggleFaq(this)">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h4>Qanday ruxsatlar xavfli hisoblanadi?</h4>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer" style="display: none; margin-top: 15px;">
+                    <p>Yuqori xavfli ruxsatlar: SMS yuborish, kontaktlarni o'qish, joylashuv, kamera, mikrofon. Ilova so'ragan barcha ruxsatlarni diqqat bilan tekshiring.</p>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Cyber Quiz FAQ -->
+    <!-- Cyber Quiz -->
     <div style="margin-bottom: 30px;" id="quiz">
         <h3 style="color: #10b981; margin-bottom: 15px;">📝 Cyber Quiz</h3>
         
@@ -121,9 +136,44 @@
             </div>
         </div>
     </div>
+    
+    <!-- URL Tekshirish (YANGI) -->
+    <div style="margin-bottom: 30px;" id="url">
+        <h3 style="color: #8b5cf6; margin-bottom: 15px;">🔗 URL Tekshirish</h3>
+        
+        <div class="faq-item" style="margin-bottom: 10px;">
+            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; cursor: pointer;" onclick="toggleFaq(this)">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h4>URL manzilini qanday tekshirish mumkin?</h4>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer" style="display: none; margin-top: 15px;">
+                    <p>URL Tekshirish bo'limiga o'ting, tekshirmoqchi bo'lgan to'liq manzilni kiriting (masalan, https://example.com yoki bit.ly/qisqa) va "Tekshirish" tugmasini bosing. Natijada xavf darajasi va tavsiyalar ko'rsatiladi.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="faq-item" style="margin-bottom: 10px;">
+            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; cursor: pointer;" onclick="toggleFaq(this)">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h4>Qanday mezonlar bo'yicha xavflilik aniqlanadi?</h4>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer" style="display: none; margin-top: 15px;">
+                    <ul>
+                        <li>Domen qisqartiruvchi yoki ma'lum xavfli domenlar ro'yxatida borligi</li>
+                        <li>Shubhali kalit so'zlar (login, bank, verify va h.k.) mavjudligi</li>
+                        <li>To'g'ridan-to'g'ri IP manzilga yo'naltirilganligi</li>
+                        <li>HTTPS ishlatilganligi (xavfsiz ulanish)</li>
+                        <li>Saytning mavjudligi va javob kodi</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Bog'lanish formasi -->
+<!-- Bog'lanish formasi (o'zgarishsiz) -->
 <div class="card">
     <h2 style="margin-bottom: 20px;">📬 Biz bilan bog'lanish</h2>
     
@@ -195,7 +245,7 @@ function searchHelp() {
     });
 }
 
-// Bog'lanish formasi
+// Bog'lanish formasi (avvalgidek)
 document.getElementById('contactForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
