@@ -1490,28 +1490,40 @@ def contact():
         if not name or not email or not message:
             return jsonify({'success': False, 'error': 'Barcha maydonlarni to‘ldiring'})
         
-        # Telegram bot ma'lumotlari (o'zingizning bot tokeningizni qo'ying)
-        BOT_TOKEN = os.environ.get('8623629787:AAFRe5uJG5S7o5cnlrAdT0U57RMI_tZLK3E')
-        CHAT_ID = os.environ.get('6633934393')
+        # TO'G'RIDAN-TO'G'RI KODGA YOZILGAN TOKEN VA CHAT ID
+        BOT_TOKEN = "8623629787:AAFRe5uJG5S7o5cnlrAdT0U57RMI_tZLK3E"
+        CHAT_ID = "6633934393"
         
-        # Xabar matni
-        text = f"📬 *Yangi xabar (CyberDash)*\n\n👤 *Ism:* {name}\n📧 *Email:* {email}\n💬 *Xabar:*\n{message}"
+        # HTML formatda xabar tayyorlash
+        text = f"""
+<b>📬 Yangi xabar (CyberDash)</b>
+
+<b>👤 Ism:</b> {name}
+<b>📧 Email:</b> {email}
+<b>💬 Xabar:</b>
+{message}
+        """
         
-        # Telegram API ga so'rov
         url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
         payload = {
             'chat_id': CHAT_ID,
             'text': text,
-            'parse_mode': 'Markdown'
+            'parse_mode': 'HTML'
         }
         
         response = requests.post(url, data=payload)
-        if response.status_code == 200:
+        result = response.json()
+        
+        if response.status_code == 200 and result.get('ok'):
             return jsonify({'success': True, 'message': 'Xabaringiz yuborildi!'})
         else:
-            return jsonify({'success': False, 'error': 'Telegram jo‘natishda xatolik'})
+            # Xatolikni batafsil chiqaramiz
+            error_desc = result.get('description', 'Nomaʼlum xatolik')
+            print(f"Telegram xatoligi: {error_desc}")
+            return jsonify({'success': False, 'error': f'Telegram xatosi: {error_desc}'})
         
     except Exception as e:
+        print(f"Xatolik: {str(e)}")
         return jsonify({'success': False, 'error': str(e)})
 # ========== STATIC FILES ==========
 @app.route('/ads.txt')
