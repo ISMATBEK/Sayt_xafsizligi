@@ -188,6 +188,74 @@
     {% endif %}
 </div>
 {% endif %}
+<!-- URL tekshiruvi natijalari -->
+{% if results.scan_type == 'url' and results.url_analysis %}
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-link"></i>
+        <h2>URL tahlili</h2>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 10px; word-break: break-all;">
+            <strong>Tekshirilgan URL:</strong> 
+            <a href="{{ results.url_analysis.url }}" target="_blank" style="color: var(--accent-primary);">{{ results.url_analysis.url }}</a>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+        <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
+            <div style="color: var(--text-secondary);">Domen</div>
+            <div style="font-size: 18px; font-weight: 600;">{{ results.url_analysis.domain }}</div>
+        </div>
+        <div style="background: var(--bg-secondary); padding: 15px; border-radius: 10px;">
+            <div style="color: var(--text-secondary);">Mavjudligi</div>
+            <div style="font-size: 18px; font-weight: 600; color: {{ 'green' if results.url_analysis.reachable else 'red' }};">
+                {{ 'Mavjud' if results.url_analysis.reachable else 'Mavjud emas' }}
+                {% if results.url_analysis.status_code %}
+                ({{ results.url_analysis.status_code }})
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div style="background: {{ results.url_analysis.risk_color }}20; border-left: 4px solid {{ results.url_analysis.risk_color }}; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="color: {{ results.url_analysis.risk_color }};">Xavf darajasi: {{ results.url_analysis.risk_level }}</h3>
+            <span class="badge" style="background: {{ results.url_analysis.risk_color }}; color: white;">{{ results.url_analysis.verdict }}</span>
+        </div>
+        <div style="font-size: 24px; font-weight: 700; color: {{ results.url_analysis.risk_color }};">{{ results.url_analysis.risk_score }}%</div>
+    </div>
+
+    {% if results.url_analysis.warnings %}
+    <div style="margin-bottom: 20px;">
+        <h3 style="margin-bottom: 10px;">⚠️ Ogohlantirishlar</h3>
+        <ul style="list-style: none;">
+            {% for warn in results.url_analysis.warnings %}
+            <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-exclamation-circle" style="color: #ef4444;"></i>
+                {{ warn }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if results.url_analysis.recommendations %}
+    <div>
+        <h3 style="margin-bottom: 10px;">💡 Tavsiyalar</h3>
+        <ul style="list-style: none;">
+            {% for rec in results.url_analysis.recommendations %}
+            <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                {{ rec }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
 <!-- APK results -->
 {% if results.scan_type == 'apk' %}
 <!-- Malware analysis -->
@@ -278,5 +346,6 @@
     </div>
 </div>
 {% endblock %}
+
 
 
