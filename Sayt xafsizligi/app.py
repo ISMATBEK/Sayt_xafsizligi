@@ -1480,21 +1480,39 @@ def submit_quiz():
 
 @app.route('/api/contact', methods=['POST'])
 def contact():
-    """Bog'lanish formasini jo'natish"""
+    """Bog'lanish formasini Telegram bot orqali jo'natish"""
     try:
         data = request.json
-        name = data.get('name', '')
-        email = data.get('email', '')
-        message = data.get('message', '')
+        name = data.get('name', '').strip()
+        email = data.get('email', '').strip()
+        message = data.get('message', '').strip()
         
-        return jsonify({
-            'success': True,
-            'message': 'Xabaringiz qabul qilindi. Tez orada javob beramiz!'
-        })
+        if not name or not email or not message:
+            return jsonify({'success': False, 'error': 'Barcha maydonlarni to‘ldiring'})
+        
+        # Telegram bot ma'lumotlari (o'zingizning bot tokeningizni qo'ying)
+        BOT_TOKEN = os.environ.get('8623629787:AAFRe5uJG5S7o5cnlrAdT0U57RMI_tZLK3E')
+        CHAT_ID = os.environ.get('6633934393')
+        
+        # Xabar matni
+        text = f"📬 *Yangi xabar (CyberDash)*\n\n👤 *Ism:* {name}\n📧 *Email:* {email}\n💬 *Xabar:*\n{message}"
+        
+        # Telegram API ga so'rov
+        url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+        payload = {
+            'chat_id': CHAT_ID,
+            'text': text,
+            'parse_mode': 'Markdown'
+        }
+        
+        response = requests.post(url, data=payload)
+        if response.status_code == 200:
+            return jsonify({'success': True, 'message': 'Xabaringiz yuborildi!'})
+        else:
+            return jsonify({'success': False, 'error': 'Telegram jo‘natishda xatolik'})
         
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
-
 # ========== STATIC FILES ==========
 @app.route('/ads.txt')
 def serve_ads_txt():
