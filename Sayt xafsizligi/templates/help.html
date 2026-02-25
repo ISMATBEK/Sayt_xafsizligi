@@ -15,7 +15,7 @@
 </div>
 
 <!-- Kategoriyalar -->
-<div class="grid-4" style="margin-bottom: 25px;">
+<div class="grid-3" style="margin-bottom: 25px;">
     <div class="card" style="text-align: center; cursor: pointer;" onclick="scrollToSection('scanner')">
         <i class="fas fa-search" style="font-size: 30px; color: var(--accent-primary);"></i>
         <h4>Website Scanner</h4>
@@ -28,18 +28,15 @@
         <i class="fas fa-question-circle" style="font-size: 30px; color: #10b981;"></i>
         <h4>Cyber Quiz</h4>
     </div>
-    <div class="card" style="text-align: center; cursor: pointer;" onclick="scrollToSection('account')">
-        <i class="fas fa-user" style="font-size: 30px; color: var(--info);"></i>
-        <h4>Hisob</h4>
-    </div>
 </div>
 
 <!-- FAQ -->
 <div class="card" id="faq">
     <h2 style="margin-bottom: 20px;">Ko'p so'raladigan savollar</h2>
     
+    <!-- Website Scanner FAQ -->
     <div style="margin-bottom: 30px;" id="scanner">
-        <h3 style="color: var(--accent-primary); margin-bottom: 15px;">📱 Website Scanner</h3>
+        <h3 style="color: var(--accent-primary); margin-bottom: 15px;">🌐 Website Scanner</h3>
         
         <div class="faq-item" style="margin-bottom: 10px;">
             <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; cursor: pointer;" onclick="toggleFaq(this)">
@@ -72,6 +69,7 @@
         </div>
     </div>
     
+    <!-- APK Analyzer FAQ -->
     <div style="margin-bottom: 30px;" id="apk">
         <h3 style="color: #f59e0b; margin-bottom: 15px;">📱 APK Analyzer</h3>
         
@@ -89,6 +87,7 @@
         </div>
     </div>
     
+    <!-- Cyber Quiz FAQ -->
     <div style="margin-bottom: 30px;" id="quiz">
         <h3 style="color: #10b981; margin-bottom: 15px;">📝 Cyber Quiz</h3>
         
@@ -122,61 +121,54 @@
             </div>
         </div>
     </div>
-    
-    <div style="margin-bottom: 30px;" id="account">
-        <h3 style="color: var(--info); margin-bottom: 15px;">👤 Hisob sozlamalari</h3>
-        
-        <div class="faq-item" style="margin-bottom: 10px;">
-            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; cursor: pointer;" onclick="toggleFaq(this)">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h4>Parolni qanday o'zgartirish mumkin?</h4>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer" style="display: none; margin-top: 15px;">
-                    <p>Sozlamalar bo'limiga o'ting, "Xavfsizlik" qismidan parolingizni o'zgartirishingiz mumkin.</p>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
-<!-- Bog'lanish -->
+<!-- Bog'lanish formasi -->
 <div class="card">
-    <h2 style="margin-bottom: 20px;">Bog'lanish</h2>
-    <div class="grid-3">
-        <div style="text-align: center;">
-            <i class="fas fa-envelope" style="font-size: 40px; color: var(--accent-primary);"></i>
-            <h4>Email</h4>
-            <p>support@cyberdash.uz</p>
-            <button class="btn btn-outline" onclick="window.location.href='mailto:support@cyberdash.uz'">
-                Yozish
-            </button>
-        </div>
-        <div style="text-align: center;">
-            <i class="fab fa-telegram" style="font-size: 40px; color: #0088cc;"></i>
-            <h4>Telegram</h4>
-            <p>@cyberdash_support</p>
-            <button class="btn btn-outline" onclick="window.open('https://t.me/cyberdash_support')">
-                Yozish
-            </button>
-        </div>
-        <div style="text-align: center;">
-            <i class="fas fa-phone" style="font-size: 40px; color: #10b981;"></i>
-            <h4>Telefon</h4>
-            <p>+998 90 123 45 67</p>
-            <button class="btn btn-outline" onclick="window.location.href='tel:+998901234567'">
-                Qo'ng'iroq
-            </button>
-        </div>
+    <h2 style="margin-bottom: 20px;">📬 Biz bilan bog'lanish</h2>
+    
+    <div id="contactSuccess" style="display: none; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+        <i class="fas fa-check-circle"></i> <span>Xabaringiz qabul qilindi! Tez orada javob beramiz.</span>
     </div>
+    
+    <div id="contactError" style="display: none; background: rgba(239,68,68,0.1); border: 1px solid #ef4444; color: #ef4444; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+        <i class="fas fa-exclamation-circle"></i> <span>Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.</span>
+    </div>
+    
+    <form id="contactForm">
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">Ismingiz</label>
+            <input type="text" id="contactName" placeholder="Ismingiz" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: var(--text-primary);">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">Email manzilingiz</label>
+            <input type="email" id="contactEmail" placeholder="email@example.com" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: var(--text-primary);">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">Xabar matni</label>
+            <textarea id="contactMessage" rows="5" placeholder="Xabaringizni yozing..." required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: var(--text-primary); resize: vertical;"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" id="contactBtn">
+            <i class="fas fa-paper-plane"></i> Yuborish
+        </button>
+    </form>
 </div>
+
+<style>
+.faq-answer {
+    transition: all 0.3s ease;
+}
+</style>
 
 <script>
 function toggleFaq(element) {
     const answer = element.querySelector('.faq-answer');
     const icon = element.querySelector('.fas.fa-chevron-down');
     
-    if (answer.style.display === 'none') {
+    if (answer.style.display === 'none' || !answer.style.display) {
         answer.style.display = 'block';
         icon.style.transform = 'rotate(180deg)';
     } else {
@@ -202,5 +194,56 @@ function searchHelp() {
         }
     });
 }
+
+// Bog'lanish formasi
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('contactName').value.trim();
+    const email = document.getElementById('contactEmail').value.trim();
+    const message = document.getElementById('contactMessage').value.trim();
+    const btn = document.getElementById('contactBtn');
+    const successDiv = document.getElementById('contactSuccess');
+    const errorDiv = document.getElementById('contactError');
+    
+    if (!name || !email || !message) {
+        errorDiv.querySelector('span').textContent = 'Barcha maydonlarni to\'ldiring!';
+        errorDiv.style.display = 'block';
+        setTimeout(() => { errorDiv.style.display = 'none'; }, 3000);
+        return;
+    }
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yuborilmoqda...';
+    
+    try {
+        const response = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, message })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            successDiv.style.display = 'block';
+            document.getElementById('contactName').value = '';
+            document.getElementById('contactEmail').value = '';
+            document.getElementById('contactMessage').value = '';
+            setTimeout(() => { successDiv.style.display = 'none'; }, 5000);
+        } else {
+            errorDiv.querySelector('span').textContent = data.error || 'Xatolik yuz berdi';
+            errorDiv.style.display = 'block';
+            setTimeout(() => { errorDiv.style.display = 'none'; }, 3000);
+        }
+    } catch (error) {
+        errorDiv.querySelector('span').textContent = 'Xatolik: ' + error.message;
+        errorDiv.style.display = 'block';
+        setTimeout(() => { errorDiv.style.display = 'none'; }, 3000);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Yuborish';
+    }
+});
 </script>
 {% endblock %}
