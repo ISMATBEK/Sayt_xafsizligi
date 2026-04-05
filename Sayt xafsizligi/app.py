@@ -706,7 +706,7 @@ def link_checker():
 
 @app.route('/apk-analyzer')
 def apk_analyzer():
-    """APK analyzer sahifasi"""
+    """Qurilmalar himoyasi"""
     return render_template('apk_analyzer.html', active_page='apk_analyzer')
 
 @app.route('/cyber-tips')
